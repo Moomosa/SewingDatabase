@@ -14,16 +14,6 @@ namespace BackendDatabase.Data
             : base(options)
         {
         }
-        public DbSet<SewingModels.Models.ElasticTypes>? ElasticTypes { get; set; }
-        public DbSet<SewingModels.Models.Elastic>? Elastic { get; set; }
-        public DbSet<SewingModels.Models.FabricBrand>? FabricBrand { get; set; }
-        public DbSet<SewingModels.Models.FabricTypes>? FabricTypes { get; set; }
-        public DbSet<SewingModels.Models.Fabric>? Fabric { get; set; }
-        public DbSet<SewingModels.Models.Machine>? Machine { get; set; }
-        public DbSet<SewingModels.Models.MiscItemType>? MiscItemType { get; set; }
-        public DbSet<SewingModels.Models.MiscObjects>? MiscObjects { get; set; }
-        public DbSet<SewingModels.Models.ThreadTypes>? ThreadTypes { get; set; }
-        public DbSet<SewingModels.Models.Thread>? Thread { get; set; }
 
     }
 }

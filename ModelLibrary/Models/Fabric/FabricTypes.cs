@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace SewingModels.Models
 {
-    public class FabricBrand
+    public class FabricTypes
     {
         [Key]
         public int ID { get; set; }
-        public string FullName { get; set; }
-        public string? Website { get; set; }
-        public string? AdditionalInfo { get; set; }
+        public string Type { get; set; }
+        public string? Content { get; set; }        
+        public ICollection<Fabric> Fabrics { get; set; }
     }
 }

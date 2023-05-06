@@ -23,7 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Users\" />
+    <Folder Include="Controllers\Elastic\" />
+    <Folder Include="Controllers\Fabric\" />
+    <Folder Include="Controllers\Machine\" />
+    <Folder Include="Controllers\Thread\" />
   </ItemGroup>
 
 </Project>

@@ -12,13 +12,15 @@ namespace SewingModels.Models
     {
         [Key]
         public int ID { get; set; }
+        [ForeignKey("FabricTypeID")]
+        public FabricTypes FabricType { get; set; }
+        public int FabricTypeID { get; set; }
+        [ForeignKey("BrandID")]
+        public FabricBrand Brand { get; set; }
+        public int FabricBrandID { get; set; }
         public float PurchasePrice { get; set; }
         public float Value { get; set; }
-        public int FabricTypeID { get; set; }
-        public FabricTypes FabricType { get; set; }
         public bool SolidOrPrint { get; set; }
-        public int BrandID { get; set; }
-        public FabricBrand Brand { get; set; }
         public string Appearance { get; set; }
         public float Amount { get; set; }
     }

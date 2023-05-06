@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace SewingModels.Models
 {
-    public class Thread
+    public class Elastic
     {
         [Key]
         public int ID { get; set; }
-        public int ThreadTypeID { get; set; }
-        public ThreadTypes ThreadType { get; set; }
+        [ForeignKey("ElasticTypeID")]
+        public ElasticTypes ElasticType { get; set; }
+        public int ElasticTypeID { get; set; }
         public string Color { get; set; }
-        public int Quantity { get; set; }
-        public bool MaxiLockStretch { get; set; }
-        public string ColorFamily { get; set; }
+        public float Width { get; set; }
+        public float Length { get; set; }
     }
 }
