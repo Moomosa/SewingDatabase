@@ -12,5 +12,6 @@ namespace SewingModels.Models
         [Key]
         public int ID { get; set; }
         public string Name { get; set; }
+        public ICollection<Thread> Threads { get; set; }
     }
 }

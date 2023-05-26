@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 namespace SewingModels.Models
 {
     public class ElasticTypes
-    {        
+    {
         public int ID { get; set; }
         public string Type { get; set; }
+        public ICollection<Elastic> Elastics { get; set; }
     }
 }
