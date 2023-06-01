@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SewingModels.Models
+namespace ModelLibrary.Models.Thread
 {
-    public class ElasticTypes
+    public class ThreadColorFamily
     {
+        [Key]
         public int ID { get; set; }
-        public string Type { get; set; }
+        public string ColorFamily { get; set; }
     }
 }

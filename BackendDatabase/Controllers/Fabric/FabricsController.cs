@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BackendDatabase.Data;
 using SewingModels.Models;
+using ModelLibrary.Models.Database;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BackendDatabase.Controllers.Fabric
 {
@@ -25,10 +28,10 @@ namespace BackendDatabase.Controllers.Fabric
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SewingModels.Models.Fabric>>> GetFabric()
         {
-          if (_context.Fabric == null)
-          {
-              return NotFound();
-          }
+            if (_context.Fabric == null)
+            {
+                return NotFound();
+            }
             return await _context.Fabric.ToListAsync();
         }
 
@@ -36,10 +39,10 @@ namespace BackendDatabase.Controllers.Fabric
         [HttpGet("{id}")]
         public async Task<ActionResult<SewingModels.Models.Fabric>> GetFabric(int id)
         {
-          if (_context.Fabric == null)
-          {
-              return NotFound();
-          }
+            if (_context.Fabric == null)
+            {
+                return NotFound();
+            }
             var fabric = await _context.Fabric.FindAsync(id);
 
             if (fabric == null)
@@ -86,10 +89,12 @@ namespace BackendDatabase.Controllers.Fabric
         [HttpPost]
         public async Task<ActionResult<SewingModels.Models.Fabric>> PostFabric(SewingModels.Models.Fabric fabric)
         {
-          if (_context.Fabric == null)
-          {
-              return Problem("Entity set 'BackendDatabaseContext.Fabric'  is null.");
-          }
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (_context.Fabric == null)
+            {
+                return Problem("Entity set 'BackendDatabaseContext.Fabric'  is null.");
+            }
             _context.Fabric.Add(fabric);
             await _context.SaveChangesAsync();
 

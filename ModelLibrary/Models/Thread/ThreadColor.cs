@@ -6,16 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SewingModels.Models
+namespace ModelLibrary.Models.Thread
 {
-    public class Elastic
+    public class ThreadColor
     {
         [Key]
         public int ID { get; set; }
-        public ElasticTypes ElasticType { get; set; }
-        public int ElasticTypeID { get; set; }
         public string Color { get; set; }
-        public float Width { get; set; }
-        public float Length { get; set; }
+        public int ColorFamilyID { get; set; }
+        public ThreadColorFamily ColorFamily { get; set; }
     }
 }

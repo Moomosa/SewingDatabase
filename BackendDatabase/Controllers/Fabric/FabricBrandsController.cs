@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BackendDatabase.Data;
 using SewingModels.Models;
+using System.Security.Claims;
+using ModelLibrary.Models.Database;
 
 namespace BackendDatabase.Controllers.Fabric
 {
@@ -25,10 +27,10 @@ namespace BackendDatabase.Controllers.Fabric
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FabricBrand>>> GetFabricBrand()
         {
-          if (_context.FabricBrand == null)
-          {
-              return NotFound();
-          }
+            if (_context.FabricBrand == null)
+            {
+                return NotFound();
+            }
             return await _context.FabricBrand.ToListAsync();
         }
 
@@ -36,10 +38,10 @@ namespace BackendDatabase.Controllers.Fabric
         [HttpGet("{id}")]
         public async Task<ActionResult<FabricBrand>> GetFabricBrand(int id)
         {
-          if (_context.FabricBrand == null)
-          {
-              return NotFound();
-          }
+            if (_context.FabricBrand == null)
+            {
+                return NotFound();
+            }
             var fabricBrand = await _context.FabricBrand.FindAsync(id);
 
             if (fabricBrand == null)
@@ -86,10 +88,12 @@ namespace BackendDatabase.Controllers.Fabric
         [HttpPost]
         public async Task<ActionResult<FabricBrand>> PostFabricBrand(FabricBrand fabricBrand)
         {
-          if (_context.FabricBrand == null)
-          {
-              return Problem("Entity set 'BackendDatabaseContext.FabricBrand'  is null.");
-          }
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (_context.FabricBrand == null)
+            {
+                return Problem("Entity set 'BackendDatabaseContext.FabricBrand'  is null.");
+            }
             _context.FabricBrand.Add(fabricBrand);
             await _context.SaveChangesAsync();
 

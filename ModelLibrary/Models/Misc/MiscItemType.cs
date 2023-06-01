@@ -12,6 +12,5 @@ namespace SewingModels.Models
         [Key]
         public int ID { get; set; }
         public string Item { get; set; }
-        public ICollection<MiscObjects> Miscs { get; set; }
     }
 }

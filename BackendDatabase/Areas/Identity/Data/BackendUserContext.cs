@@ -12,6 +12,25 @@ public class BackendUserContext : IdentityDbContext<BackendDatabaseUser>
     {
     }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            string connectionString = configuration.GetConnectionString("BackendUserContextConnection");
+
+            optionsBuilder.UseSqlServer(connectionString);
+        }
+
+        //base.OnConfiguring(optionsBuilder);
+        //optionsBuilder.UseSqlServer("Server=MOOMOSASPLAYGRO\\SQLEXPRESS;Database=BackendUserDatabase;Trusted_Connection=True;");
+    }
+
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

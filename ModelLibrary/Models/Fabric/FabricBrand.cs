@@ -14,6 +14,5 @@ namespace SewingModels.Models
         public string FullName { get; set; }
         public string? Website { get; set; }
         public string? AdditionalInfo { get; set; }
-        public ICollection<Fabric> Fabrics { get; set; }
     }
 }

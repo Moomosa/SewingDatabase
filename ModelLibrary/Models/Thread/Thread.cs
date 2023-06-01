@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModelLibrary.Models.Thread;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,12 +13,13 @@ namespace SewingModels.Models
     {
         [Key]
         public int ID { get; set; }
-        [ForeignKey("ThreadTypeID")]
-        public ThreadTypes ThreadType { get; set; }
         public int ThreadTypeID { get; set; }
-        public string Color { get; set; }
+        public ThreadTypes ThreadType { get; set; }
+        public int ColorFamilyID { get; set; }
+        public ThreadColorFamily ColorFamily { get; set; }
+        public int ColorID { get; set; }
+        public ThreadColor Color { get; set; }
         public int Quantity { get; set; }
         public bool MaxiLockStretch { get; set; }
-        public string ColorFamily { get; set; }
     }
 }

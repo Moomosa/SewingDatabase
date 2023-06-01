@@ -12,7 +12,6 @@ namespace SewingModels.Models
     {
         [Key]
         public int ID { get; set; }
-        [ForeignKey("ItemTypeID")]
         public MiscItemType ItemType { get; set; }
         public int ItemTypeID { get; set; }
         public int Quantity { get; set; }

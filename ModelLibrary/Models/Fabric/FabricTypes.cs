@@ -13,6 +13,5 @@ namespace SewingModels.Models
         public int ID { get; set; }
         public string Type { get; set; }
         public string? Content { get; set; }        
-        public ICollection<Fabric> Fabrics { get; set; }
     }
 }

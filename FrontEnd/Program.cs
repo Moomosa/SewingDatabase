@@ -6,6 +6,9 @@ builder.Services.AddRazorPages()
 
 builder.Services.AddSession();
 
+var configuration = builder.Configuration;
+var baseUrl = configuration.GetSection("AppSettings:BaseUrl").Value;
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

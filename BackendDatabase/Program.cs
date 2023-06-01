@@ -7,7 +7,7 @@ using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<BackendDatabaseContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("BackendDatabaseContext") ?? throw new InvalidOperationException("Connection string 'BackendDatabaseContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("BackendDatabaseContextConnection") ?? throw new InvalidOperationException("Connection string 'BackendDatabaseContext' not found.")));
 
 builder.Services.AddDbContext<BackendUserContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BackendUserContextConnection")));
