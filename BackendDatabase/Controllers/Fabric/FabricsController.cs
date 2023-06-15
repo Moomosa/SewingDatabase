@@ -28,11 +28,16 @@ namespace BackendDatabase.Controllers.Fabric
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SewingModels.Models.Fabric>>> GetFabric()
         {
-            if (_context.Fabric == null)
+            var fabrics = await _context.Fabric
+                .Include(f => f.FabricType)
+                .Include(f => f.FabricBrand)
+                .ToListAsync();
+
+            if (fabrics == null)
             {
                 return NotFound();
             }
-            return await _context.Fabric.ToListAsync();
+            return fabrics;
         }
 
         // GET: api/Fabrics/5

@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrontEnd", "FrontEnd\FrontE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelLibrary", "ModelLibrary\ModelLibrary.csproj", "{186D9695-35AB-4792-BF62-D272C49B20B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackendDatabase", "BackendDatabase\BackendDatabase.csproj", "{84509B54-7AE7-4B24-8BB4-256EF536CCD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackendDatabase", "BackendDatabase\BackendDatabase.csproj", "{84509B54-7AE7-4B24-8BB4-256EF536CCD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

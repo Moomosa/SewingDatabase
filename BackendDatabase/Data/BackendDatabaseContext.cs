@@ -20,17 +20,14 @@ namespace BackendDatabase.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                IConfigurationRoot configuration = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json")
-                    .Build();
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
 
-                string connectionString = configuration.GetConnectionString("BackendDatabaseContextConnection");
+            string connectionString = configuration.GetConnectionString("BackendDatabaseContextConnection");
 
-                optionsBuilder.UseSqlServer(connectionString);
-            }
+            optionsBuilder.UseSqlServer(connectionString);
             //base.OnConfiguring(optionsBuilder);
             //optionsBuilder.UseSqlServer("Server=MOOMOSASPLAYGRO\\SQLEXPRESS;Database=BackendDataDatabase;Trusted_Connection=True;");
         }
@@ -42,7 +39,7 @@ namespace BackendDatabase.Data
                 .HasDatabaseName("IX_UserId");
 
             modelBuilder.Entity<Fabric>()
-                .HasOne(f => f.Brand)
+                .HasOne(f => f.FabricBrand)
                 .WithMany()
                 .HasForeignKey(f => f.FabricBrandID)
                 .OnDelete(DeleteBehavior.Restrict);

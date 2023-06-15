@@ -14,7 +14,7 @@ namespace SewingModels.Models
         public int ID { get; set; }
         public FabricTypes FabricType { get; set; }
         public int FabricTypeID { get; set; }
-        public FabricBrand Brand { get; set; }
+        public FabricBrand FabricBrand { get; set; }
         public int FabricBrandID { get; set; }
         public float PurchasePrice { get; set; }
         public float Value { get; set; }

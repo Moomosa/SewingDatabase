@@ -1,0 +1,31 @@
+﻿@page
+@model FrontEnd.Pages.Data.Fabric.Type.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>FabricTypes</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FabricTypes.Type)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FabricTypes.Type)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FabricTypes.Content)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FabricTypes.Content)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.FabricTypes?.ID">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

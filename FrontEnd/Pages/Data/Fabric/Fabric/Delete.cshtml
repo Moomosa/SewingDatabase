@@ -1,0 +1,64 @@
+﻿@page
+@model FrontEnd.Pages.Data.Fabric.Fabric.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Fabric</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Fabric.FabricType)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Fabric.FabricType.Type)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Fabric.FabricBrand)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Fabric.FabricBrand.FullName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Fabric.PurchasePrice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Fabric.PurchasePrice)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Fabric.Value)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Fabric.Value)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Fabric.SolidOrPrint)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Fabric.SolidOrPrint)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Fabric.Appearance)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Fabric.Appearance)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Fabric.Amount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Fabric.Amount)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="Fabric.ID" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-page="./Index">Back to List</a>
+    </form>
+</div>

@@ -12,9 +12,9 @@ namespace FrontEnd.Pages
             _logger = logger;
         }
 
-        public void OnGet()
+        public async void OnGet()
         {
-
+            
         }
     }
 }
