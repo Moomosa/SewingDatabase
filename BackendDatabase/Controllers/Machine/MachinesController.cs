@@ -10,7 +10,7 @@ using SewingModels.Models;
 
 namespace BackendDatabase.Controllers.Machine
 {
-    [Route("api/[controller]")]
+    [Route("api/Machine")]
     [ApiController]
     public class MachinesController : ControllerBase
     {

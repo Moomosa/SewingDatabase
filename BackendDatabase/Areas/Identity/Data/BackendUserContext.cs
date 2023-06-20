@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BackendDatabase.Areas.Identity.Data;
 
-public class BackendUserContext : IdentityDbContext<BackendDatabaseUser, IdentityRole, string>
+public class BackendUserContext : IdentityDbContext<IdentityUser, IdentityRole, string>
 {
 	public BackendUserContext(DbContextOptions<BackendUserContext> options)
 		: base(options)

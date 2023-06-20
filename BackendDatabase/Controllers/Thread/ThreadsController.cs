@@ -10,7 +10,7 @@ using SewingModels.Models;
 
 namespace BackendDatabase.Controllers.Thread
 {
-    [Route("api/[controller]")]
+    [Route("api/Thread")]
     [ApiController]
     public class ThreadsController : ControllerBase
     {

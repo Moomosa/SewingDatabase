@@ -10,7 +10,7 @@ using SewingModels.Models;
 
 namespace BackendDatabase.Controllers.Elastic
 {
-    [Route("api/[controller]")]
+    [Route("api/ElasticTypes")]
     [ApiController]
     public class ElasticTypesController : ControllerBase
     {

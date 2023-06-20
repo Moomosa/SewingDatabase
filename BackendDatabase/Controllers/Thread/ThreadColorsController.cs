@@ -10,7 +10,7 @@ using ModelLibrary.Models.Thread;
 
 namespace BackendDatabase.Controllers.Thread
 {
-    [Route("api/[controller]")]
+    [Route("api/ThreadColor")]
     [ApiController]
     public class ThreadColorsController : ControllerBase
     {

@@ -12,7 +12,7 @@ using ModelLibrary.Models.Database;
 
 namespace BackendDatabase.Controllers.Fabric
 {
-    [Route("api/[controller]")]
+    [Route("api/FabricBrand")]
     [ApiController]
     public class FabricBrandsController : ControllerBase
     {

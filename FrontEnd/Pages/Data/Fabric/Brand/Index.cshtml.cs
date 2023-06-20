@@ -7,26 +7,32 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BackendDatabase.Data;
 using SewingModels.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace FrontEnd.Pages.Data.Fabric.Brand
 {
-    public class IndexModel : PageModel
-    {
-        private readonly BackendDatabase.Data.BackendDatabaseContext _context;
+	public class IndexModel : PageModel
+	{
+		private readonly BackendDatabase.Data.BackendDatabaseContext _context;
+		private readonly UserManager<IdentityUser> _userManager;
+		private readonly ApiService _apiService;
+		private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public IndexModel(BackendDatabase.Data.BackendDatabaseContext context)
-        {
-            _context = context;
-        }
+		public IndexModel(UserManager<IdentityUser> userManager, ApiService apiService, IHttpContextAccessor httpContextAccessor)
+		{
+			_userManager = userManager;
+			_apiService = apiService;
+			_httpContextAccessor = httpContextAccessor;
+		}
 
-        public IList<FabricBrand> FabricBrand { get;set; } = default!;
+		public IList<FabricBrand> FabricBrand { get; set; } = default!;
 
-        public async Task OnGetAsync()
-        {
-            if (_context.FabricBrand != null)
-            {
-                FabricBrand = await _context.FabricBrand.ToListAsync();
-            }
-        }
-    }
+		public async Task OnGetAsync()
+		{
+			var user = await _userManager.GetUserAsync(User);
+			if (user != null)
+				FabricBrand = await _apiService.GetRecordsForUser<FabricBrand>("FabricBrand", user.UserName);
+
+		}
+	}
 }

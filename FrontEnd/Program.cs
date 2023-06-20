@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using BackendDatabase.Data;
 using BackendDatabase.Areas.Identity.Data;
 using System.Configuration;
+using BackendDatabase.Controllers.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 //var connectionString = builder.Configuration.GetConnectionString("BackendUserContextConnection") ?? throw new InvalidOperationException("Connection string 'BackendUserContextConnection' not found.");

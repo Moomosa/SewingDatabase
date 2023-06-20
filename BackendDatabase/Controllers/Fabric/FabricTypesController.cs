@@ -9,120 +9,187 @@ using BackendDatabase.Data;
 using SewingModels.Models;
 using System.Security.Claims;
 using ModelLibrary.Models.Database;
+using BackendDatabase.Controllers.Database;
 
 namespace BackendDatabase.Controllers.Fabric
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class FabricTypesController : ControllerBase
-    {
-        private readonly BackendDatabaseContext _context;
+	[Route("api/FabricTypes")]
+	[ApiController]
+	public class FabricTypesController : ControllerBase
+	{
+		private readonly BackendDatabaseContext _context;
+		private readonly Helper _helper;
 
-        public FabricTypesController(BackendDatabaseContext context)
-        {
-            _context = context;
-        }
+		public FabricTypesController(BackendDatabaseContext context, Helper helper)
+		{
+			_context = context;
+			_helper = helper;
+		}
 
-        // GET: api/FabricTypes
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<FabricTypes>>> GetFabricTypes()
-        {
-            if (_context.FabricTypes == null)
-            {
-                return NotFound();
-            }
-            return await _context.FabricTypes.ToListAsync();
-        }
+		// GET: api/FabricTypes
+		[HttpGet]
+		public async Task<ActionResult<IEnumerable<FabricTypes>>> GetFabricTypes()
+		{
+			if (_context.FabricTypes == null)
+			{
+				return NotFound();
+			}
+			return await _context.FabricTypes.ToListAsync();
+		}
 
-        // GET: api/FabricTypes/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<FabricTypes>> GetFabricTypes(int id)
-        {
-            if (_context.FabricTypes == null)
-            {
-                return NotFound();
-            }
-            var fabricTypes = await _context.FabricTypes.FindAsync(id);
+		// GET: api/FabricTypes/{tableName}/{userName}
+		[HttpGet("{tableName}/{userName}")]
+		public async Task<ActionResult<IEnumerable<FabricTypes>>> GetFabricTypesByIds(string tableName, string userName)
+		{
+			List<int> ids = await _helper.GetRecordIds(tableName, userName);
 
-            if (fabricTypes == null)
-            {
-                return NotFound();
-            }
+			var fabricTypes = await _context.FabricTypes
+				.Where(ft => ids.Contains(ft.ID))
+				.ToListAsync();
 
-            return fabricTypes;
-        }
+			if (fabricTypes == null)
+				return NotFound();
 
-        // PUT: api/FabricTypes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutFabricTypes(int id, FabricTypes fabricTypes)
-        {
-            if (id != fabricTypes.ID)
-            {
-                return BadRequest();
-            }
+			return fabricTypes;
+		}
 
-            _context.Entry(fabricTypes).State = EntityState.Modified;
+		// GET: api/FabricTypes/5
+		[HttpGet("{id}")]
+		public async Task<ActionResult<FabricTypes>> GetFabricTypes(int id)
+		{
+			if (_context.FabricTypes == null)
+			{
+				return NotFound();
+			}
+			var fabricTypes = await _context.FabricTypes.FindAsync(id);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FabricTypesExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+			if (fabricTypes == null)
+			{
+				return NotFound();
+			}
 
-            return NoContent();
-        }
+			return fabricTypes;
+		}
 
-        // POST: api/FabricTypes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<FabricTypes>> PostFabricTypes(FabricTypes fabricTypes)
-        {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+		// PUT: api/FabricTypes/5
+		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+		[HttpPut("{id}")]
+		public async Task<IActionResult> PutFabricTypes(int id, FabricTypes fabricTypes)
+		{
+			if (id != fabricTypes.ID)
+			{
+				return BadRequest();
+			}
 
-            if (_context.FabricTypes == null)
-            {
-                return Problem("Entity set 'BackendDatabaseContext.FabricTypes'  is null.");
-            }
-            _context.FabricTypes.Add(fabricTypes);
-            await _context.SaveChangesAsync();
+			_context.Entry(fabricTypes).State = EntityState.Modified;
 
-            return CreatedAtAction("GetFabricTypes", new { id = fabricTypes.ID }, fabricTypes);
-        }
+			try
+			{
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!FabricTypesExists(id))
+				{
+					return NotFound();
+				}
+				else
+				{
+					throw;
+				}
+			}
 
-        // DELETE: api/FabricTypes/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFabricTypes(int id)
-        {
-            if (_context.FabricTypes == null)
-            {
-                return NotFound();
-            }
-            var fabricTypes = await _context.FabricTypes.FindAsync(id);
-            if (fabricTypes == null)
-            {
-                return NotFound();
-            }
+			return NoContent();
+		}
 
-            _context.FabricTypes.Remove(fabricTypes);
-            await _context.SaveChangesAsync();
+		// POST: api/FabricTypes
+		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+		[HttpPost]
+		public async Task<ActionResult<FabricTypes>> PostFabricTypes(FabricTypes fabricTypes, string userId)
+		{
+			using (var transaction = _context.Database.BeginTransaction())
+			{
+				try
+				{
+					if (_context.FabricTypes == null)
+						return Problem("Entity set 'BackendDatabaseContext.FabricTypes' is null.");
+					_context.FabricTypes.Add(fabricTypes);
 
-            return NoContent();
-        }
+					await _context.SaveChangesAsync();
 
-        private bool FabricTypesExists(int id)
-        {
-            return (_context.FabricTypes?.Any(e => e.ID == id)).GetValueOrDefault();
-        }
-    }
+					var userMapping = new UserMapping
+					{
+						UserId = userId,
+						TableName = "FabricTypes",
+						RecordId = fabricTypes.ID
+					};
+
+					_context.UserMapping.Add(userMapping);
+
+					await _context.SaveChangesAsync();
+
+					await transaction.CommitAsync();
+
+					return CreatedAtAction("GetFabricTypes", new { id = fabricTypes.ID }, fabricTypes);
+				}
+				catch (Exception)
+				{
+					await transaction.RollbackAsync();
+					throw;
+				}
+			}
+		}
+
+		// DELETE: api/FabricTypes/5
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> DeleteFabricTypes(int id)
+		{
+			if (_context.FabricTypes == null)
+			{
+				return NotFound();
+			}
+
+			var fabricTypes = await _context.FabricTypes.FindAsync(id);
+			if (fabricTypes == null)
+			{
+				return NotFound();
+			}
+
+			using (var transaction = _context.Database.BeginTransaction())
+			{
+				try
+				{
+					_context.FabricTypes.Remove(fabricTypes);
+					await _context.SaveChangesAsync();
+
+					var userMapping = await _context.UserMapping.FirstOrDefaultAsync(um => um.TableName == "FabricTypes" && um.RecordId == id);
+					if (userMapping != null)
+					{
+						_context.UserMapping.Remove(userMapping);
+						await _context.SaveChangesAsync();
+					}
+
+					await transaction.CommitAsync();
+
+					return NoContent();
+				}
+				catch (Exception)
+				{
+					await transaction.RollbackAsync();
+					throw;
+				}
+			}
+
+
+			//_context.FabricTypes.Remove(fabricTypes);
+			//await _context.SaveChangesAsync();
+
+			//return NoContent();
+		}
+
+		private bool FabricTypesExists(int id)
+		{
+			return (_context.FabricTypes?.Any(e => e.ID == id)).GetValueOrDefault();
+		}
+	}
 }

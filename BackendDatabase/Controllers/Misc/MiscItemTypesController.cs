@@ -10,7 +10,7 @@ using SewingModels.Models;
 
 namespace BackendDatabase.Controllers.Misc
 {
-    [Route("api/[controller]")]
+    [Route("api/MiscItemType")]
     [ApiController]
     public class MiscItemTypesController : ControllerBase
     {

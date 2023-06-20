@@ -46,7 +46,7 @@ namespace BackendDatabase.Migrations
                     b.HasIndex("UserId")
                         .HasDatabaseName("IX_UserId");
 
-                    b.ToTable("UserMapping");
+                    b.ToTable("UserMapping", (string)null);
                 });
 
             modelBuilder.Entity("ModelLibrary.Models.Thread.ThreadColor", b =>
@@ -68,7 +68,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasIndex("ColorFamilyID");
 
-                    b.ToTable("ThreadColor");
+                    b.ToTable("ThreadColor", (string)null);
                 });
 
             modelBuilder.Entity("ModelLibrary.Models.Thread.ThreadColorFamily", b =>
@@ -85,7 +85,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("ThreadColorFamily");
+                    b.ToTable("ThreadColorFamily", (string)null);
                 });
 
             modelBuilder.Entity("SewingModels.Models.Elastic", b =>
@@ -113,7 +113,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasIndex("ElasticTypeID");
 
-                    b.ToTable("Elastic");
+                    b.ToTable("Elastic", (string)null);
                 });
 
             modelBuilder.Entity("SewingModels.Models.ElasticTypes", b =>
@@ -130,7 +130,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("ElasticTypes");
+                    b.ToTable("ElasticTypes", (string)null);
                 });
 
             modelBuilder.Entity("SewingModels.Models.Fabric", b =>
@@ -169,7 +169,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasIndex("FabricTypeID");
 
-                    b.ToTable("Fabric");
+                    b.ToTable("Fabric", (string)null);
                 });
 
             modelBuilder.Entity("SewingModels.Models.FabricBrand", b =>
@@ -192,7 +192,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("FabricBrand");
+                    b.ToTable("FabricBrand", (string)null);
                 });
 
             modelBuilder.Entity("SewingModels.Models.FabricTypes", b =>
@@ -212,7 +212,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("FabricTypes");
+                    b.ToTable("FabricTypes", (string)null);
                 });
 
             modelBuilder.Entity("SewingModels.Models.Machine", b =>
@@ -239,7 +239,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Machine");
+                    b.ToTable("Machine", (string)null);
                 });
 
             modelBuilder.Entity("SewingModels.Models.MiscItemType", b =>
@@ -256,7 +256,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("MiscItemType");
+                    b.ToTable("MiscItemType", (string)null);
                 });
 
             modelBuilder.Entity("SewingModels.Models.MiscObjects", b =>
@@ -292,7 +292,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasIndex("ItemTypeID");
 
-                    b.ToTable("MiscObjects");
+                    b.ToTable("MiscObjects", (string)null);
                 });
 
             modelBuilder.Entity("SewingModels.Models.Thread", b =>
@@ -326,7 +326,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasIndex("ThreadTypeID");
 
-                    b.ToTable("Thread");
+                    b.ToTable("Thread", (string)null);
                 });
 
             modelBuilder.Entity("SewingModels.Models.ThreadTypes", b =>
@@ -343,7 +343,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("ThreadTypes");
+                    b.ToTable("ThreadTypes", (string)null);
                 });
 
             modelBuilder.Entity("ModelLibrary.Models.Thread.ThreadColor", b =>

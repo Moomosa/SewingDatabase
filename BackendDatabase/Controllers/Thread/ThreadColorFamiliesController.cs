@@ -10,7 +10,7 @@ using ModelLibrary.Models.Thread;
 
 namespace BackendDatabase.Controllers.Thread
 {
-    [Route("api/[controller]")]
+    [Route("api/ThreadColorFamily")]
     [ApiController]
     public class ThreadColorFamiliesController : ControllerBase
     {
@@ -21,7 +21,7 @@ namespace BackendDatabase.Controllers.Thread
             _context = context;
         }
 
-        // GET: api/ThreadColorFamilies
+        // GET: api/ThreadColorFamily
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ThreadColorFamily>>> GetThreadColorFamily()
         {

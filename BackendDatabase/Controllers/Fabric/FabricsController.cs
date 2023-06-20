@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BackendDatabase.Controllers.Fabric
 {
-    [Route("api/[controller]")]
+    [Route("api/Fabric")]
     [ApiController]
     public class FabricsController : ControllerBase
     {

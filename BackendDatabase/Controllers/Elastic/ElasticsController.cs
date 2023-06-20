@@ -10,7 +10,7 @@ using SewingModels.Models;
 
 namespace BackendDatabase.Controllers.Elastic
 {
-    [Route("api/[controller]")]
+    [Route("api/Elastic")]
     [ApiController]
     public class ElasticsController : ControllerBase
     {
@@ -21,7 +21,7 @@ namespace BackendDatabase.Controllers.Elastic
             _context = context;
         }
 
-        // GET: api/Elastics
+        // GET: api/Elastic
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SewingModels.Models.Elastic>>> GetElastic()
         {

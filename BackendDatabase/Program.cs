@@ -4,6 +4,7 @@ using BackendDatabase.Data;
 using Microsoft.AspNetCore.Identity;
 using BackendDatabase.Areas.Identity.Data;
 using System.Configuration;
+using BackendDatabase.Controllers.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<BackendDatabaseContext>(options =>
@@ -21,6 +22,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<Helper>();
 
 var app = builder.Build();
 
