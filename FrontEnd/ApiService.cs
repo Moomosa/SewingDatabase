@@ -10,12 +10,10 @@ namespace FrontEnd
 	public class ApiService
 	{
 		private readonly HttpClient _httpClient;
-		private readonly BackendDatabaseContext _context;
 
-		public ApiService(IConfiguration configuration, BackendDatabaseContext context)
+		public ApiService(IConfiguration configuration)
 		{
 			string baseUrl = configuration.GetSection("AppSettings:BaseUrl").Value;
-			_context = context;
 
 			_httpClient = new HttpClient()
 			{
@@ -33,9 +31,7 @@ namespace FrontEnd
 				List<T> recordIds = JsonConvert.DeserializeObject<List<T>>(json);
 
 				if (recordIds.Count == 0)
-				{
 					return new List<T>();
-				}
 
 				return recordIds;
 			}
@@ -63,5 +59,29 @@ namespace FrontEnd
 			HttpResponseMessage response = await _httpClient.DeleteAsync($"/api/{tableName}/{id}");
 			return response.IsSuccessStatusCode;
 		}
+
+		public async Task<T> GetSingleItem<T>(int id) where T : class
+		{
+			HttpResponseMessage response = await _httpClient.GetAsync($"/api/{typeof(T).Name}/{id}");
+
+			if (response.IsSuccessStatusCode)
+			{
+				string content = await response.Content.ReadAsStringAsync();
+				T item = JsonConvert.DeserializeObject<T>(content);
+				return item;
+			}
+			else
+				return null;
+		}
+
+		public async Task<bool> UpdateItem<T>(int id, T item) where T : class
+		{
+			var json = JsonConvert.SerializeObject(item);
+			var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+			var response = await _httpClient.PutAsync($"/api/{typeof(T).Name}/{id}", content);
+			return response.IsSuccessStatusCode;
+		}
+
 	}
 }

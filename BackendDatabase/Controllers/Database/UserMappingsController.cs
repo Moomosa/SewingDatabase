@@ -38,18 +38,6 @@ namespace BackendDatabase.Controllers.Database
 			return await _context.UserMapping.ToListAsync();
 		}
 
-		//This may not be neccessary anymore
-		[HttpGet("{tableName}/{userName}")]
-		public async Task<List<int>> GetRecordIds(string tableName, string userName)
-		{
-			List<int> recordIds = await _context.UserMapping
-				.Where(um => um.UserId == userName && um.TableName == tableName)
-				.Select(um => um.RecordId)
-				.ToListAsync();
-
-			return recordIds;
-		}
-
 		// GET: api/UserMappings/5
 		[HttpGet("{id}")]
 		public async Task<ActionResult<UserMapping>> GetUserMapping(int id)

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using BackendDatabase.Data;
 using SewingModels.Models;
 using Microsoft.AspNetCore.Identity;
 
@@ -13,7 +12,6 @@ namespace FrontEnd.Pages.Data.Fabric.Brand
 {
 	public class IndexModel : PageModel
 	{
-		private readonly BackendDatabase.Data.BackendDatabaseContext _context;
 		private readonly UserManager<IdentityUser> _userManager;
 		private readonly ApiService _apiService;
 		private readonly IHttpContextAccessor _httpContextAccessor;

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using BackendDatabase.Data;
 using SewingModels.Models;
 using System.Security.Claims;
 
@@ -13,12 +12,10 @@ namespace FrontEnd.Pages.Data.Fabric.Type
 {
 	public class CreateModel : PageModel
 	{
-		private readonly BackendDatabase.Data.BackendDatabaseContext _context;
 		private readonly ApiService _apiService;
 
-		public CreateModel(BackendDatabase.Data.BackendDatabaseContext context, ApiService apiService)
+		public CreateModel(ApiService apiService)
 		{
-			_context = context;
 			_apiService = apiService;
 		}
 
@@ -30,11 +27,9 @@ namespace FrontEnd.Pages.Data.Fabric.Type
 		[BindProperty]
 		public FabricTypes FabricTypes { get; set; } = default!;
 
-
-		// To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
 		public async Task<IActionResult> OnPostAsync()
 		{
-			if (!ModelState.IsValid || _context.FabricTypes == null || FabricTypes == null)
+			if (!ModelState.IsValid || _apiService == null)
 			{
 				return Page();
 			}

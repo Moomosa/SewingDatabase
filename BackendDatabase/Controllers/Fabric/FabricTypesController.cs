@@ -179,12 +179,6 @@ namespace BackendDatabase.Controllers.Fabric
 					throw;
 				}
 			}
-
-
-			//_context.FabricTypes.Remove(fabricTypes);
-			//await _context.SaveChangesAsync();
-
-			//return NoContent();
 		}
 
 		private bool FabricTypesExists(int id)

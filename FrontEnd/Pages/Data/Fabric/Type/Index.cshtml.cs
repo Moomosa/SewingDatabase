@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using BackendDatabase.Data;
 using SewingModels.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
@@ -14,13 +13,10 @@ namespace FrontEnd.Pages.Data.Fabric.Type
 {
 	public class IndexModel : PageModel
 	{
-		private readonly BackendDatabase.Data.BackendDatabaseContext _context;
-		private readonly UserManager<IdentityUser> _userManager;
 		private readonly ApiService _apiService;
 
-		public IndexModel(UserManager<IdentityUser> userManager, ApiService apiService)
+		public IndexModel(ApiService apiService)
 		{
-			_userManager = userManager;
 			_apiService = apiService;
 		}
 

@@ -10,54 +10,56 @@ using SewingModels.Models;
 
 namespace FrontEnd.Pages.Data.Fabric.Brand
 {
-    public class DeleteModel : PageModel
-    {
-        private readonly BackendDatabase.Data.BackendDatabaseContext _context;
+	public class DeleteModel : PageModel
+	{
+		private readonly BackendDatabase.Data.BackendDatabaseContext _context;
+		private readonly ApiService _apiService;
 
-        public DeleteModel(BackendDatabase.Data.BackendDatabaseContext context)
-        {
-            _context = context;
-        }
+		public DeleteModel(BackendDatabase.Data.BackendDatabaseContext context, ApiService apiService)
+		{
+			_context = context;
+			_apiService = apiService;
+		}
 
-        [BindProperty]
-      public FabricBrand FabricBrand { get; set; } = default!;
+		[BindProperty]
+		public FabricBrand FabricBrand { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null || _context.FabricBrand == null)
-            {
-                return NotFound();
-            }
+		public async Task<IActionResult> OnGetAsync(int? id)
+		{
+			if (id == null || _context.FabricBrand == null)
+			{
+				return NotFound();
+			}
 
-            var fabricbrand = await _context.FabricBrand.FirstOrDefaultAsync(m => m.ID == id);
+			var fabricbrand = await _context.FabricBrand.FirstOrDefaultAsync(m => m.ID == id);
 
-            if (fabricbrand == null)
-            {
-                return NotFound();
-            }
-            else 
-            {
-                FabricBrand = fabricbrand;
-            }
-            return Page();
-        }
+			if (fabricbrand == null)
+			{
+				return NotFound();
+			}
+			else
+			{
+				FabricBrand = fabricbrand;
+			}
+			return Page();
+		}
 
-        public async Task<IActionResult> OnPostAsync(int? id)
-        {
-            if (id == null || _context.FabricBrand == null)
-            {
-                return NotFound();
-            }
-            var fabricbrand = await _context.FabricBrand.FindAsync(id);
+		public async Task<IActionResult> OnPostAsync(int? id)
+		{
+			if (id == null || _context.FabricBrand == null)
+			{
+				return NotFound();
+			}
+			var fabricbrand = await _context.FabricBrand.FindAsync(id);
 
-            if (fabricbrand != null)
-            {
-                FabricBrand = fabricbrand;
-                _context.FabricBrand.Remove(FabricBrand);
-                await _context.SaveChangesAsync();
-            }
+			if (fabricbrand != null)
+			{
+				FabricBrand = fabricbrand;
+				_context.FabricBrand.Remove(FabricBrand);
+				await _context.SaveChangesAsync();
+			}
 
-            return RedirectToPage("./Index");
-        }
-    }
+			return RedirectToPage("./Index");
+		}
+	}
 }
