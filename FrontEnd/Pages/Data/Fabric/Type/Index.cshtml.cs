@@ -8,9 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using SewingModels.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FrontEnd.Pages.Data.Fabric.Type
 {
+	[Authorize(Roles = "User,Admin")]
+
 	public class IndexModel : PageModel
 	{
 		private readonly ApiService _apiService;

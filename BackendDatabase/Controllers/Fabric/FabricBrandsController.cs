@@ -36,9 +36,9 @@ namespace BackendDatabase.Controllers.Fabric
 			return await _context.FabricBrand.ToListAsync();
 		}
 
-		// GET: api/FabricBrand/{tableName}/{userName}
-		[HttpGet("{tableName}/{userName}")]
-		public async Task<ActionResult<IEnumerable<FabricBrand>>> GetFabricBrandsByIds(string tableName, string userName)
+		// GET: api/FabricBrand/byIds/{tableName}/{userName}
+		[HttpGet("byIds/{tableName}/{userName}")]
+		public async Task<ActionResult<IEnumerable<FabricBrand>>> GetFabricBrandByIds(string tableName, string userName)
 		{
 			List<int> ids = await _helper.GetRecordIds(tableName, userName);
 
@@ -52,26 +52,25 @@ namespace BackendDatabase.Controllers.Fabric
 			return fabricBrands;
 		}
 
-		// GET: api/FabricBrand/5
-		[HttpGet("{id}")]
-		public async Task<ActionResult<FabricBrand>> GetFabricBrand(int id)
+		// GET: api/FabricBrand/5/{userId}
+		[HttpGet("{id}/{userId}")]
+		public async Task<ActionResult<FabricBrand>> GetFabricBrand(int id, string userId)
 		{
 			if (_context.FabricBrand == null)
-			{
 				return NotFound();
-			}
+
 			var fabricBrand = await _context.FabricBrand.FindAsync(id);
 
 			if (fabricBrand == null)
-			{
 				return NotFound();
-			}
+
+			if (!await _helper.IsOwnedByUser("FabricBrand", id, userId))
+				return Forbid();
 
 			return fabricBrand;
 		}
 
 		// PUT: api/FabricBrand/5
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPut("{id}")]
 		public async Task<IActionResult> PutFabricBrand(int id, FabricBrand fabricBrand)
 		{
@@ -102,7 +101,6 @@ namespace BackendDatabase.Controllers.Fabric
 		}
 
 		// POST: api/FabricBrand
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPost]
 		public async Task<ActionResult<FabricBrand>> PostFabricBrand(FabricBrand fabricBrand, string userId)
 		{
@@ -143,14 +141,13 @@ namespace BackendDatabase.Controllers.Fabric
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteFabricBrand(int id)
 		{
-			if (_context.FabricBrand == null)
-				return NotFound();
-
-
 			var fabricBrand = await _context.FabricBrand.FindAsync(id);
 			if (fabricBrand == null)
 				return NotFound();
 
+			bool associatedFabrics = await _context.Fabric.AnyAsync(f => f.FabricBrandID == id);
+			if (associatedFabrics)
+				return BadRequest();
 
 			using (var transaction = _context.Database.BeginTransaction())
 			{

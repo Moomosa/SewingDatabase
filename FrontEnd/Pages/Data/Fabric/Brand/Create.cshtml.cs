@@ -5,20 +5,23 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using BackendDatabase.Data;
 using SewingModels.Models;
 using System.Security.Claims;
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FrontEnd.Pages.Data.Fabric.Brand
 {
+	[Authorize(Roles = "User,Admin")]
 	public class CreateModel : PageModel
 	{
-		private readonly BackendDatabase.Data.BackendDatabaseContext _context;
 		private readonly ApiService _apiService;
 
-		public CreateModel(BackendDatabase.Data.BackendDatabaseContext context, ApiService apiService)
+		[BindProperty]
+		public FabricBrand FabricBrand { get; set; } = default!;
+
+		public CreateModel(ApiService apiService)
 		{
-			_context = context;
 			_apiService = apiService;
 		}
 
@@ -27,17 +30,11 @@ namespace FrontEnd.Pages.Data.Fabric.Brand
 			return Page();
 		}
 
-		[BindProperty]
-		public FabricBrand FabricBrand { get; set; } = default!;
-
-
-		// To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
 		public async Task<IActionResult> OnPostAsync()
 		{
-			if (!ModelState.IsValid || _context.FabricBrand == null || FabricBrand == null)
-			{
+			if (!ModelState.IsValid || _apiService == null)
 				return Page();
-			}
+
 			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
 			HttpResponseMessage response = await _apiService.PostNewItem(FabricBrand, "/api/FabricBrand", userId);

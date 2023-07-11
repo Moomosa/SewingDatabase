@@ -7,30 +7,29 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using SewingModels.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FrontEnd.Pages.Data.Fabric.Brand
 {
+	[Authorize(Roles = "User,Admin")]
 	public class IndexModel : PageModel
 	{
-		private readonly UserManager<IdentityUser> _userManager;
 		private readonly ApiService _apiService;
-		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public IndexModel(UserManager<IdentityUser> userManager, ApiService apiService, IHttpContextAccessor httpContextAccessor)
+		public IndexModel(ApiService apiService)
 		{
-			_userManager = userManager;
 			_apiService = apiService;
-			_httpContextAccessor = httpContextAccessor;
 		}
 
 		public IList<FabricBrand> FabricBrand { get; set; } = default!;
 
 		public async Task OnGetAsync()
 		{
-			var user = await _userManager.GetUserAsync(User);
-			if (user != null)
-				FabricBrand = await _apiService.GetRecordsForUser<FabricBrand>("FabricBrand", user.UserName);
-
+			var userNameClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			if (userNameClaim != null)
+				FabricBrand = await _apiService.GetRecordsForUser<FabricBrand>("FabricBrand", userNameClaim);
 		}
 	}
 }

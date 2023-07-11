@@ -7,12 +7,18 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SewingModels.Models;
 using System.Security.Claims;
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FrontEnd.Pages.Data.Fabric.Type
 {
+	[Authorize(Roles = "User,Admin")]
 	public class CreateModel : PageModel
 	{
 		private readonly ApiService _apiService;
+
+		[BindProperty]
+		public FabricTypes FabricTypes { get; set; } = default!;
 
 		public CreateModel(ApiService apiService)
 		{
@@ -24,15 +30,11 @@ namespace FrontEnd.Pages.Data.Fabric.Type
 			return Page();
 		}
 
-		[BindProperty]
-		public FabricTypes FabricTypes { get; set; } = default!;
-
 		public async Task<IActionResult> OnPostAsync()
 		{
 			if (!ModelState.IsValid || _apiService == null)
-			{
 				return Page();
-			}
+
 			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
 			HttpResponseMessage response = await _apiService.PostNewItem(FabricTypes, "/api/FabricTypes", userId);

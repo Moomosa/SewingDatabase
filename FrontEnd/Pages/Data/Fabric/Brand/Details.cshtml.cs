@@ -1,42 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using BackendDatabase.Data;
 using SewingModels.Models;
 
 namespace FrontEnd.Pages.Data.Fabric.Brand
 {
-    public class DetailsModel : PageModel
+	[Authorize(Roles = "User,Admin")]
+	public class DetailsModel : PageModel
     {
-        private readonly BackendDatabase.Data.BackendDatabaseContext _context;
-
-        public DetailsModel(BackendDatabase.Data.BackendDatabaseContext context)
+        private readonly ApiService _apiService;
+        public DetailsModel(ApiService apiService)
         {
-            _context = context;
+            _apiService = apiService;
         }
 
       public FabricBrand FabricBrand { get; set; } = default!; 
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.FabricBrand == null)
-            {
+            if (id == null || _apiService == null)            
                 return NotFound();
-            }
 
-            var fabricbrand = await _context.FabricBrand.FirstOrDefaultAsync(m => m.ID == id);
-            if (fabricbrand == null)
-            {
-                return NotFound();
-            }
-            else 
-            {
+			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var fabricbrand = await _apiService.GetSingleItem<FabricBrand>(id.Value, userId);
+            if (fabricbrand == null)            
+                return NotFound();            
+            else             
                 FabricBrand = fabricbrand;
-            }
+            
             return Page();
         }
     }

@@ -7,37 +7,38 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BackendDatabase.Data;
 using SewingModels.Models;
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace FrontEnd.Pages.Data.Fabric.Fabric
 {
-    public class DetailsModel : PageModel
-    {
-        private readonly BackendDatabase.Data.BackendDatabaseContext _context;
+	[Authorize(Roles = "User,Admin")]
+	public class DetailsModel : PageModel
+	{
+		private readonly ApiService _apiService;
 
-        public DetailsModel(BackendDatabase.Data.BackendDatabaseContext context)
-        {
-            _context = context;
-        }
+		public DetailsModel(ApiService apiService)
+		{
+			_apiService = apiService;
+		}
 
-      public SewingModels.Models.Fabric Fabric { get; set; } = default!; 
+		public SewingModels.Models.Fabric Fabric { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null || _context.Fabric == null)
-            {
-                return NotFound();
-            }
+		public async Task<IActionResult> OnGetAsync(int? id)
+		{
+			if (id == null || _apiService == null)
+				return NotFound();
 
-            var fabric = await _context.Fabric.FirstOrDefaultAsync(m => m.ID == id);
-            if (fabric == null)
-            {
-                return NotFound();
-            }
-            else 
-            {
-                Fabric = fabric;
-            }
-            return Page();
-        }
-    }
+			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var fabric = await _apiService.GetSingleItem<SewingModels.Models.Fabric>(id.Value, userId);
+			if (fabric == null)
+				return NotFound();
+			else
+				Fabric = fabric;
+
+			return Page();
+		}
+	}
 }

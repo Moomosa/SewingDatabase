@@ -7,57 +7,50 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BackendDatabase.Data;
 using SewingModels.Models;
+using System.Security.Claims;
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FrontEnd.Pages.Data.Fabric.Fabric
 {
-    public class DeleteModel : PageModel
-    {
-        private readonly BackendDatabase.Data.BackendDatabaseContext _context;
+	[Authorize(Roles = "User,Admin")]
+	public class DeleteModel : PageModel
+	{
+		private readonly ApiService _apiService;
 
-        public DeleteModel(BackendDatabase.Data.BackendDatabaseContext context)
-        {
-            _context = context;
-        }
+		public DeleteModel(ApiService apiService)
+		{
+			_apiService = apiService;
+		}
 
-        [BindProperty]
-      public SewingModels.Models.Fabric Fabric { get; set; } = default!;
+		[BindProperty]
+		public SewingModels.Models.Fabric Fabric { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null || _context.Fabric == null)
-            {
-                return NotFound();
-            }
+		public async Task<IActionResult> OnGetAsync(int? id)
+		{
+			if (id == null)
+				return NotFound();
 
-            var fabric = await _context.Fabric.FirstOrDefaultAsync(m => m.ID == id);
+			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (fabric == null)
-            {
-                return NotFound();
-            }
-            else 
-            {
-                Fabric = fabric;
-            }
-            return Page();
-        }
+			Fabric = await _apiService.GetSingleItem<SewingModels.Models.Fabric>(id.Value, userId);
 
-        public async Task<IActionResult> OnPostAsync(int? id)
-        {
-            if (id == null || _context.Fabric == null)
-            {
-                return NotFound();
-            }
-            var fabric = await _context.Fabric.FindAsync(id);
+			if (Fabric == null)
+				return NotFound();
 
-            if (fabric != null)
-            {
-                Fabric = fabric;
-                _context.Fabric.Remove(Fabric);
-                await _context.SaveChangesAsync();
-            }
+			return Page();
+		}
 
-            return RedirectToPage("./Index");
-        }
-    }
+		public async Task<IActionResult> OnPostAsync(int? id)
+		{
+			if (id == null || Fabric == null)
+				return NotFound();
+
+			bool deleted = await _apiService.DeleteItem<SewingModels.Models.Fabric>(id.Value);
+			if (!deleted)
+				return NotFound();			
+
+			return RedirectToPage("./Index");
+		}
+	}
 }

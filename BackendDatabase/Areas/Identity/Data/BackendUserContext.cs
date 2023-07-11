@@ -22,10 +22,6 @@ public class BackendUserContext : IdentityDbContext<IdentityUser, IdentityRole, 
 		string connectionString = configuration.GetConnectionString("BackendUserContextConnection");
 
 		optionsBuilder.UseSqlServer(connectionString);
-
-
-		//base.OnConfiguring(optionsBuilder);
-		//optionsBuilder.UseSqlServer("Server=MOOMOSASPLAYGRO\\SQLEXPRESS;Database=BackendUserDatabase;Trusted_Connection=True;");
 	}	
 
 	protected override void OnModelCreating(ModelBuilder builder)

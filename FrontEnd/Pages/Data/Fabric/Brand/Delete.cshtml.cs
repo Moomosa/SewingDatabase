@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using BackendDatabase.Data;
 using SewingModels.Models;
 
 namespace FrontEnd.Pages.Data.Fabric.Brand
 {
+	[Authorize(Roles = "User,Admin")]
 	public class DeleteModel : PageModel
 	{
-		private readonly BackendDatabase.Data.BackendDatabaseContext _context;
 		private readonly ApiService _apiService;
 
-		public DeleteModel(BackendDatabase.Data.BackendDatabaseContext context, ApiService apiService)
+		public DeleteModel(ApiService apiService)
 		{
-			_context = context;
 			_apiService = apiService;
 		}
 
@@ -26,37 +27,30 @@ namespace FrontEnd.Pages.Data.Fabric.Brand
 
 		public async Task<IActionResult> OnGetAsync(int? id)
 		{
-			if (id == null || _context.FabricBrand == null)
-			{
+			if (id == null)			
 				return NotFound();
-			}
 
-			var fabricbrand = await _context.FabricBrand.FirstOrDefaultAsync(m => m.ID == id);
+			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			if (fabricbrand == null)
-			{
+			FabricBrand = await _apiService.GetSingleItem<FabricBrand>(id.Value, userId);
+
+			if (FabricBrand == null)			
 				return NotFound();
-			}
-			else
-			{
-				FabricBrand = fabricbrand;
-			}
+			
 			return Page();
 		}
 
 		public async Task<IActionResult> OnPostAsync(int? id)
 		{
-			if (id == null || _context.FabricBrand == null)
-			{
+			if (id == null || FabricBrand == null)			
 				return NotFound();
-			}
-			var fabricbrand = await _context.FabricBrand.FindAsync(id);
 
-			if (fabricbrand != null)
+			bool deleted = await _apiService.DeleteItem<FabricBrand>(id.Value);
+			if (!deleted)
 			{
-				FabricBrand = fabricbrand;
-				_context.FabricBrand.Remove(FabricBrand);
-				await _context.SaveChangesAsync();
+				//This message is sent to the page as the error message
+				TempData["DeleteFailureMessage"] = "Deletion is not allowed because it is used in a Fabric.";
+				return RedirectToPage("Delete", new { id });
 			}
 
 			return RedirectToPage("./Index");

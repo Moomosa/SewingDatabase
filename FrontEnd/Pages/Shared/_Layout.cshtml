@@ -25,8 +25,17 @@
 						@if (User.IsInRole("User"))
 						{
 							<li class="nav-item">
-								<a class="nav=link text-dark" asp-area="" asp-page="/Data/Fabric/Type/Index">Big Test</a>
+								<a class="nav=link text-dark" asp-area="" asp-page="/Data/Fabric/Fabric/Index">Fabric</a>
 							</li>
+							<p>|</p>
+							<li class="nav-item">
+								<a class="nav=link text-dark" asp-area="" asp-page="/Data/Fabric/Brand/Index">Brand</a>
+							</li>
+							<p>|</p>
+							<li class="nav-item">
+								<a class="nav=link text-dark" asp-area="" asp-page="/Data/Fabric/Type/Index">Type</a>
+							</li>
+
 						}
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>

@@ -21,5 +21,12 @@ namespace BackendDatabase.Data
 			return recordIds;
 		}
 
+		public async Task<bool> IsOwnedByUser(string tableName, int id, string userId)
+		{
+			return await _context.UserMapping
+				.AnyAsync(um => um.TableName == tableName && um.RecordId == id && um.UserId == userId);				
+		}
+
+
 	}
 }

@@ -9,7 +9,6 @@ using BackendDatabase.Data;
 using SewingModels.Models;
 using System.Security.Claims;
 using ModelLibrary.Models.Database;
-using BackendDatabase.Controllers.Database;
 
 namespace BackendDatabase.Controllers.Fabric
 {
@@ -30,15 +29,14 @@ namespace BackendDatabase.Controllers.Fabric
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<FabricTypes>>> GetFabricTypes()
 		{
-			if (_context.FabricTypes == null)
-			{
+			if (_context.FabricTypes == null)			
 				return NotFound();
-			}
+			
 			return await _context.FabricTypes.ToListAsync();
 		}
 
-		// GET: api/FabricTypes/{tableName}/{userName}
-		[HttpGet("{tableName}/{userName}")]
+		// GET: api/FabricTypes/byIds/{tableName}/{userName}
+		[HttpGet("byIds/{tableName}/{userName}")]
 		public async Task<ActionResult<IEnumerable<FabricTypes>>> GetFabricTypesByIds(string tableName, string userName)
 		{
 			List<int> ids = await _helper.GetRecordIds(tableName, userName);
@@ -53,9 +51,9 @@ namespace BackendDatabase.Controllers.Fabric
 			return fabricTypes;
 		}
 
-		// GET: api/FabricTypes/5
-		[HttpGet("{id}")]
-		public async Task<ActionResult<FabricTypes>> GetFabricTypes(int id)
+		// GET: api/FabricTypes/5/{userId}
+		[HttpGet("{id}/{userId}")]
+		public async Task<ActionResult<FabricTypes>> GetFabricTypes(int id, string userId)
 		{
 			if (_context.FabricTypes == null)
 			{
@@ -64,15 +62,16 @@ namespace BackendDatabase.Controllers.Fabric
 			var fabricTypes = await _context.FabricTypes.FindAsync(id);
 
 			if (fabricTypes == null)
-			{
 				return NotFound();
-			}
+
+			//This is a check to see if the item belongs to the logged in user
+			if (!await _helper.IsOwnedByUser("FabricTypes", id, userId))
+				return Forbid();
 
 			return fabricTypes;
 		}
 
 		// PUT: api/FabricTypes/5
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPut("{id}")]
 		public async Task<IActionResult> PutFabricTypes(int id, FabricTypes fabricTypes)
 		{
@@ -103,7 +102,6 @@ namespace BackendDatabase.Controllers.Fabric
 		}
 
 		// POST: api/FabricTypes
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPost]
 		public async Task<ActionResult<FabricTypes>> PostFabricTypes(FabricTypes fabricTypes, string userId)
 		{
@@ -113,8 +111,8 @@ namespace BackendDatabase.Controllers.Fabric
 				{
 					if (_context.FabricTypes == null)
 						return Problem("Entity set 'BackendDatabaseContext.FabricTypes' is null.");
-					_context.FabricTypes.Add(fabricTypes);
 
+					_context.FabricTypes.Add(fabricTypes);
 					await _context.SaveChangesAsync();
 
 					var userMapping = new UserMapping
@@ -145,15 +143,15 @@ namespace BackendDatabase.Controllers.Fabric
 		public async Task<IActionResult> DeleteFabricTypes(int id)
 		{
 			if (_context.FabricTypes == null)
-			{
 				return NotFound();
-			}
 
 			var fabricTypes = await _context.FabricTypes.FindAsync(id);
 			if (fabricTypes == null)
-			{
 				return NotFound();
-			}
+
+			bool associatedFabrics = _context.Fabric.Any(f => f.FabricTypeID == id);
+			if (associatedFabrics)
+				return BadRequest();
 
 			using (var transaction = _context.Database.BeginTransaction())
 			{

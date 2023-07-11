@@ -7,28 +7,29 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BackendDatabase.Data;
 using SewingModels.Models;
+using System.Security.Claims;
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FrontEnd.Pages.Data.Fabric.Fabric
 {
-    public class IndexModel : PageModel
+	[Authorize(Roles = "User,Admin")]
+	public class IndexModel : PageModel
     {
-        private readonly BackendDatabase.Data.BackendDatabaseContext _context;
+        private readonly ApiService _apiService;
 
-        public IndexModel(BackendDatabase.Data.BackendDatabaseContext context)
+        public IndexModel(ApiService apiService)
         {
-            _context = context;
+            _apiService = apiService;
         }
 
         public IList<SewingModels.Models.Fabric> Fabric { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            if (_context.Fabric != null)
-            {
-                Fabric = await _context.Fabric
-                .Include(f => f.FabricBrand)
-                .Include(f => f.FabricType).ToListAsync();
-            }
+            var userNameClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userNameClaim != null)
+                Fabric = await _apiService.GetRecordsForUser<SewingModels.Models.Fabric>("Fabric", userNameClaim);
         }
     }
 }

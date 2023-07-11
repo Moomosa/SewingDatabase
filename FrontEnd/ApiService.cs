@@ -23,7 +23,7 @@ namespace FrontEnd
 
 		public async Task<List<T>> GetRecordsForUser<T>(string tableName, string userName) where T : class
 		{
-			HttpResponseMessage recordResponse = await _httpClient.GetAsync($"/api/{tableName}/{tableName}/{userName}");
+			HttpResponseMessage recordResponse = await _httpClient.GetAsync($"/api/{tableName}/byIds/{tableName}/{userName}");
 
 			if (recordResponse.IsSuccessStatusCode)
 			{
@@ -57,12 +57,13 @@ namespace FrontEnd
 			string tableName = typeof(T).Name;
 
 			HttpResponseMessage response = await _httpClient.DeleteAsync($"/api/{tableName}/{id}");
+
 			return response.IsSuccessStatusCode;
 		}
 
-		public async Task<T> GetSingleItem<T>(int id) where T : class
+		public async Task<T> GetSingleItem<T>(int id, string userId) where T : class
 		{
-			HttpResponseMessage response = await _httpClient.GetAsync($"/api/{typeof(T).Name}/{id}");
+			HttpResponseMessage response = await _httpClient.GetAsync($"/api/{typeof(T).Name}/{id}/{userId}");
 
 			if (response.IsSuccessStatusCode)
 			{

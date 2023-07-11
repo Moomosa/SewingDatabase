@@ -8,72 +8,89 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BackendDatabase.Data;
 using SewingModels.Models;
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Newtonsoft.Json;
 
 namespace FrontEnd.Pages.Data.Fabric.Fabric
 {
-    public class EditModel : PageModel
-    {
-        private readonly BackendDatabase.Data.BackendDatabaseContext _context;
+	[Authorize(Roles = "User,Admin")]
+	public class EditModel : PageModel
+	{
+		private readonly ApiService _apiService;
 
-        public EditModel(BackendDatabase.Data.BackendDatabaseContext context)
-        {
-            _context = context;
-        }
+		public EditModel(ApiService apiService)
+		{
+			_apiService = apiService;
+		}
 
-        [BindProperty]
-        public SewingModels.Models.Fabric Fabric { get; set; } = default!;
+		[BindProperty]
+		public SewingModels.Models.Fabric Fabric { get; set; } = default!;
+		[BindProperty]
+		public List<FabricBrand> FabricBrands { get; set; }
+		[BindProperty]
+		public List<FabricTypes> FabricTypes { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null || _context.Fabric == null)
-            {
-                return NotFound();
-            }
+		public async Task<IActionResult> OnGetAsync(int? id)
+		{
+			if (id == null || _apiService == null)
+				return NotFound();
 
-            var fabric =  await _context.Fabric.FirstOrDefaultAsync(m => m.ID == id);
-            if (fabric == null)
-            {
-                return NotFound();
-            }
-            Fabric = fabric;
-           ViewData["FabricBrandID"] = new SelectList(_context.FabricBrand, "ID", "FullName");
-           ViewData["FabricTypeID"] = new SelectList(_context.FabricTypes, "ID", "Type");
-            return Page();
-        }
+			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+			var fabric = await _apiService.GetSingleItem<SewingModels.Models.Fabric>(id.Value, userId);
+			if (fabric == null)
+				return NotFound();
 
-            _context.Attach(Fabric).State = EntityState.Modified;
+			Fabric = fabric;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FabricExists(Fabric.ID))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+			//Filling the lists with data from the DB according to the user
+			FabricBrands = await _apiService.GetRecordsForUser<FabricBrand>("FabricBrand", userId);
+			FabricTypes = await _apiService.GetRecordsForUser<FabricTypes>("FabricTypes", userId);
 
-            return RedirectToPage("./Index");
-        }
+			//Setting the Lists to Session states for use in OnPost
+			HttpContext.Session.SetString("BrandData", JsonConvert.SerializeObject(FabricBrands));
+			HttpContext.Session.SetString("TypeData", JsonConvert.SerializeObject(FabricTypes));
 
-        private bool FabricExists(int id)
-        {
-          return (_context.Fabric?.Any(e => e.ID == id)).GetValueOrDefault();
-        }
-    }
+			ViewData["FabricBrandID"] = new SelectList(FabricBrands, "ID", "FullName");
+			ViewData["FabricTypeID"] = new SelectList(FabricTypes, "ID", "Type");
+			return Page();
+		}
+
+		public async Task<IActionResult> OnPostAsync()
+		{
+			//This is pulling the Lists from Session states
+			var serializedBrands = HttpContext.Session.GetString("BrandData");
+			FabricBrands = JsonConvert.DeserializeObject<List<FabricBrand>>(serializedBrands);
+
+			var serializedTypes = HttpContext.Session.GetString("TypeData");
+			FabricTypes = JsonConvert.DeserializeObject<List<FabricTypes>>(serializedTypes);
+
+			//So we can assign the values properly without another pull from DB
+			Fabric.FabricBrand = FabricBrands.FirstOrDefault(fb => fb.ID == Fabric.FabricBrandID);
+			Fabric.FabricType = FabricTypes.FirstOrDefault(ft => ft.ID == Fabric.FabricTypeID);
+
+			//If we don't remove these, the ModelState becomes invalid even though properly configured
+			ModelState.Remove("Fabric.FabricBrand");
+			ModelState.Remove("Fabric.FabricType");
+
+			if (!ModelState.IsValid)
+				return Page();
+
+			try
+			{
+				bool updated = await _apiService.UpdateItem<SewingModels.Models.Fabric>(Fabric.ID, Fabric);
+				if (!updated)
+					return NotFound();
+
+				return RedirectToPage("./Index");
+			}
+			catch
+			{
+				return StatusCode(500, "An error occured while updating the item.");
+			}
+		}
+
+	}
 }

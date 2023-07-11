@@ -2,7 +2,7 @@
 @model FrontEnd.Pages.Data.Fabric.Fabric.CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+	ViewData["Title"] = "Create";
 }
 
 <h1>Create</h1>
@@ -10,53 +10,69 @@
 <h4>Fabric</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Fabric.FabricTypeID" class="control-label"></label>
-                <select asp-for="Fabric.FabricTypeID" class ="form-control" asp-items="ViewBag.FabricTypeID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Fabric.FabricBrandID" class="control-label"></label>
-                <select asp-for="Fabric.FabricBrandID" class ="form-control" asp-items="ViewBag.FabricBrandID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Fabric.PurchasePrice" class="control-label"></label>
-                <input asp-for="Fabric.PurchasePrice" class="form-control" />
-                <span asp-validation-for="Fabric.PurchasePrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Fabric.Value" class="control-label"></label>
-                <input asp-for="Fabric.Value" class="form-control" />
-                <span asp-validation-for="Fabric.Value" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Fabric.SolidOrPrint" /> @Html.DisplayNameFor(model => model.Fabric.SolidOrPrint)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="Fabric.Appearance" class="control-label"></label>
-                <input asp-for="Fabric.Appearance" class="form-control" />
-                <span asp-validation-for="Fabric.Appearance" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Fabric.Amount" class="control-label"></label>
-                <input asp-for="Fabric.Amount" class="form-control" />
-                <span asp-validation-for="Fabric.Amount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+	<div class="col-md-4">
+		<form method="post">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="Fabric.FabricTypeID" class="control-label"></label>
+				<select asp-for="Fabric.FabricTypeID" class="form-control form-select">
+					<option value=""></option>
+					@foreach (var fabricType in Model.FabricTypes)
+					{
+						<option value="@fabricType.ID">@fabricType.Type</option>
+					}
+				</select>
+				<span asp-validation-for="Fabric.FabricType.ID" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Fabric.FabricBrandID" class="control-label"></label>
+				<select asp-for="Fabric.FabricBrandID" class="form-control form-select">
+					<option value=""></option>
+					@foreach (var fabricBrand in Model.FabricBrands)
+					{
+						<option value="@fabricBrand.ID">@fabricBrand.FullName</option>
+					}
+				</select>
+				<span asp-validation-for="Fabric.FabricBrand.ID" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Fabric.PurchasePrice" class="control-label"></label>
+				<input asp-for="Fabric.PurchasePrice" class="form-control" />
+				<span asp-validation-for="Fabric.PurchasePrice" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Fabric.Value" class="control-label"></label>
+				<input asp-for="Fabric.Value" class="form-control" />
+				<span asp-validation-for="Fabric.Value" class="text-danger"></span>
+			</div>
+			<div class="form-group form-check">
+				<label class="form-check-label">
+					<input class="form-check-input" asp-for="Fabric.SolidOrPrint" /> @Html.DisplayNameFor(model => model.Fabric.SolidOrPrint)
+				</label>
+			</div>
+			<div class="form-group">
+				<label asp-for="Fabric.Appearance" class="control-label"></label>
+				<input asp-for="Fabric.Appearance" class="form-control" />
+				<span asp-validation-for="Fabric.Appearance" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Fabric.Amount" class="control-label"></label>
+				<input asp-for="Fabric.Amount" class="form-control" />
+				<span asp-validation-for="Fabric.Amount" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Create" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
 </div>
 
 <div>
-    <a asp-page="Index">Back to List</a>
+	<a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 }
