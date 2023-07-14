@@ -45,8 +45,8 @@ namespace BackendDatabase.Controllers.Fabric
 			return fabrics;
 		}
 
-		// GET: api/byIds/Fabric/{tableName}/{userName}
-		[HttpGet("byIds/{tableName}/{userName}")]
+        // GET: api/Fabric/byIds/{tableName}/{userName}
+        [HttpGet("byIds/{tableName}/{userName}")]
 		public async Task<ActionResult<IEnumerable<SewingModels.Models.Fabric>>> GetFabricByIds(string tableName, string userName)
 		{
 			List<int> ids = await _helper.GetRecordIds(tableName, userName);

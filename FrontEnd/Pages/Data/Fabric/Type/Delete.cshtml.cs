@@ -15,45 +15,45 @@ namespace FrontEnd.Pages.Data.Fabric.Type
 {
 	[Authorize(Roles = "User,Admin")]
 	public class DeleteModel : PageModel
-    {
-        private readonly ApiService _apiService;
+	{
+		private readonly ApiService _apiService;
 
-        public DeleteModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
+		public DeleteModel(ApiService apiService)
+		{
+			_apiService = apiService;
+		}
 
-        [BindProperty]
-        public FabricTypes FabricTypes { get; set; } = default!;
+		[BindProperty]
+		public FabricTypes FabricTypes { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null)
-                return NotFound();
+		public async Task<IActionResult> OnGetAsync(int? id)
+		{
+			if (id == null)
+				return NotFound();
 
 			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			FabricTypes = await _apiService.GetSingleItem<FabricTypes>(id.Value,userId);
+			FabricTypes = await _apiService.GetSingleItem<FabricTypes>(id.Value, userId);
 
-            if (FabricTypes == null)
-                return NotFound();
+			if (FabricTypes == null)
+				return NotFound();
 
-            return Page();
-        }
+			return Page();
+		}
 
-        public async Task<IActionResult> OnPostAsync(int? id)
-        {
-            if (id == null || FabricTypes == null)
-                return NotFound();
+		public async Task<IActionResult> OnPostAsync(int? id)
+		{
+			if (id == null || FabricTypes == null)
+				return NotFound();
 
-            bool deleted = await _apiService.DeleteItem<FabricTypes>(id.Value);
-            if (!deleted)
-            {
-                TempData["DeleteFailureMessage"] = "Deletion is not allowed because it is used in a Fabric.";
-                return RedirectToPage("Delete", new { id });
-            }
+			bool deleted = await _apiService.DeleteItem<FabricTypes>(id.Value);
+			if (!deleted)
+			{
+				TempData["DeleteFailureMessage"] = "Deletion is not allowed because it is used in a Fabric.";
+				return RedirectToPage("Delete", new { id });
+			}
 
-            return RedirectToPage("./Index");
-        }
-    }
+			return RedirectToPage("./Index");
+		}
+	}
 }

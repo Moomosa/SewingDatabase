@@ -31,7 +31,7 @@ namespace FrontEnd.Pages.Data.Fabric.Type
 			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
 			var fabrictypes = await _apiService.GetSingleItem<FabricTypes>(id.Value, userId);
-			if (fabrictypes == null)	//TODO: Fix to not be NotFound, something like "Oops, this doesn't exist"
+			if (fabrictypes == null)    //TODO: Fix to not be NotFound, something like "Oops, this doesn't exist"
 				return NotFound();
 			else
 				FabricTypes = fabrictypes;

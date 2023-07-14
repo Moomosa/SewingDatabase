@@ -40,9 +40,7 @@ namespace FrontEnd.Pages.Data.Fabric.Type
 			HttpResponseMessage response = await _apiService.PostNewItem(FabricTypes, "/api/FabricTypes", userId);
 
 			if (response.IsSuccessStatusCode)
-			{
 				return RedirectToPage("./Index");
-			}
 			else
 			{
 				ModelState.AddModelError("", "Failed to create item");

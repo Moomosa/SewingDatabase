@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BackendDatabase.Data;
 using SewingModels.Models;
+using ModelLibrary.Models.Database;
 
 namespace BackendDatabase.Controllers.Misc
 {
@@ -15,43 +16,59 @@ namespace BackendDatabase.Controllers.Misc
     public class MiscItemTypesController : ControllerBase
     {
         private readonly BackendDatabaseContext _context;
+        private readonly Helper _helper;
 
-        public MiscItemTypesController(BackendDatabaseContext context)
+        public MiscItemTypesController(BackendDatabaseContext context, Helper helper)
         {
             _context = context;
+            _helper = helper;
         }
 
-        // GET: api/MiscItemTypes
+        // GET: api/MiscItemType
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MiscItemType>>> GetMiscItemType()
         {
-          if (_context.MiscItemType == null)
-          {
-              return NotFound();
-          }
+            if (_context.MiscItemType == null)
+                return NotFound();
+
             return await _context.MiscItemType.ToListAsync();
         }
 
-        // GET: api/MiscItemTypes/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<MiscItemType>> GetMiscItemType(int id)
+        // GET: api/MiscItemType/byIds/{tableName}/{userName}
+        [HttpGet("byIds/{tableName}/{userName}")]
+        public async Task<ActionResult<IEnumerable<MiscItemType>>> GetItemTypesByIds(string tableName, string userName)
         {
-          if (_context.MiscItemType == null)
-          {
-              return NotFound();
-          }
+            List<int> ids = await _helper.GetRecordIds(tableName, userName);
+
+            var itemTypes = await _context.MiscItemType
+                .Where(it => ids.Contains(it.ID))
+                .ToListAsync();
+
+            if (itemTypes == null)
+                return NotFound();
+
+            return itemTypes;
+        }
+
+        // GET: api/MiscItemType/5/{userId}
+        [HttpGet("{id}/{userId}")]
+        public async Task<ActionResult<MiscItemType>> GetMiscItemType(int id, string userId)
+        {
+            if (_context.MiscItemType == null)
+                return NotFound();
+
             var miscItemType = await _context.MiscItemType.FindAsync(id);
 
             if (miscItemType == null)
-            {
                 return NotFound();
-            }
+
+            if (!await _helper.IsOwnedByUser("MiscItemType", id, userId))
+                return Forbid();
 
             return miscItemType;
         }
 
         // PUT: api/MiscItemTypes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMiscItemType(int id, MiscItemType miscItemType)
         {
@@ -82,18 +99,40 @@ namespace BackendDatabase.Controllers.Misc
         }
 
         // POST: api/MiscItemTypes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<MiscItemType>> PostMiscItemType(MiscItemType miscItemType)
+        public async Task<ActionResult<MiscItemType>> PostMiscItemType(MiscItemType miscItemType, string userId)
         {
-          if (_context.MiscItemType == null)
-          {
-              return Problem("Entity set 'BackendDatabaseContext.MiscItemType'  is null.");
-          }
-            _context.MiscItemType.Add(miscItemType);
-            await _context.SaveChangesAsync();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (_context.MiscItemType == null)
+                        return Problem("Entity set 'BackendDatabaseContext.MiscItemType'  is null.");
 
-            return CreatedAtAction("GetMiscItemType", new { id = miscItemType.ID }, miscItemType);
+                    _context.MiscItemType.Add(miscItemType);
+                    await _context.SaveChangesAsync();
+
+                    var userMapping = new UserMapping
+                    {
+                        UserId = userId,
+                        TableName = "MiscItemType",
+                        RecordId = miscItemType.ID
+                    };
+
+                    _context.UserMapping.Add(userMapping);
+
+                    await _context.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+
+                    return CreatedAtAction("GetMiscItemType", new { id = miscItemType.ID }, miscItemType);
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
         }
 
         // DELETE: api/MiscItemTypes/5
@@ -101,19 +140,40 @@ namespace BackendDatabase.Controllers.Misc
         public async Task<IActionResult> DeleteMiscItemType(int id)
         {
             if (_context.MiscItemType == null)
-            {
                 return NotFound();
-            }
+
             var miscItemType = await _context.MiscItemType.FindAsync(id);
             if (miscItemType == null)
-            {
                 return NotFound();
+
+            bool associatedItems = _context.MiscObjects.Any(i => i.ItemTypeID == id);
+            if (associatedItems)
+                return BadRequest();
+
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _context.MiscItemType.Remove(miscItemType);
+                    await _context.SaveChangesAsync();
+
+                    var userMapping = await _context.UserMapping.FirstOrDefaultAsync(um => um.TableName == "MiscItemType" && um.RecordId == id);
+                    if (userMapping != null)
+                    {
+                        _context.UserMapping.Remove(userMapping);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    await transaction.CommitAsync();
+
+                    return NoContent();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
-
-            _context.MiscItemType.Remove(miscItemType);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
         private bool MiscItemTypeExists(int id)

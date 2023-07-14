@@ -18,7 +18,7 @@ namespace SewingModels.Models
         public string? AdditionalNotes { get; set; }
         public string? Brand { get; set; }
         public string? SpecificInfo { get; set; }
-        public float Value { get; set; }
+        public float? Value { get; set; }
         public float? PurchasePrice { get; set; }
     }
 }

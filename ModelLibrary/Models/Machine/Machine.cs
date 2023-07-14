@@ -13,7 +13,10 @@ namespace SewingModels.Models
         public int ID { get; set; }
         public string Brand { get; set; }
         public string Model { get; set; }
+        [DataType(DataType.Date)]
         public DateTime PurchaseDate { get; set; }
-        public float PurchasePrice { get; set; }
+        public float? PurchasePrice { get; set; }
+		[DataType(DataType.Date)]
+		public DateTime LastServiced { get; set; }
     }
 }

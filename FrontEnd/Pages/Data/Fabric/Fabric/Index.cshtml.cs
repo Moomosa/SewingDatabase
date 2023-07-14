@@ -27,9 +27,9 @@ namespace FrontEnd.Pages.Data.Fabric.Fabric
 
         public async Task OnGetAsync()
         {
-            var userNameClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userNameClaim != null)
-                Fabric = await _apiService.GetRecordsForUser<SewingModels.Models.Fabric>("Fabric", userNameClaim);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId != null)
+                Fabric = await _apiService.GetRecordsForUser<SewingModels.Models.Fabric>("Fabric", userId);
         }
     }
 }

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BackendDatabase.Data;
 using SewingModels.Models;
+using Microsoft.AspNetCore.Identity;
+using ModelLibrary.Models.Database;
 
 namespace BackendDatabase.Controllers.Elastic
 {
@@ -15,43 +17,69 @@ namespace BackendDatabase.Controllers.Elastic
     public class ElasticsController : ControllerBase
     {
         private readonly BackendDatabaseContext _context;
+        private readonly Helper _helper;
 
-        public ElasticsController(BackendDatabaseContext context)
+        public ElasticsController(BackendDatabaseContext context, Helper helper)
         {
             _context = context;
+            _helper = helper;
         }
 
         // GET: api/Elastic
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SewingModels.Models.Elastic>>> GetElastic()
         {
-          if (_context.Elastic == null)
-          {
-              return NotFound();
-          }
-            return await _context.Elastic.ToListAsync();
+            if (_context.Elastic == null)
+                return NotFound();
+
+            var elastics = await _context.Elastic
+                .Include(e => e.ElasticType)
+                .ToListAsync();
+
+            if (elastics == null)
+                return NotFound();
+
+            return elastics;
         }
 
-        // GET: api/Elastics/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<SewingModels.Models.Elastic>> GetElastic(int id)
+        // GET: api/byIds/Elastic/{tableName}/{userName}
+        [HttpGet("byIds/{tableName}/{userName}")]
+        public async Task<ActionResult<IEnumerable<SewingModels.Models.Elastic>>> GetElasticByIds(string tableName, string userName)
         {
-          if (_context.Elastic == null)
-          {
-              return NotFound();
-          }
-            var elastic = await _context.Elastic.FindAsync(id);
+            List<int> ids = await _helper.GetRecordIds(tableName, userName);
+
+            var elastics = await _context.Elastic
+                .Include(e => e.ElasticType)
+                .Where(e => ids.Contains(e.ID))
+                .ToListAsync();
+
+            if (elastics == null)
+                return NotFound();
+
+            return elastics;
+        }
+
+        // GET: api/Elastics/5/{userId}
+        [HttpGet("{id}/{userId}")]
+        public async Task<ActionResult<SewingModels.Models.Elastic>> GetElastic(int id, string userId)
+        {
+            if (_context.Elastic == null)
+                return NotFound();
+
+            var elastic = await _context.Elastic
+                .Include(e => e.ElasticType)
+                .FirstOrDefaultAsync(e => e.ID == id);
 
             if (elastic == null)
-            {
                 return NotFound();
-            }
+
+            if (!await _helper.IsOwnedByUser("Elastic", id, userId))
+                return Forbid();
 
             return elastic;
         }
 
         // PUT: api/Elastics/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutElastic(int id, SewingModels.Models.Elastic elastic)
         {
@@ -82,38 +110,75 @@ namespace BackendDatabase.Controllers.Elastic
         }
 
         // POST: api/Elastics
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<SewingModels.Models.Elastic>> PostElastic(SewingModels.Models.Elastic elastic)
+        public async Task<ActionResult<SewingModels.Models.Elastic>> PostElastic(SewingModels.Models.Elastic elastic, string userId)
         {
-          if (_context.Elastic == null)
-          {
-              return Problem("Entity set 'BackendDatabaseContext.Elastic'  is null.");
-          }
-            _context.Elastic.Add(elastic);
-            await _context.SaveChangesAsync();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (_context.Elastic == null)
+                        return Problem("Entity set 'BackendDatabaseContext.Elastic'  is null.");
 
-            return CreatedAtAction("GetElastic", new { id = elastic.ID }, elastic);
+                    elastic.ElasticType = _context.ElasticTypes.FirstOrDefault(et => et.ID == elastic.ElasticTypeID);
+
+                    _context.Elastic.Add(elastic);
+                    await _context.SaveChangesAsync();
+
+                    var userMapping = new UserMapping
+                    {
+                        UserId = userId,
+                        TableName = "Elastic",
+                        RecordId = elastic.ID
+                    };
+
+                    _context.UserMapping.Add(userMapping);
+                    await _context.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+
+                    return CreatedAtAction("GetElastic", new { id = elastic.ID }, elastic);
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
         }
 
         // DELETE: api/Elastics/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteElastic(int id)
         {
-            if (_context.Elastic == null)
-            {
-                return NotFound();
-            }
             var elastic = await _context.Elastic.FindAsync(id);
             if (elastic == null)
-            {
                 return NotFound();
+
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _context.Elastic.Remove(elastic);
+                    await _context.SaveChangesAsync();
+
+                    var userMapping = await _context.UserMapping.FirstOrDefaultAsync(um => um.TableName == "Elastic" && um.RecordId == id);
+                    if(userMapping != null)
+                    {
+                        _context.UserMapping.Remove(userMapping);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    await transaction.CommitAsync();
+
+                    return NoContent();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
-
-            _context.Elastic.Remove(elastic);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
         private bool ElasticExists(int id)

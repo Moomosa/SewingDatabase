@@ -19,7 +19,6 @@ namespace SewingModels.Models
         public ThreadColorFamily ColorFamily { get; set; }
         public int ColorID { get; set; }
         public ThreadColor Color { get; set; }
-        public int Quantity { get; set; }
-        public bool MaxiLockStretch { get; set; }
+        public int Quantity { get; set; }        
     }
 }

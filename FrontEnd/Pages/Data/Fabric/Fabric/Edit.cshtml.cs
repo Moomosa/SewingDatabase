@@ -50,8 +50,8 @@ namespace FrontEnd.Pages.Data.Fabric.Fabric
 			FabricTypes = await _apiService.GetRecordsForUser<FabricTypes>("FabricTypes", userId);
 
 			//Setting the Lists to Session states for use in OnPost
-			HttpContext.Session.SetString("BrandData", JsonConvert.SerializeObject(FabricBrands));
-			HttpContext.Session.SetString("TypeData", JsonConvert.SerializeObject(FabricTypes));
+			HttpContext.Session.SetString("FabricBrandData", JsonConvert.SerializeObject(FabricBrands));
+			HttpContext.Session.SetString("FabricTypeData", JsonConvert.SerializeObject(FabricTypes));
 
 			ViewData["FabricBrandID"] = new SelectList(FabricBrands, "ID", "FullName");
 			ViewData["FabricTypeID"] = new SelectList(FabricTypes, "ID", "Type");
@@ -61,10 +61,10 @@ namespace FrontEnd.Pages.Data.Fabric.Fabric
 		public async Task<IActionResult> OnPostAsync()
 		{
 			//This is pulling the Lists from Session states
-			var serializedBrands = HttpContext.Session.GetString("BrandData");
+			var serializedBrands = HttpContext.Session.GetString("FabricBrandData");
 			FabricBrands = JsonConvert.DeserializeObject<List<FabricBrand>>(serializedBrands);
 
-			var serializedTypes = HttpContext.Session.GetString("TypeData");
+			var serializedTypes = HttpContext.Session.GetString("FabricTypeData");
 			FabricTypes = JsonConvert.DeserializeObject<List<FabricTypes>>(serializedTypes);
 
 			//So we can assign the values properly without another pull from DB
@@ -91,6 +91,5 @@ namespace FrontEnd.Pages.Data.Fabric.Fabric
 				return StatusCode(500, "An error occured while updating the item.");
 			}
 		}
-
 	}
 }

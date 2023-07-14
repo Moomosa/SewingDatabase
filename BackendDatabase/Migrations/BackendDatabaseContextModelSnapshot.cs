@@ -17,7 +17,7 @@ namespace BackendDatabase.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.16")
+                .HasAnnotation("ProductVersion", "6.0.18")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -46,7 +46,7 @@ namespace BackendDatabase.Migrations
                     b.HasIndex("UserId")
                         .HasDatabaseName("IX_UserId");
 
-                    b.ToTable("UserMapping", (string)null);
+                    b.ToTable("UserMapping");
                 });
 
             modelBuilder.Entity("ModelLibrary.Models.Thread.ThreadColor", b =>
@@ -68,7 +68,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasIndex("ColorFamilyID");
 
-                    b.ToTable("ThreadColor", (string)null);
+                    b.ToTable("ThreadColor");
                 });
 
             modelBuilder.Entity("ModelLibrary.Models.Thread.ThreadColorFamily", b =>
@@ -85,7 +85,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("ThreadColorFamily", (string)null);
+                    b.ToTable("ThreadColorFamily");
                 });
 
             modelBuilder.Entity("SewingModels.Models.Elastic", b =>
@@ -113,7 +113,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasIndex("ElasticTypeID");
 
-                    b.ToTable("Elastic", (string)null);
+                    b.ToTable("Elastic");
                 });
 
             modelBuilder.Entity("SewingModels.Models.ElasticTypes", b =>
@@ -130,7 +130,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("ElasticTypes", (string)null);
+                    b.ToTable("ElasticTypes");
                 });
 
             modelBuilder.Entity("SewingModels.Models.Fabric", b =>
@@ -169,7 +169,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasIndex("FabricTypeID");
 
-                    b.ToTable("Fabric", (string)null);
+                    b.ToTable("Fabric");
                 });
 
             modelBuilder.Entity("SewingModels.Models.FabricBrand", b =>
@@ -192,7 +192,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("FabricBrand", (string)null);
+                    b.ToTable("FabricBrand");
                 });
 
             modelBuilder.Entity("SewingModels.Models.FabricTypes", b =>
@@ -212,7 +212,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("FabricTypes", (string)null);
+                    b.ToTable("FabricTypes");
                 });
 
             modelBuilder.Entity("SewingModels.Models.Machine", b =>
@@ -227,6 +227,9 @@ namespace BackendDatabase.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("LastServiced")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -234,12 +237,12 @@ namespace BackendDatabase.Migrations
                     b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<float>("PurchasePrice")
+                    b.Property<float?>("PurchasePrice")
                         .HasColumnType("real");
 
                     b.HasKey("ID");
 
-                    b.ToTable("Machine", (string)null);
+                    b.ToTable("Machine");
                 });
 
             modelBuilder.Entity("SewingModels.Models.MiscItemType", b =>
@@ -256,7 +259,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("MiscItemType", (string)null);
+                    b.ToTable("MiscItemType");
                 });
 
             modelBuilder.Entity("SewingModels.Models.MiscObjects", b =>
@@ -285,14 +288,14 @@ namespace BackendDatabase.Migrations
                     b.Property<string>("SpecificInfo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("Value")
+                    b.Property<float?>("Value")
                         .HasColumnType("real");
 
                     b.HasKey("ID");
 
                     b.HasIndex("ItemTypeID");
 
-                    b.ToTable("MiscObjects", (string)null);
+                    b.ToTable("MiscObjects");
                 });
 
             modelBuilder.Entity("SewingModels.Models.Thread", b =>
@@ -309,9 +312,6 @@ namespace BackendDatabase.Migrations
                     b.Property<int>("ColorID")
                         .HasColumnType("int");
 
-                    b.Property<bool>("MaxiLockStretch")
-                        .HasColumnType("bit");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -326,7 +326,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasIndex("ThreadTypeID");
 
-                    b.ToTable("Thread", (string)null);
+                    b.ToTable("Thread");
                 });
 
             modelBuilder.Entity("SewingModels.Models.ThreadTypes", b =>
@@ -343,7 +343,7 @@ namespace BackendDatabase.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("ThreadTypes", (string)null);
+                    b.ToTable("ThreadTypes");
                 });
 
             modelBuilder.Entity("ModelLibrary.Models.Thread.ThreadColor", b =>
@@ -370,7 +370,7 @@ namespace BackendDatabase.Migrations
 
             modelBuilder.Entity("SewingModels.Models.Fabric", b =>
                 {
-                    b.HasOne("SewingModels.Models.FabricBrand", "Brand")
+                    b.HasOne("SewingModels.Models.FabricBrand", "FabricBrand")
                         .WithMany()
                         .HasForeignKey("FabricBrandID")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -382,7 +382,7 @@ namespace BackendDatabase.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Brand");
+                    b.Navigation("FabricBrand");
 
                     b.Navigation("FabricType");
                 });

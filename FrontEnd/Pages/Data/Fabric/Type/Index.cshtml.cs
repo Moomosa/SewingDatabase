@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Authorization;
 namespace FrontEnd.Pages.Data.Fabric.Type
 {
 	[Authorize(Roles = "User,Admin")]
-
 	public class IndexModel : PageModel
 	{
 		private readonly ApiService _apiService;
@@ -28,9 +27,9 @@ namespace FrontEnd.Pages.Data.Fabric.Type
 
 		public async Task OnGetAsync()
 		{
-			var userNameClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-			if (userNameClaim != null)
-				FabricTypes = await _apiService.GetRecordsForUser<FabricTypes>("FabricTypes", userNameClaim);
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			if (userId != null)
+				FabricTypes = await _apiService.GetRecordsForUser<FabricTypes>("FabricTypes", userId);
 		}
 	}
 }

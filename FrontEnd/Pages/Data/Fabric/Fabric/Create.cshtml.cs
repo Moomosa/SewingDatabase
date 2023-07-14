@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using BackendDatabase.Data;
 using SewingModels.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -35,15 +34,15 @@ namespace FrontEnd.Pages.Data.Fabric.Fabric
 
 		public async Task<IActionResult> OnGet()
 		{
-			var userNameClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
 			//Filling the lists with data from the DB according to the user
-			FabricBrands = await _apiService.GetRecordsForUser<FabricBrand>("FabricBrand", userNameClaim);
-			FabricTypes = await _apiService.GetRecordsForUser<FabricTypes>("FabricTypes", userNameClaim);
+			FabricBrands = await _apiService.GetRecordsForUser<FabricBrand>("FabricBrand", userId);
+			FabricTypes = await _apiService.GetRecordsForUser<FabricTypes>("FabricTypes", userId);
 
 			//Setting the Lists to Session states for use in OnPost
-			HttpContext.Session.SetString("BrandData", JsonConvert.SerializeObject(FabricBrands));
-			HttpContext.Session.SetString("TypeData", JsonConvert.SerializeObject(FabricTypes));
+			HttpContext.Session.SetString("FabricBrandData", JsonConvert.SerializeObject(FabricBrands));
+			HttpContext.Session.SetString("FabricTypeData", JsonConvert.SerializeObject(FabricTypes));
 
 			return Page();
 		}
@@ -51,10 +50,10 @@ namespace FrontEnd.Pages.Data.Fabric.Fabric
 		public async Task<IActionResult> OnPostAsync()
 		{
 			//This is pulling the Lists from Session states
-			var serializedBrands = HttpContext.Session.GetString("BrandData");
+			var serializedBrands = HttpContext.Session.GetString("FabricBrandData");
 			FabricBrands = JsonConvert.DeserializeObject<List<FabricBrand>>(serializedBrands);
 
-			var serializedTypes = HttpContext.Session.GetString("TypeData");
+			var serializedTypes = HttpContext.Session.GetString("FabricTypeData");
 			FabricTypes = JsonConvert.DeserializeObject<List<FabricTypes>>(serializedTypes);
 
 			//So we can assign the values properly without another pull from DB

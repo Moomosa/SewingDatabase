@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BackendDatabase.Data;
 using ModelLibrary.Models.Thread;
+using ModelLibrary.Models.Database;
 
 namespace BackendDatabase.Controllers.Thread
 {
@@ -15,43 +16,60 @@ namespace BackendDatabase.Controllers.Thread
     public class ThreadColorFamiliesController : ControllerBase
     {
         private readonly BackendDatabaseContext _context;
+        private readonly Helper _helper;
 
-        public ThreadColorFamiliesController(BackendDatabaseContext context)
+        public ThreadColorFamiliesController(BackendDatabaseContext context, Helper helper)
         {
             _context = context;
+            _helper = helper;
         }
 
         // GET: api/ThreadColorFamily
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ThreadColorFamily>>> GetThreadColorFamily()
         {
-          if (_context.ThreadColorFamily == null)
-          {
-              return NotFound();
-          }
+            if (_context.ThreadColorFamily == null)
+                return NotFound();
+
             return await _context.ThreadColorFamily.ToListAsync();
         }
 
-        // GET: api/ThreadColorFamilies/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ThreadColorFamily>> GetThreadColorFamily(int id)
+        // GET: api/ThreadColorFamily/byIds/{tableName}/{userName}
+        [HttpGet("byIds/{tableName}/{userName}")]
+        public async Task<ActionResult<IEnumerable<ThreadColorFamily>>> GetColorFamilyByIds(string tableName, string userName)
         {
-          if (_context.ThreadColorFamily == null)
-          {
-              return NotFound();
-          }
-            var threadColorFamily = await _context.ThreadColorFamily.FindAsync(id);
+            List<int> ids = await _helper.GetRecordIds(tableName, userName);
 
-            if (threadColorFamily == null)
+            var colorFamily = await _context.ThreadColorFamily
+                .Where(cf => ids.Contains(cf.ID))
+                .ToListAsync();
+
+            if (colorFamily == null)
+                return NotFound();
+
+            return colorFamily;
+        }
+
+        // GET: api/ThreadColorFamily/5/{userId}
+        [HttpGet("{id}/{userId}")]
+        public async Task<ActionResult<ThreadColorFamily>> GetThreadColorFamily(int id, string userId)
+        {
+            if (_context.ThreadColorFamily == null)
             {
                 return NotFound();
             }
+            var threadColorFamily = await _context.ThreadColorFamily.FindAsync(id);
+
+            if (threadColorFamily == null)
+                return NotFound();
+
+            if (!await _helper.IsOwnedByUser("ThreadColorFamily", id, userId))
+                return Forbid();
 
             return threadColorFamily;
         }
 
-        // PUT: api/ThreadColorFamilies/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/ThreadColorFamily/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutThreadColorFamily(int id, ThreadColorFamily threadColorFamily)
         {
@@ -81,39 +99,82 @@ namespace BackendDatabase.Controllers.Thread
             return NoContent();
         }
 
-        // POST: api/ThreadColorFamilies
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/ThreadColorFamily
         [HttpPost]
-        public async Task<ActionResult<ThreadColorFamily>> PostThreadColorFamily(ThreadColorFamily threadColorFamily)
+        public async Task<ActionResult<ThreadColorFamily>> PostThreadColorFamily(ThreadColorFamily threadColorFamily, string userId)
         {
-          if (_context.ThreadColorFamily == null)
-          {
-              return Problem("Entity set 'BackendDatabaseContext.ThreadColorFamily'  is null.");
-          }
-            _context.ThreadColorFamily.Add(threadColorFamily);
-            await _context.SaveChangesAsync();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (_context.ThreadColorFamily == null)
+                        return Problem("Entity set 'BackendDatabaseContext.ThreadColorFamily'  is null.");
 
-            return CreatedAtAction("GetThreadColorFamily", new { id = threadColorFamily.ID }, threadColorFamily);
+                    _context.ThreadColorFamily.Add(threadColorFamily);
+                    await _context.SaveChangesAsync();
+
+                    var userMapping = new UserMapping
+                    {
+                        UserId = userId,
+                        TableName = "ThreadColorFamily",
+                        RecordId = threadColorFamily.ID
+                    };
+
+                    _context.UserMapping.Add(userMapping);
+
+                    await _context.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+
+                    return CreatedAtAction("GetThreadColorFamily", new { id = threadColorFamily.ID }, threadColorFamily);
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
         }
 
-        // DELETE: api/ThreadColorFamilies/5
+        // DELETE: api/ThreadColorFamily/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteThreadColorFamily(int id)
         {
             if (_context.ThreadColorFamily == null)
-            {
                 return NotFound();
-            }
+
             var threadColorFamily = await _context.ThreadColorFamily.FindAsync(id);
             if (threadColorFamily == null)
-            {
                 return NotFound();
+
+            bool associatedColor = _context.Thread.Any(t => t.ColorFamilyID == id);
+            if (associatedColor)
+                return BadRequest();
+
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _context.ThreadColorFamily.Remove(threadColorFamily);
+                    await _context.SaveChangesAsync();
+
+                    var userMapping = await _context.UserMapping.FirstOrDefaultAsync(um => um.TableName == "ThreadColorFamily" && um.RecordId == id);
+                    if (userMapping != null)
+                    {
+                        _context.UserMapping.Remove(userMapping);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    await transaction.CommitAsync();
+
+                    return NoContent();
+                }
+                catch(Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
-
-            _context.ThreadColorFamily.Remove(threadColorFamily);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
         private bool ThreadColorFamilyExists(int id)
