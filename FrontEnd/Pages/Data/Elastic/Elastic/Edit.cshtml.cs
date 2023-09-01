@@ -19,15 +19,15 @@ namespace FrontEnd.Pages.Data.Elastic.Elastic
     {
         private readonly ApiService _apiService;
 
-        public EditModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
-
         [BindProperty]
         public SewingModels.Models.Elastic Elastic { get; set; } = default!;
         [BindProperty]
         public List<ElasticTypes> ElasticTypes { get; set; }
+
+        public EditModel(ApiService apiService)
+        {
+            _apiService = apiService;
+        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {

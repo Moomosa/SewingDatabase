@@ -1,10 +1,159 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+	ViewData["Title"] = "Home page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome to [Insert website name here]</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+	@if (User.IsInRole("User"))
+	{
+		<h1>Welcome @User.Identity.Name</h1>
+		<div class="fabricTable">
+			@if (Model.multiData.Fabrics.Count != 0)
+			{
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Fabric Type</th>
+							<th>Appearance</th>
+							<th>Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var item in Model.multiData.Fabrics)
+						{
+							<tr>
+								<td>@Html.DisplayFor(modelItem => item.FabricType)</td>
+								<td>@Html.DisplayFor(modelItem => item.Appearance)</td>
+								<td>@Html.DisplayFor(modelItem => item.Amount)</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			}
+			else
+			{
+				<p>You haven't added any Fabrics yet. Click <a asp-page="Data/Fabric/Fabric/Create">here</a> to create one!</p>
+			}
+		</div>
+		<div class="elasticTable">
+			@if (Model.multiData.Elastics.Count != 0)
+			{
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Elastic Type</th>
+							<th>Color</th>
+							<th>Width</th>
+							<th>Length</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var item in Model.multiData.Elastics)
+						{
+							<tr>
+								<td>@Html.DisplayFor(modelItem => item.ElasticType)</td>
+								<td>@Html.DisplayFor(modelItem => item.Color)</td>
+								<td>@Html.DisplayFor(modelItem => item.Width)</td>
+								<td>@Html.DisplayFor(modelItem => item.Length)</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			}
+			else
+			{
+				<p>You haven't added any Elastics yet. Click <a asp-page="Data/Elastic/Elastic/Create">here</a> to create one!</p>
+			}
+		</div>
+		<div class="ThreadTable">
+			@if (Model.multiData.Threads.Count != 0)
+			{
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Thread Type</th>
+							<th>Color</th>
+							<th>Quantity</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var item in Model.multiData.Threads)
+						{
+							<tr>
+								<td>@Html.DisplayFor(modelItem => item.ThreadType)</td>
+								<td>@Html.DisplayFor(modelItem => item.ThreadColor)</td>
+								<td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			}
+			else
+			{
+				<p>You haven't added any Threads yet. Click <a asp-page="Data/Thread/Thread/Create">here</a> to create one!</p>
+			}
+		</div>
+		<div class="machineTable">
+			@if (Model.multiData.Machines.Count != 0)
+			{
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Brand</th>
+							<th>Model</th>
+							<th>Last Serviced</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var item in Model.multiData.Machines)
+						{
+							<tr>
+								<td>@Html.DisplayFor(modelItem => item.Brand)</td>
+								<td>@Html.DisplayFor(modelItem => item.Model)</td>
+								<td>@item.LastServiced.ToString("MMMM dd yyyy")</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			}
+			else
+			{
+				<p>You haven't added any Machines yet. Click <a asp-page="Data/Machine/Create">here</a> to create one!</p>
+			}
+		</div>
+		<div class="miscTable">
+			@if (Model.multiData.Miscs.Count != 0)
+			{
+
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Item Type</th>
+							<th>Specific Info</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var item in Model.multiData.Miscs)
+						{
+							<tr>
+								<td>@Html.DisplayFor(modelItem => item.ItemType)</td>
+								<td>@Html.DisplayFor(modelItem => item.SpecificInfo)</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			}
+			else
+			{
+				<p>You haven't added any Miscellaneous Items yet. Click <a asp-page="Data/Misc/MiscObjects/Create">here</a> to create one!</p>
+			}
+		</div>
+	}
+	else
+	{
+		<h1 class="display-4">Welcome to [Insert website name here]</h1>
+
+	}
 </div>

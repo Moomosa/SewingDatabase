@@ -24,56 +24,52 @@
 						</li>
 						@if (User.IsInRole("User"))
 						{
-							<li class="nav-item">
-								<a class="nav=link text-dark" asp-area="" asp-page="/Data/Fabric/Fabric/Index">Fabric</a>
-							</li>
-							<p>|</p>
-							<li class="nav-item">
-								<a class="nav=link text-dark" asp-area="" asp-page="/Data/Fabric/Brand/Index">Brand</a>
-							</li>
-							<p>|</p>
-							<li class="nav-item">
-								<a class="nav=link text-dark" asp-area="" asp-page="/Data/Fabric/Type/Index">Type</a>
-							</li>
-
-							<p>|</p>
-							<li class="nav-item">
-								<a class="nav=link text-dark" asp-area="" asp-page="/Data/Elastic/Elastic/Index">Elastic</a>
-							</li>
-							<p>|</p>
-							<li class="nav-item">
-								<a class="nav=link text-dark" asp-area="" asp-page="/Data/Elastic/Type/Index">Elastic Type</a>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle text-dark" href="#" id="fabricDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Fabric
+								</a>
+								<div class="dropdown-menu" aria-labelledby="fabricDropdown">
+									<a class="nav-link text-dark" asp-area="" asp-page="/Data/Fabric/Fabric/Index">Fabric</a>
+									<a class="nav-link text-dark" asp-area="" asp-page="/Data/Fabric/Brand/Index">Brand</a>
+									<a class="nav-link text-dark" asp-area="" asp-page="/Data/Fabric/Type/Index">Type</a>
+								</div>
 							</li>
 
-							<p>|</p>
-							<li class="nav-item">
-								<a class="nav=link text-dark" asp-area="" asp-page="/Data/Thread/Thread/Index">Thread</a>
-							</li>
-							<p>|</p>
-							<li class="nav-item">
-								<a class="nav=link text-dark" asp-area="" asp-page="/Data/Thread/Type/Index">ThreadType</a>
-							</li>
-							<p>|</p>
-							<li class="nav-item">
-								<a class="nav=link text-dark" asp-area="" asp-page="/Data/Thread/Color/Index">ThreadColor</a>
-							</li>
-							<p>|</p>
-							<li class="nav-item">
-								<a class="nav=link text-dark" asp-area="" asp-page="/Data/Thread/Family/Index">Thread Family</a>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle text-dark" href="#" id="elasticDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Elastic
+								</a>
+								<div class="dropdown-menu" aria-labelledby="elasticDropdown">
+									<a class="nav-link text-dark" asp-area="" asp-page="/Data/Elastic/Elastic/Index">Elastic</a>
+									<a class="nav-link text-dark" asp-area="" asp-page="/Data/Elastic/Type/Index">Elastic Type</a>
+								</div>
 							</li>
 
-							<p>|</p>
-							<li class="nav-item">
-								<a class="nav=link text-dark" asp-area="" asp-page="/Data/Machine/Index">Machines</a>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle text-dark" href="#" id="threadDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Thread
+								</a>
+								<div class="dropdown-menu" aria-labelledby="threadDropdown">
+									<a class="nav-link text-dark" asp-area="" asp-page="/Data/Thread/Thread/Index">Thread</a>
+									<a class="nav-link text-dark" asp-area="" asp-page="/Data/Thread/Type/Index">ThreadType</a>
+									<a class="nav-link text-dark" asp-area="" asp-page="/Data/Thread/Color/Index">ThreadColor</a>
+									<a class="nav-link text-dark" asp-area="" asp-page="/Data/Thread/Family/Index">Thread Family</a>
+
+								</div>
 							</li>
 
-							<p>|</p>
 							<li class="nav-item">
-								<a class="nav=link text-dark" asp-area="" asp-page="/Data/Misc/MiscObjects/Index">MiscObjects</a>
+								<a class="nav-link text-dark" asp-area="" asp-page="/Data/Machine/Index">Machines</a>
 							</li>
-							<p>|</p>
-							<li class="nav-item">
-								<a class="nav=link text-dark" asp-area="" asp-page="/Data/Misc/MiscType/Index">MiscItemTypes</a>
+
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle text-dark" href="#" id="miscDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Miscellaneous Items
+								</a>
+								<div class="dropdown-menu" aria-labelledby="miscDropdown">
+								<a class="nav-link text-dark" asp-area="" asp-page="/Data/Misc/MiscObjects/Index">MiscObjects</a>
+								<a class="nav-link text-dark" asp-area="" asp-page="/Data/Misc/MiscType/Index">MiscItemTypes</a>
+								</div>
 							</li>
 
 						}

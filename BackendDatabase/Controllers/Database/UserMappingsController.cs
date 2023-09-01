@@ -57,7 +57,6 @@ namespace BackendDatabase.Controllers.Database
 		}
 
 		// PUT: api/UserMappings/5
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPut("{id}")]
 		public async Task<IActionResult> PutUserMapping(int id, UserMapping userMapping)
 		{
@@ -88,7 +87,6 @@ namespace BackendDatabase.Controllers.Database
 		}
 
 		// POST: api/UserMappings
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPost]
 		public async Task<ActionResult<UserMapping>> PostUserMapping(UserMapping userMapping)
 		{

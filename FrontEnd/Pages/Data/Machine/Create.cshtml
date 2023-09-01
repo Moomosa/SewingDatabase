@@ -2,7 +2,7 @@
 @model FrontEnd.Pages.Data.Machine.CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+	ViewData["Title"] = "Create";
 }
 
 <h1>Create</h1>
@@ -10,45 +10,57 @@
 <h4>Machine</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Machine.Brand" class="control-label"></label>
-                <input asp-for="Machine.Brand" class="form-control" />
-                <span asp-validation-for="Machine.Brand" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Machine.Model" class="control-label"></label>
-                <input asp-for="Machine.Model" class="form-control" />
-                <span asp-validation-for="Machine.Model" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Machine.PurchaseDate" class="control-label"></label>
-                <input asp-for="Machine.PurchaseDate" class="form-control" />
-                <span asp-validation-for="Machine.PurchaseDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Machine.PurchasePrice" class="control-label"></label>
-                <input asp-for="Machine.PurchasePrice" class="form-control" />
-                <span asp-validation-for="Machine.PurchasePrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Machine.LastServiced" class="control-label"></label>
-                <input asp-for="Machine.LastServiced" class="form-control" />
-                <span asp-validation-for="Machine.LastServiced" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+	<div class="col-md-4">
+		<form method="post">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="Machine.Brand" class="control-label"></label>
+				<input asp-for="Machine.Brand" class="form-control" />
+				<span asp-validation-for="Machine.Brand" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Machine.Model" class="control-label"></label>
+				<input asp-for="Machine.Model" class="form-control" />
+				<span asp-validation-for="Machine.Model" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Machine.PurchaseDate" class="control-label">Purchase Date</label>
+				<input asp-for="Machine.PurchaseDate" class="form-control" id="PurchaseDate" />
+				<span asp-validation-for="Machine.PurchaseDate" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Machine.PurchasePrice" class="control-label">Purchase Price</label>
+				<input asp-for="Machine.PurchasePrice" class="form-control" />
+				<span asp-validation-for="Machine.PurchasePrice" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Machine.LastServiced" class="control-label">Last Serviced</label>
+				<input asp-for="Machine.LastServiced" class="form-control" id="LastServicedInput" />
+				<span asp-validation-for="Machine.LastServiced" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Create" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
 </div>
 
 <div>
-    <a asp-page="Index">Back to List</a>
+	<a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	<script>
+		document.getElementById('PurchaseDate').addEventListener('change', function () {
+			var purchaseDate = new Date(this.value);
+			var lastServicedInput = document.getElementById('LastServicedInput');
+			lastServicedInput.value = purchaseDate.toISOString().substring(0, 10);
+
+			var lastServicedMinDate = document.getElementById('LastServicedInput');
+			lastServicedMinDate.min = this.value;
+		});
+	</script>
 }

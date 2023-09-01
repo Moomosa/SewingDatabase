@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using SewingModels.Models;
 using System.Text;
 using System.Net.Http;
+using ModelLibrary.Models.Database;
 
 namespace FrontEnd
 {
@@ -84,5 +85,20 @@ namespace FrontEnd
 			return response.IsSuccessStatusCode;
 		}
 
+		public async Task<MultiDataDTO> GetMultiData(string userName, int count)
+		{
+			HttpResponseMessage response = await _httpClient.GetAsync($"api/Multi/{userName}/{count}");
+
+			if (response.IsSuccessStatusCode)
+			{
+				string json = await response.Content.ReadAsStringAsync();
+				MultiDataDTO multiData = JsonConvert.DeserializeObject<MultiDataDTO>(json);
+				return multiData;
+			}
+			else
+			{
+				return null;
+			}
+		}
 	}
 }

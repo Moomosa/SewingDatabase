@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace FrontEnd.Areas.Identity.Pages.Account
 {
@@ -68,8 +69,8 @@ namespace FrontEnd.Areas.Identity.Pages.Account
 			///     directly from your code. This API may change or be removed in future releases.
 			/// </summary>
 			[Required]
-			[EmailAddress]
-			public string Email { get; set; }
+			[Display(Name = "Email Or Username")]
+			public string EmailOrUsername { get; set; }
 
 			/// <summary>
 			///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -114,34 +115,42 @@ namespace FrontEnd.Areas.Identity.Pages.Account
 			{
 				// This doesn't count login failures towards account lockout
 				// To enable password failures to trigger account lockout, set lockoutOnFailure: true
-				var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-				if (result.Succeeded)
+				//var userName = _signInManager.UserManager.Users.Where(u => u.Email == Input.Email).FirstOrDefault();
+				var user = await _userManager.FindByEmailAsync(Input.EmailOrUsername);
+				if (user == null)
+					user = await _userManager.FindByNameAsync(Input.EmailOrUsername);
+				if (user != null)
 				{
-					_logger.LogInformation("User logged in.");
-					var user = await _userManager.FindByEmailAsync(Input.Email);
-					var claims = new List<Claim>
+					var result = await _signInManager.PasswordSignInAsync(user, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+
+					if (result.Succeeded)
+					{
+						_logger.LogInformation("User logged in.");
+						var claims = new List<Claim>
 					{
 						new Claim(ClaimTypes.NameIdentifier, user.Id)  //Store the userId as a claim
 					};
 
-					await _signInManager.SignInWithClaimsAsync(user, Input.RememberMe, claims);  //Sign in the user with claims
+						await _signInManager.SignInWithClaimsAsync(user, Input.RememberMe, claims);  //Sign in the user with claims
 
-					return LocalRedirect(returnUrl);
-				}
-				if (result.RequiresTwoFactor)
-				{
-					return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-				}
-				if (result.IsLockedOut)
-				{
-					_logger.LogWarning("User account locked out.");
-					return RedirectToPage("./Lockout");
+						return LocalRedirect(returnUrl);
+					}
+					if (result.RequiresTwoFactor)
+					{
+						return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+					}
+					if (result.IsLockedOut)
+					{
+						_logger.LogWarning("User account locked out.");
+						return RedirectToPage("./Lockout");
+					}
 				}
 				else
 				{
 					ModelState.AddModelError(string.Empty, "Invalid login attempt.");
 					return Page();
 				}
+
 			}
 
 			// If we got this far, something failed, redisplay form

@@ -13,19 +13,22 @@ builder.Services.AddDbContext<BackendDatabaseContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("BackendDatabaseContextConnection") ?? throw new InvalidOperationException("Connection string 'BackendDatabaseContextConnection' not found.")));
 
 builder.Services.AddDbContext<BackendUserContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("BackendUserContextConnection") ?? throw new InvalidOperationException("Connection string 'BackendUserContextConnection' not found.")));
+	options.UseSqlServer(builder.Configuration.GetConnectionString("BackendUserContextConnection") ?? throw new InvalidOperationException("Connection string 'BackendUserContextConnection' not found.")));
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<BackendUserContext>();
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+	{
+		options.User.RequireUniqueEmail = true;
+	})
 	.AddDefaultTokenProviders()
 	.AddDefaultUI()
 	.AddEntityFrameworkStores<BackendUserContext>();
 
 // Add services to the container.
 builder.Services.AddRazorPages()
-    .AddRazorRuntimeCompilation();
+	.AddRazorRuntimeCompilation();
 
 builder.Services.AddSession();
 builder.Services.AddScoped<ApiService>();
@@ -38,7 +41,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
+	app.UseExceptionHandler("/Error");
 }
 app.UseHttpsRedirection();
 app.UseStaticFiles();

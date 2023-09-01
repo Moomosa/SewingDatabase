@@ -24,9 +24,27 @@ namespace BackendDatabase.Data
 		public async Task<bool> IsOwnedByUser(string tableName, int id, string userId)
 		{
 			return await _context.UserMapping
-				.AnyAsync(um => um.TableName == tableName && um.RecordId == id && um.UserId == userId);				
+				.AnyAsync(um => um.TableName == tableName && um.RecordId == id && um.UserId == userId);
 		}
 
+		public async Task<List<int>> GetRandomIndices(string tableName, string userName, int count)
+		{
+			List<int> recordIds = await GetRecordIds(tableName, userName);
+			Random rand = new Random();
 
+			if (recordIds.Count <= count)
+				return recordIds;
+
+			List<int> randomIndices = new List<int>();
+			HashSet<int> usedIndices = new HashSet<int>();
+
+			while (randomIndices.Count < count)
+			{
+				int index = rand.Next(0, recordIds.Count);
+				if (usedIndices.Add(index))
+					randomIndices.Add(recordIds[index]);
+			}
+			return randomIndices;
+		}
 	}
 }

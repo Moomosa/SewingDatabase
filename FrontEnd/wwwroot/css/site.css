@@ -1,18 +1,39 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+}
+
+.navbar-nav .nav-item {
+    text-decoration: none;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px; /* Add some spacing between items */
+}
+
+/* If you want to remove the underlines on hover and focus */
+.navbar-nav .nav-item:hover,
+.navbar-nav .nav-item:focus {
+    text-decoration: none;
+}
+
+.dropdown-menu {
+    position: absolute;
+    background-color: white; /* Optional: Set the background color of the dropdown */
+    z-index: 1000; /* Ensure that the dropdown appears above other content */
+    width: 25%; /* Make the dropdown full-width */
+    padding-top: 10px;
 }

@@ -32,6 +32,8 @@ namespace FrontEnd.Pages.Data.Machine
 
 		public async Task<IActionResult> OnPostAsync()
 		{
+			UpdateLastServiced();
+
 			if (!ModelState.IsValid || _apiService == null)
 				return Page();
 
@@ -46,6 +48,12 @@ namespace FrontEnd.Pages.Data.Machine
 				ModelState.AddModelError("", "Failed to create item");
 				return Page();
 			}
+		}
+
+		public void UpdateLastServiced()
+		{
+			if(Machine.LastServiced == null || Machine.LastServiced == default(DateTime))			
+				Machine.LastServiced = Machine.PurchaseDate;			
 		}
 	}
 }
