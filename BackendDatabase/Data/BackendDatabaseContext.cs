@@ -28,8 +28,7 @@ namespace BackendDatabase.Data
             string connectionString = configuration.GetConnectionString("BackendDatabaseContextConnection");
 
             optionsBuilder.UseSqlServer(connectionString);
-            //base.OnConfiguring(optionsBuilder);
-            //optionsBuilder.UseSqlServer("Server=MOOMOSASPLAYGRO\\SQLEXPRESS;Database=BackendDataDatabase;Trusted_Connection=True;");
+            //base.OnConfiguring(optionsBuilder);            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
