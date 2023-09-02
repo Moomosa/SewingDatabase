@@ -53,6 +53,7 @@ namespace BackendDatabase.Controllers.Thread
 				.Include(t => t.ThreadType)
 				.Include(t => t.Color)
 				.Include(t => t.ColorFamily)
+				.Where(t => ids.Contains(t.ID))
 				.ToListAsync();
 
 			if (threads == null)

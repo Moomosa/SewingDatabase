@@ -37,3 +37,8 @@ body {
     width: 25%; /* Make the dropdown full-width */
     padding-top: 10px;
 }
+
+.required-label:after {
+    content: " *";
+    color: red;
+}

@@ -49,6 +49,7 @@ namespace BackendDatabase.Controllers.Misc
 
 			var objects = await _context.MiscObjects
 				.Include(o => o.ItemType)
+				.Where(o => ids.Contains(o.ID))
 				.ToListAsync();
 
 			if (objects == null)
