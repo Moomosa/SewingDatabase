@@ -2,59 +2,57 @@
 @model FrontEnd.Pages.Data.Machine.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Machines</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Machine[0].Brand)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Machine[0].Model)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Machine[0].PurchaseDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Machine[0].PurchasePrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Machine[0].LastServiced)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Machine) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Brand)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Model)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PurchaseDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PurchasePrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastServiced)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
+@if (Model.Machine.Count != 0)
+{
+	<h4>
+		<a asp-page="Create">Add New Machine</a>
+	</h4>
+	<table class="table table-colors">
+		<thead>
+			<tr>
+				<th>Brand</th>
+				<th>Model</th>
+				<th>Purchase Date</th>
+				<th>Purchase Price</th>
+				<th>Date Last Serviced</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.Machine)
+			{
+				<tr class="table-row-clickable" data-href='@Url.Page("./Details", new {id = item.ID})'>
+					<td>
+						@Html.DisplayFor(modelItem => item.Brand)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Model)
+					</td>
+					<td>
+						@item.PurchaseDate.ToString("MMMM dd yyyy")
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.PurchasePrice)
+					</td>
+					<td>
+						@item.LastServiced.ToString("MMMM dd yyyy")
+					</td>
+					<td>
+						<a asp-page="./Edit" asp-route-id="@item.ID" class="btn btn-primary btn-sm hide-on-mobile" title="Edit"><i class="fas fa-edit"></i></a>
+						<a asp-page="./Details" asp-route-id="@item.ID" class="btn btn-info btn-sm hide-on-mobile" title="Details"><i class="fas fa-info-circle text-white"></i></a>
+						<a asp-page="./Delete" asp-route-id="@item.ID" class="btn btn-danger btn-sm hide-on-mobile" title="Delete"><i class="fas fa-trash-alt"></i></a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 }
-    </tbody>
-</table>
+else
+{
+	<h5>Not everyone sews just by hand. Let's add a machine <a asp-page="./Create">here</a>.</h5>
+}

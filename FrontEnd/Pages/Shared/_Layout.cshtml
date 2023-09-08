@@ -3,16 +3,22 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"] - FrontEnd</title>
+	<title>@ViewData["Title"] - Stitchers Stash</title>
 	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/FrontEnd.styles.css" asp-append-version="true" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
 	<header>
 		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
 			<div class="container">
-				<a class="navbar-brand" asp-area="" asp-page="/Index">FrontEnd</a>
+				<a class="navbar-brand" asp-area="" asp-page="/Index">
+					<img src="/images/SSLogo.png" alt="SSLogo" class="header-logo-img" />
+				</a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
 						aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
@@ -67,8 +73,8 @@
 									Miscellaneous Items
 								</a>
 								<div class="dropdown-menu" aria-labelledby="miscDropdown">
-								<a class="nav-link text-dark" asp-area="" asp-page="/Data/Misc/MiscObjects/Index">Misc Objects</a>
-								<a class="nav-link text-dark" asp-area="" asp-page="/Data/Misc/MiscType/Index">Misc Item Types</a>
+									<a class="nav-link text-dark" asp-area="" asp-page="/Data/Misc/MiscObjects/Index">Misc Items</a>
+									<a class="nav-link text-dark" asp-area="" asp-page="/Data/Misc/MiscType/Index">Misc Item Types</a>
 								</div>
 							</li>
 
@@ -88,9 +94,41 @@
 		</main>
 	</div>
 
-	<footer class="border-top footer text-muted">
+	<footer class="border-top footer text-muted site-footer">
 		<div class="container">
-			&copy; 2023 - FrontEnd - <a asp-area="" asp-page="/Privacy">Privacy</a>
+			<div class="row">
+				<div class="col-sm-12 col-md-6">
+					<h6>Main</h6>
+					<p class="text-justify">
+						Lot's of text goes here. This is just a placeholder for something
+						more amazing later. Who knows, maybe this will take off nicely.
+					</p>
+				</div>
+				<div class="col-xs-6 col-md-3">
+					<h6>Categories</h6>
+					<ul class="footer-links">
+						<li><a asp-page="/Data/Fabric/Fabric/Index">Fabric</a></li>
+						<li><a asp-page="/Data/Elastic/Elastic/Index">Elastic</a></li>
+						<li><a asp-page="/Data/Thread/Thread/Index">Thread</a></li>
+						<li><a asp-page="/Data/Machine/Index">Machine</a></li>
+						<li><a asp-page="/Data/Misc/MiscObjects/Index">Misc</a></li>
+					</ul>
+				</div>
+				<div class="col-xs-6 col-md-3">
+					<h6>Quick Links</h6>
+					<ul class="footer-links">
+						<li><a href="/">Home</a></li>
+					</ul>
+				</div>
+			</div>
+			<hr>
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-8 col-sm-6 col-xs-12">
+					<p class="copyright-text">&copy; 2023 - Stitchers Stash - <a asp-area="" asp-page="/Privacy">Privacy</a></p>
+				</div>
+			</div>
 		</div>
 	</footer>
 

@@ -2,71 +2,65 @@
 @model FrontEnd.Pages.Data.Misc.MiscObjects.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Miscellaneous Items</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MiscObjects[0].ItemType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MiscObjects[0].Quantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MiscObjects[0].AdditionalNotes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MiscObjects[0].Brand)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MiscObjects[0].SpecificInfo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MiscObjects[0].Value)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MiscObjects[0].PurchasePrice)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.MiscObjects) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ItemType.Item)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AdditionalNotes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Brand)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SpecificInfo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Value)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PurchasePrice)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
+@if (Model.MiscObjects.Count != 0)
+{
+	<h4>
+		<a asp-page="Create">Add New Item</a>
+	</h4>
+	<table class="table table-colors">
+		<thead>
+			<tr>
+				<th>Item Type</th>
+				<th>Quantity</th>
+				<th>Brand</th>
+				<th>Specific Info</th>
+				<th>Additional Notes</th>
+				<th class="hide-on-mobile">Value</th>
+				<th class="hide-on-mobile">Purchase Price</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.MiscObjects)
+			{
+				<tr class="table-row-clickable" data-href='@Url.Page("./Details", new {id = item.ID})'>
+					<td>
+						@Html.DisplayFor(modelItem => item.ItemType.Item)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Quantity)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Brand)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.SpecificInfo)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.AdditionalNotes)
+					</td>
+					<td class="hide-on-mobile">
+						@Html.DisplayFor(modelItem => item.Value)
+					</td>
+					<td class="hide-on-mobile">
+						@Html.DisplayFor(modelItem => item.PurchasePrice)
+					</td>
+					<td>
+						<a asp-page="./Edit" asp-route-id="@item.ID" class="btn btn-primary btn-sm hide-on-mobile" title="Edit"><i class="fas fa-edit"></i></a>
+						<a asp-page="./Details" asp-route-id="@item.ID" class="btn btn-info btn-sm hide-on-mobile" title="Details"><i class="fas fa-info-circle text-white"></i></a>
+						<a asp-page="./Delete" asp-route-id="@item.ID" class="btn btn-danger btn-sm hide-on-mobile" title="Delete"><i class="fas fa-trash-alt"></i></a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 }
-    </tbody>
-</table>
+else
+{
+	<h5>Do you have things that don't fit in the other categories? Let's add them <a asp-page="./Create">here</a>.</h5>
+}

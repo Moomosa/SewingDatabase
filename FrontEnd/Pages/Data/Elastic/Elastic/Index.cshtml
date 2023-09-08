@@ -2,53 +2,52 @@
 @model FrontEnd.Pages.Data.Elastic.Elastic.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
+<h1>Elastic</h1>
 
-<h1>Index</h1>
-
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Elastic[0].ElasticType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Elastic[0].Color)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Elastic[0].Width)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Elastic[0].Length)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Elastic) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ElasticType.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Color)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Width)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Length)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
+@if (Model.Elastic.Count != 0)
+{
+	<h4>
+		<a asp-page="Create">Add New Elastic</a>
+	</h4>
+	<table class="table table-colors">
+		<thead>
+			<tr>
+				<th>Elastic Type</th>
+				<th>Color</th>
+				<th>Width</th>
+				<th>Length</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.Elastic)
+			{
+				<tr class="table-row-clickable" data-href='@Url.Page("./Details", new {id = item.ID})'>
+					<td>
+						@Html.DisplayFor(modelItem => item.ElasticType.Type)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Color)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Width)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Length)
+					</td>
+					<td>
+						<a asp-page="./Edit" asp-route-id="@item.ID" class="btn btn-primary btn-sm hide-on-mobile" title="Edit"><i class="fas fa-edit"></i></a>
+						<a asp-page="./Details" asp-route-id="@item.ID" class="btn btn-info btn-sm hide-on-mobile" title="Details"><i class="fas fa-info-circle text-white"></i></a>
+						<a asp-page="./Delete" asp-route-id="@item.ID" class="btn btn-danger btn-sm hide-on-mobile" title="Delete"><i class="fas fa-trash-alt"></i></a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 }
-    </tbody>
-</table>
+else
+{
+	<h5>It looks like you don't have any elastic here. Let's fix that <a asp-page="./Create">here</a>.</h5>
+}

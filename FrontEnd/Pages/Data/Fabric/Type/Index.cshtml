@@ -2,41 +2,45 @@
 @model FrontEnd.Pages.Data.Fabric.Type.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Fabric Types</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FabricTypes[0].Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FabricTypes[0].Content)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.FabricTypes) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
+@if (Model.FabricTypes.Count != 0)
+{
+	<h4>
+		<a asp-page="Create">Add New Type</a>
+	</h4>
+	<table class="table table-colors">
+		<thead>
+			<tr>
+				<th>Type</th>
+				<th>Content</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.FabricTypes)
+			{
+				<tr class="table-row-clickable" data-href='@Url.Page("./Details", new {id = item.ID})'>
+					<td>
+						@Html.DisplayFor(modelItem => item.Type)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Content)
+					</td>
+					<td>
+						<a asp-page="./Edit" asp-route-id="@item.ID" class="btn btn-primary btn-sm hide-on-mobile" title="Edit"><i class="fas fa-edit"></i></a>
+						<a asp-page="./Details" asp-route-id="@item.ID" class="btn btn-info btn-sm hide-on-mobile" title="Details"><i class="fas fa-info-circle text-white"></i></a>
+						<a asp-page="./Delete" asp-route-id="@item.ID" class="btn btn-danger btn-sm hide-on-mobile" title="Delete"><i class="fas fa-trash-alt"></i></a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 }
-    </tbody>
-</table>
+else
+{
+	<h5>What kind of fabric bases do you use? Let's add them <a asp-page="./Create">here</a>.</h5>
+}

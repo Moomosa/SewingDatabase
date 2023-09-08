@@ -14,7 +14,19 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
+    font-family: 'JetBrains Mono', sans-serif;
+    margin-bottom: 0px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+footer {
+    margin-top: auto;
+    position: relative;
+    bottom: auto;
+    width: 100%;
+    background-color: aliceblue;
 }
 
 .navbar-nav .nav-item {
@@ -24,11 +36,11 @@ body {
     margin-right: 10px; /* Add some spacing between items */
 }
 
-/* If you want to remove the underlines on hover and focus */
-.navbar-nav .nav-item:hover,
-.navbar-nav .nav-item:focus {
-    text-decoration: none;
-}
+    /* If you want to remove the underlines on hover and focus */
+    .navbar-nav .nav-item:hover,
+    .navbar-nav .nav-item:focus {
+        text-decoration: none;
+    }
 
 .dropdown-menu {
     position: absolute;
@@ -41,4 +53,135 @@ body {
 .required-label:after {
     content: " *";
     color: red;
+}
+
+.table-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    text-decoration: none;
+    color: inherit;
+}
+
+.table-row {
+    flex-basis: calc(50% -10px);
+    margin-right: 20px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.table-container .table-row:last-child {
+    margin-right: 0;
+}
+
+.table-colors tbody tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+.table-colors tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.fabric-table {
+    border: 5px outset #E74C3C;
+    border-radius: 50px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.thread-table {
+    border: 5px outset #27AE60;
+    border-radius: 50px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.elastic-table {
+    border: 5px outset #e498DB;
+    border-radius: 50px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.machine-table {
+    border: 5px outset #F1C40F;
+    border-radius: 50px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.misc-table {
+    border: 5px outset #9B59B6;
+    border-radius: 50px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.site-footer {
+    padding: 20px 0 20px;
+    line-height: 24px;    
+}
+
+    .site-footer h6 {
+        text-transform: uppercase;
+        margin-top: 5px;
+        letter-spacing: 2px;
+    }
+
+    .site-footer a:hover {
+        text-decoration: none;
+    }
+
+.footer-links {
+    padding-left: 0;
+    list-style: none;
+}
+
+    .footer-links li {
+        display: block;
+    }
+
+    .footer-links a {
+        color: #737373;
+        text-decoration: none;
+    }
+
+        .footer-links a:active, .footer-links a:focus, .footer-links a:hover {
+            color: #3366cc;
+            text-decoration: none;
+        }
+
+    .footer-links.inline li {
+        display: inline-block
+    }
+
+.copyright-text {
+    margin: 0;
+}
+
+@media (max-width:991px) {
+    .site-footer [class^=col-] {
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width:767px) {
+    .hide-on-mobile {
+        display: none;
+    }
+
+    .site-footer {
+        padding-bottom: 0
+    }
+
+        .site-footer .copyright-text, .site-footer .social-icons {
+            text-align: center
+        }
+}
+
+.header-logo-img {
+    width: 200px;
+    height: auto;
+    margin-right: 10px;
 }

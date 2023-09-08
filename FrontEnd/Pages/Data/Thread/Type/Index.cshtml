@@ -2,35 +2,41 @@
 @model FrontEnd.Pages.Data.Thread.Type.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Thread Type</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ThreadTypes[0].Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.ThreadTypes) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
+@if (Model.ThreadTypes.Count != 0)
+{
+	<h4>
+		<a asp-page="Create">Add New Thread Type</a>
+	</h4>
+	<table class="table table-colors">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.ThreadTypes)
+			{
+				<tr class="table-row-clickable" data-href='@Url.Page("./Details", new {id = item.ID})'>
+					<td>
+						@Html.DisplayFor(modelItem => item.Name)
+					</td>
+					<td>
+						<a asp-page="./Edit" asp-route-id="@item.ID" class="btn btn-primary btn-sm hide-on-mobile" title="Edit"><i class="fas fa-edit"></i></a>
+						<a asp-page="./Details" asp-route-id="@item.ID" class="btn btn-info btn-sm hide-on-mobile" title="Details"><i class="fas fa-info-circle text-white"></i></a>
+						<a asp-page="./Delete" asp-route-id="@item.ID" class="btn btn-danger btn-sm hide-on-mobile" title="Delete"><i class="fas fa-trash-alt"></i></a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 }
-    </tbody>
-</table>
+else
+{
+	<h5>What kind of thread do you use? Let's set that up <a asp-page="./Create">here</a>.</h5>
+}

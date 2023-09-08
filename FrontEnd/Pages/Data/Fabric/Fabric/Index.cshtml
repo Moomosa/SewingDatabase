@@ -2,71 +2,65 @@
 @model FrontEnd.Pages.Data.Fabric.Fabric.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Fabrics</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Fabric[0].FabricType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Fabric[0].FabricBrand)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Fabric[0].PurchasePrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Fabric[0].Value)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Fabric[0].SolidOrPrint)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Fabric[0].Appearance)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Fabric[0].Amount)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Fabric) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FabricType.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FabricBrand.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PurchasePrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Value)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SolidOrPrint)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Appearance)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Amount)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
+@if (Model.Fabric.Count != 0)
+{
+	<h4>
+		<a asp-page="Create">Add New Fabric</a>
+	</h4>
+	<table class="table table-colors">
+		<thead>
+			<tr>
+				<th>Fabric Type</th>
+				<th>Fabric Brand</th>
+				<th>Appearance</th>
+				<th>Print</th>
+				<th>Amount</th>
+				<th class="hide-on-mobile">Value</th>
+				<th class="hide-on-mobile">Purchase Price</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.Fabric)
+			{
+				<tr class="table-row-clickable" data-href='@Url.Page("./Details", new {id = item.ID})'>
+					<td>
+						@Html.DisplayFor(modelItem => item.FabricType.Type)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.FabricBrand.FullName)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Appearance)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.SolidOrPrint)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Amount) Yards
+					</td>
+					<td class="hide-on-mobile">
+						$@Html.DisplayFor(modelItem => item.Value) / Yard
+					</td>
+					<td class="hide-on-mobile">
+						$@Html.DisplayFor(modelItem => item.PurchasePrice) / Yard
+					</td>
+					<td>
+						<a asp-page="./Edit" asp-route-id="@item.ID" class="btn btn-primary btn-sm hide-on-mobile" title="Edit"><i class="fas fa-edit"></i></a>
+						<a asp-page="./Details" asp-route-id="@item.ID" class="btn btn-info btn-sm hide-on-mobile" title="Details"><i class="fas fa-info-circle text-white"></i></a>
+						<a asp-page="./Delete" asp-route-id="@item.ID" class="btn btn-danger btn-sm hide-on-mobile" title="Delete"><i class="fas fa-trash-alt"></i></a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 }
-    </tbody>
-</table>
+else
+{
+	<h5>It looks like your shelf is empty! Let's start by <a asp-page="./Create">adding to it</a>.</h5>
+}

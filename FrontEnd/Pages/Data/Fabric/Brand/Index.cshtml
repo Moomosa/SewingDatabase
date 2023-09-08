@@ -2,47 +2,49 @@
 @model FrontEnd.Pages.Data.Fabric.Brand.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Fabric Brands</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FabricBrand[0].FullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FabricBrand[0].Website)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FabricBrand[0].AdditionalInfo)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.FabricBrand) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Website)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AdditionalInfo)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ID" asp-route-fabricBrand="@Model.FabricBrand">Delete</a>
-            </td>
-        </tr>
+@if (Model.FabricBrand.Count != 0)
+{
+	<h4>
+		<a asp-page="Create">Add New Brand</a>
+	</h4>
+	<table class="table table-colors">
+		<thead>
+			<tr>
+				<th>Brand Name</th>
+				<th>Website</th>
+				<th>Additional Info</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.FabricBrand)
+			{
+				<tr class="table-row-clickable" data-href='@Url.Page("./Details", new {id = item.ID})'>				
+					<td>
+						@Html.DisplayFor(modelItem => item.FullName)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Website)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.AdditionalInfo)
+					</td>
+					<td>
+						<a asp-page="./Edit" asp-route-id="@item.ID" class="btn btn-primary btn-sm hide-on-mobile" title="Edit"><i class="fas fa-edit"></i></a>
+						<a asp-page="./Details" asp-route-id="@item.ID" class="btn btn-info btn-sm hide-on-mobile" title="Details"><i class="fas fa-info-circle text-white"></i></a>
+						<a asp-page="./Delete" asp-route-id="@item.ID" class="btn btn-danger btn-sm hide-on-mobile" title="Delete"><i class="fas fa-trash-alt"></i></a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 }
-    </tbody>
-</table>
+else
+{
+	<h5>Where's your favorite place to get fabric? Let's add them <a asp-page="./Create">here</a>.</h5>
+}
