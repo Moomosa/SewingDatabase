@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using BackendDatabase.Controllers.Machine;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -24,11 +25,22 @@ namespace FrontEnd.Pages.Data.Machine
 
 		public IList<SewingModels.Models.Machine> Machine { get; set; } = default!;
 
-		public async Task OnGetAsync()
+		public async Task<IActionResult> OnGetAsync()
 		{
-			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-			if (userId != null)
-				Machine = await _apiService.GetRecordsForUser<SewingModels.Models.Machine>("Machine", userId);
+			Machine = HttpContext.Session.GetObjectFromJson<IList<SewingModels.Models.Machine>>("Machines");
+
+			if (Machine == null)
+			{
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+				if (userId != null)
+				{
+					Machine = await _apiService.GetRecordsForUser<SewingModels.Models.Machine>("Machine", userId);
+					HttpContext.Session.SetObjectAsJson("Machines", Machine);
+				}
+				else
+					return RedirectToPage("/Account/Login");
+			}
+			return Page();
 		}
 	}
 }

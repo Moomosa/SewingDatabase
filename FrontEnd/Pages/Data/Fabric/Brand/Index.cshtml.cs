@@ -25,11 +25,22 @@ namespace FrontEnd.Pages.Data.Fabric.Brand
 
 		public IList<FabricBrand> FabricBrand { get; set; } = default!;
 
-		public async Task OnGetAsync()
+		public async Task<IActionResult> OnGetAsync()
 		{
-			var userNameClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-			if (userNameClaim != null)
-				FabricBrand = await _apiService.GetRecordsForUser<FabricBrand>("FabricBrand", userNameClaim);
+			FabricBrand = HttpContext.Session.GetObjectFromJson<IList<FabricBrand>>("FBrands");
+
+			if (FabricBrand == null)
+			{
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+				if (userId != null)
+				{
+					FabricBrand = await _apiService.GetRecordsForUser<FabricBrand>("FabricBrand", userId);
+					HttpContext.Session.SetObjectAsJson("FBrands", FabricBrand);
+				}
+				else
+					return RedirectToPage("/Account/Login");
+			}
+			return Page();
 		}
 	}
 }

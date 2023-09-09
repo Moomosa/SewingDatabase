@@ -56,7 +56,10 @@ namespace FrontEnd.Pages.Data.Thread.Color
             HttpResponseMessage response = await _apiService.PostNewItem(ThreadColor, "/api/ThreadColor", userId);
 
             if (response.IsSuccessStatusCode)
+            {
+                HttpContext.Session.Remove("TColor");
                 return RedirectToPage("./Index");
+            }
             else
             {
                 ModelState.AddModelError("", "Failed to create item");

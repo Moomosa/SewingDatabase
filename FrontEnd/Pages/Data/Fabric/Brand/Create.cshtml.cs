@@ -40,7 +40,10 @@ namespace FrontEnd.Pages.Data.Fabric.Brand
 			HttpResponseMessage response = await _apiService.PostNewItem(FabricBrand, "/api/FabricBrand", userId);
 
 			if (response.IsSuccessStatusCode)
+			{
+				HttpContext.Session.Remove("FBrands");
 				return RedirectToPage("./Index");
+			}
 			else
 			{
 				ModelState.AddModelError("", "Failed to create item");

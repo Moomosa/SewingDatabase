@@ -40,7 +40,10 @@ namespace FrontEnd.Pages.Data.Thread.Type
 			HttpResponseMessage response = await _apiService.PostNewItem(ThreadTypes, "/api/ThreadTypes", userId);
 
 			if (response.IsSuccessStatusCode)
+			{
+				HttpContext.Session.Remove("TTypes");
 				return RedirectToPage("./Index");
+			}
 			else
 			{
 				ModelState.AddModelError("", "Failed to create item");

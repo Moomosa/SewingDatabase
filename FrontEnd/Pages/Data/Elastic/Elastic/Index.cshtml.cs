@@ -12,23 +12,34 @@ using System.Security.Claims;
 
 namespace FrontEnd.Pages.Data.Elastic.Elastic
 {
-    [Authorize(Roles = "User,Admin")]
-    public class IndexModel : PageModel
-    {
-        private readonly ApiService _apiService;
+	[Authorize(Roles = "User,Admin")]
+	public class IndexModel : PageModel
+	{
+		private readonly ApiService _apiService;
 
-        public IndexModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
+		public IndexModel(ApiService apiService)
+		{
+			_apiService = apiService;
+		}
 
-        public IList<SewingModels.Models.Elastic> Elastic { get;set; } = default!;
+		public IList<SewingModels.Models.Elastic> Elastic { get; set; } = default!;
 
-        public async Task OnGetAsync()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId != null)
-                Elastic = await _apiService.GetRecordsForUser<SewingModels.Models.Elastic>("Elastic", userId);
-        }
-    }
+		public async Task<IActionResult> OnGetAsync()
+		{
+			Elastic = HttpContext.Session.GetObjectFromJson<IList<SewingModels.Models.Elastic>>("Elastics");
+
+			if (Elastic == null)
+			{
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+				if (userId != null)
+				{
+					Elastic = await _apiService.GetRecordsForUser<SewingModels.Models.Elastic>("Elastic", userId);
+					HttpContext.Session.SetObjectAsJson("Elastics", Elastic);
+				}
+				else
+					return RedirectToPage("/Account/Login");
+			}
+			return Page();
+		}
+	}
 }

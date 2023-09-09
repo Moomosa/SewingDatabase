@@ -57,7 +57,10 @@ namespace FrontEnd.Pages.Data.Elastic.Elastic
             HttpResponseMessage response = await _apiService.PostNewItem(Elastic, "/api/Elastic", userId);
 
             if (response.IsSuccessStatusCode)
+            {
+                HttpContext.Session.Remove("Elastics");
                 return RedirectToPage("./Index");
+            }
             else
             {
                 ModelState.AddModelError("", "Failed to create item");

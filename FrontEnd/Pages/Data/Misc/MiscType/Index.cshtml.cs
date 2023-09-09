@@ -12,23 +12,35 @@ using SewingModels.Models;
 
 namespace FrontEnd.Pages.Data.Misc.MiscType
 {
-    [Authorize(Roles = "User,Admin")]
-    public class IndexModel : PageModel
-    {
-        private readonly ApiService _apiService;
+	[Authorize(Roles = "User,Admin")]
+	public class IndexModel : PageModel
+	{
+		private readonly ApiService _apiService;
 
-        public IndexModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
+		public IndexModel(ApiService apiService)
+		{
+			_apiService = apiService;
+		}
 
-        public IList<MiscItemType> MiscItemType { get;set; } = default!;
+		public IList<MiscItemType> MiscItemType { get; set; } = default!;
 
-        public async Task OnGetAsync()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId != null)
-                MiscItemType = await _apiService.GetRecordsForUser<MiscItemType>("MiscItemType", userId);
-        }
-    }
+		public async Task<IActionResult> OnGetAsync()
+		{
+			MiscItemType = HttpContext.Session.GetObjectFromJson<IList<MiscItemType>>("MTypes");
+
+			if (MiscItemType == null)
+			{
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+				if (userId != null)
+				{
+					MiscItemType = await _apiService.GetRecordsForUser<MiscItemType>("MiscItemType", userId);
+					HttpContext.Session.SetObjectAsJson("MTypes", MiscItemType);
+				}
+				else
+					return RedirectToPage("/Account/Login");
+			}
+			return Page();
+		}
+	}
 }
+

@@ -40,7 +40,10 @@ namespace FrontEnd.Pages.Data.Misc.MiscType
             HttpResponseMessage response = await _apiService.PostNewItem(MiscItemType, "/api/MiscItemType", userId);
 
             if (response.IsSuccessStatusCode)
+            {
+                HttpContext.Session.Remove("MTypes");
                 return RedirectToPage("./Index");
+            }
             else
             {
                 ModelState.AddModelError("", "Failed to create item");

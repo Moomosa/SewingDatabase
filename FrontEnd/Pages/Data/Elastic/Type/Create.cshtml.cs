@@ -40,7 +40,10 @@ namespace FrontEnd.Pages.Data.Elastic.Type
 			HttpResponseMessage response = await _apiService.PostNewItem(ElasticTypes, "/api/ElasticTypes", userId);
 
 			if (response.IsSuccessStatusCode)
+			{
+				HttpContext.Session.Remove("ETypes");
 				return RedirectToPage("./Index");
+			}
 			else
 			{
 				ModelState.AddModelError("", "Failed to create item");

@@ -12,24 +12,35 @@ using SewingModels.Models;
 
 namespace FrontEnd.Pages.Data.Thread.Thread
 {
-    [Authorize(Roles = "User,Admin")]
-    public class IndexModel : PageModel
-    {
-        private readonly ApiService _apiService;
+	[Authorize(Roles = "User,Admin")]
+	public class IndexModel : PageModel
+	{
+		private readonly ApiService _apiService;
 
-        public IndexModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
+		public IndexModel(ApiService apiService)
+		{
+			_apiService = apiService;
+		}
 
-        public IList<SewingModels.Models.Thread> Thread { get;set; } = default!;
+		public IList<SewingModels.Models.Thread> Thread { get; set; } = default!;
 
-        public async Task OnGetAsync()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+		public async Task<IActionResult> OnGetAsync()
+		{
+			Thread = HttpContext.Session.GetObjectFromJson<IList<SewingModels.Models.Thread>>("Threads");
 
-            if (userId != null)
-                Thread = await _apiService.GetRecordsForUser<SewingModels.Models.Thread>("Thread", userId);
-        }
-    }
+			if (Thread == null)
+			{
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+				if (userId != null)
+				{
+					Thread = await _apiService.GetRecordsForUser<SewingModels.Models.Thread>("Thread", userId);
+					HttpContext.Session.SetObjectAsJson("Threads", Thread);
+				}
+				else
+					return RedirectToPage("/Account/Login");
+			}
+			return Page();
+		}
+	}
 }

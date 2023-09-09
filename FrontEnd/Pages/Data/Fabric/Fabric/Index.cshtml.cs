@@ -15,21 +15,32 @@ namespace FrontEnd.Pages.Data.Fabric.Fabric
 {
 	[Authorize(Roles = "User,Admin")]
 	public class IndexModel : PageModel
-    {
-        private readonly ApiService _apiService;
+	{
+		private readonly ApiService _apiService;
 
-        public IndexModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
+		public IndexModel(ApiService apiService)
+		{
+			_apiService = apiService;
+		}
 
-        public IList<SewingModels.Models.Fabric> Fabric { get;set; } = default!;
+		public IList<SewingModels.Models.Fabric> Fabric { get; set; } = default!;
 
-        public async Task OnGetAsync()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId != null)
-                Fabric = await _apiService.GetRecordsForUser<SewingModels.Models.Fabric>("Fabric", userId);
-        }
-    }
+		public async Task<IActionResult> OnGetAsync()
+		{
+			Fabric = HttpContext.Session.GetObjectFromJson<IList<SewingModels.Models.Fabric>>("Fabrics");
+
+			if (Fabric == null)
+			{
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+				if (userId != null)
+				{
+					Fabric = await _apiService.GetRecordsForUser<SewingModels.Models.Fabric>("Fabric", userId);
+					HttpContext.Session.SetObjectAsJson("Fabrics", Fabric);
+				}
+				else
+					return RedirectToPage("/Account/Login");
+			}
+			return Page();
+		}
+	}
 }

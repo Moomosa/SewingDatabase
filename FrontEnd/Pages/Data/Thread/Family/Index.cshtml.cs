@@ -12,23 +12,34 @@ using System.Security.Claims;
 
 namespace FrontEnd.Pages.Data.Thread.Family
 {
-    [Authorize(Roles = "User,Admin")]
-    public class IndexModel : PageModel
-    {
-        private readonly ApiService _apiService;
+	[Authorize(Roles = "User,Admin")]
+	public class IndexModel : PageModel
+	{
+		private readonly ApiService _apiService;
 
-        public IndexModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
+		public IndexModel(ApiService apiService)
+		{
+			_apiService = apiService;
+		}
 
-        public IList<ThreadColorFamily> ThreadColorFamily { get;set; } = default!;
+		public IList<ThreadColorFamily> ThreadColorFamily { get; set; } = default!;
 
-        public async Task OnGetAsync()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId != null)
-                ThreadColorFamily = await _apiService.GetRecordsForUser<ThreadColorFamily>("ThreadColorFamily", userId);
-        }
-    }
+		public async Task<IActionResult> OnGetAsync()
+		{
+			ThreadColorFamily = HttpContext.Session.GetObjectFromJson<IList<ThreadColorFamily>>("TFamily");
+
+			if (ThreadColorFamily == null)
+			{
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+				if (userId != null)
+				{
+					ThreadColorFamily = await _apiService.GetRecordsForUser<ThreadColorFamily>("ThreadColorFamily", userId);
+					HttpContext.Session.SetObjectAsJson("TFamily", ThreadColorFamily);
+				}
+				else
+					return RedirectToPage("/Account/Login");
+			}
+			return Page();
+		}
+	}
 }

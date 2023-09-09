@@ -41,7 +41,10 @@ namespace FrontEnd.Pages.Data.Thread.Family
             HttpResponseMessage response = await _apiService.PostNewItem(ThreadColorFamily, "/api/ThreadColorFamily", userId);
 
             if (response.IsSuccessStatusCode)
+            {
+                HttpContext.Session.Remove("TFamily");
                 return RedirectToPage("./Index");
+            }
             else
             {
                 ModelState.AddModelError("", "Failed to create item");

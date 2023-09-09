@@ -14,21 +14,32 @@ namespace FrontEnd.Pages.Data.Thread.Color
 {
 	[Authorize(Roles = "User,Admin")]
 	public class IndexModel : PageModel
-    {
-        private readonly ApiService _apiService;
+	{
+		private readonly ApiService _apiService;
 
-        public IndexModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
+		public IndexModel(ApiService apiService)
+		{
+			_apiService = apiService;
+		}
 
-        public IList<ThreadColor> ThreadColor { get;set; } = default!;
+		public IList<ThreadColor> ThreadColor { get; set; } = default!;
 
-        public async Task OnGetAsync()
-        {
-			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId != null)
-                ThreadColor = await _apiService.GetRecordsForUser<ThreadColor>("ThreadColor", userId);
+		public async Task<IActionResult> OnGetAsync()
+		{
+			ThreadColor = HttpContext.Session.GetObjectFromJson<IList<ThreadColor>>("TColor");
+
+			if (ThreadColor == null)
+			{
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+				if (userId != null)
+				{
+					ThreadColor = await _apiService.GetRecordsForUser<ThreadColor>("ThreadColor", userId);
+					HttpContext.Session.SetObjectAsJson("TColor", ThreadColor);
+				}
+				else
+					return RedirectToPage("/Account/Login");
+			}
+			return Page();
 		}
 	}
 }

@@ -12,23 +12,34 @@ using System.Security.Claims;
 
 namespace FrontEnd.Pages.Data.Thread.Type
 {
-    [Authorize(Roles = "User,Admin")]
-    public class IndexModel : PageModel
-    {
-        private readonly ApiService _apiService;
+	[Authorize(Roles = "User,Admin")]
+	public class IndexModel : PageModel
+	{
+		private readonly ApiService _apiService;
 
-        public IndexModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
+		public IndexModel(ApiService apiService)
+		{
+			_apiService = apiService;
+		}
 
-        public IList<ThreadTypes> ThreadTypes { get;set; } = default!;
+		public IList<ThreadTypes> ThreadTypes { get; set; } = default!;
 
-        public async Task OnGetAsync()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId != null)
-                ThreadTypes = await _apiService.GetRecordsForUser<ThreadTypes>("ThreadTypes", userId);
-        }
-    }
+		public async Task<IActionResult> OnGetAsync()
+		{
+			ThreadTypes = HttpContext.Session.GetObjectFromJson<IList<ThreadTypes>>("TTypes");
+
+			if (ThreadTypes == null)
+			{
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+				if (userId != null)
+				{
+					ThreadTypes = await _apiService.GetRecordsForUser<ThreadTypes>("ThreadTypes", userId);
+					HttpContext.Session.SetObjectAsJson("TTypes", ThreadTypes);
+				}
+				else
+					return RedirectToPage("/Account/Login");
+			}
+			return Page();
+		}
+	}
 }

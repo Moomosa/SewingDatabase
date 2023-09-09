@@ -42,7 +42,10 @@ namespace FrontEnd.Pages.Data.Machine
 			HttpResponseMessage response = await _apiService.PostNewItem(Machine, "/api/Machine", userId);
 
 			if (response.IsSuccessStatusCode)
+			{
+				HttpContext.Session.Remove("Machines");
 				return RedirectToPage("./Index");
+			}
 			else
 			{
 				ModelState.AddModelError("", "Failed to create item");

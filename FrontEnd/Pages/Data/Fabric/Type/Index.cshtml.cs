@@ -25,11 +25,22 @@ namespace FrontEnd.Pages.Data.Fabric.Type
 
 		public IList<FabricTypes> FabricTypes { get; set; } = default!;
 
-		public async Task OnGetAsync()
+		public async Task<IActionResult> OnGetAsync()
 		{
-			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-			if (userId != null)
-				FabricTypes = await _apiService.GetRecordsForUser<FabricTypes>("FabricTypes", userId);
+			FabricTypes = HttpContext.Session.GetObjectFromJson<IList<FabricTypes>>("FTypes");
+
+			if (FabricTypes == null)
+			{
+				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+				if (userId != null)
+				{
+					FabricTypes = await _apiService.GetRecordsForUser<FabricTypes>("FabricTypes", userId);
+					HttpContext.Session.SetObjectAsJson("FTypes", FabricTypes);
+				}
+				else
+					return RedirectToPage("/Account/Login");
+			}
+			return Page();
 		}
 	}
 }
