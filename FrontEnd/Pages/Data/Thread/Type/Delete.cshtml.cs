@@ -52,6 +52,9 @@ namespace FrontEnd.Pages.Data.Thread.Type
 				return RedirectToPage("Delete", new { id });
 			}
 
+			HttpContext.Session.Remove("TTypes");
+			HttpContext.Session.Remove("TTypesTotalRecords");
+
 			return RedirectToPage("./Index");
 		}
 	}

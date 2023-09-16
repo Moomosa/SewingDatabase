@@ -48,9 +48,12 @@ namespace FrontEnd.Pages.Data.Machine
 			bool deleted = await _apiService.DeleteItem<SewingModels.Models.Machine>(id.Value);
 			if (!deleted)
 			{
-				TempData["DeleteFailureMessage"] = "Deletion is not allowed because it is used in a Fabric.";
+				TempData["DeleteFailureMessage"] = "Deletion is not allowed.";
 				return RedirectToPage("Delete", new { id });
 			}
+
+			HttpContext.Session.Remove("Machines");
+			HttpContext.Session.Remove("MachineTotalRecords");
 
 			return RedirectToPage("./Index");
 		}

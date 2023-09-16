@@ -49,7 +49,10 @@ namespace FrontEnd.Pages.Data.Thread.Color
             if (!deleted)
                 return NotFound();
 
-            return RedirectToPage("./Index");
+			HttpContext.Session.Remove("TColor");
+			HttpContext.Session.Remove("TColorTotalRecords");
+
+			return RedirectToPage("./Index");
         }
     }
 }

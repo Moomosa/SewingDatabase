@@ -70,6 +70,31 @@ namespace BackendDatabase.Controllers.Fabric
 			return fabricBrand;
 		}
 
+		// GET: api/FabricBrand/count/{userId}
+		[HttpGet("count/{userId}")]
+		public async Task<ActionResult<int>> GetTotalCount(string userId)
+		{
+			List<int> brandRecordIds = await _helper.GetRecordIds("FabricBrand", userId);
+			int count = brandRecordIds.Count;
+			return count;
+		}
+
+		// GET: api/FabricBrand/paged/{userId}/{page}/{recordsPerPage}
+		[HttpGet("paged/{userId}/{page}/{recordsPerPage}")]
+		public async Task<ActionResult<IEnumerable<FabricBrand>>> GetPagedFabricBrand(string userId, int page, int recordsPerPage)
+		{
+			List<int> fabricBrandRecordIds = await _helper.GetRecordIds("FabricBrand", userId);
+
+			var brands = await _context.FabricBrand
+				.OrderBy(fb => fb.ID)
+				.Where(fb => fabricBrandRecordIds.Contains(fb.ID))
+				.Skip((page - 1) * recordsPerPage)
+				.Take(recordsPerPage)
+				.ToListAsync();
+
+			return brands;
+		}
+
 		// PUT: api/FabricBrand/5
 		[HttpPut("{id}")]
 		public async Task<IActionResult> PutFabricBrand(int id, FabricBrand fabricBrand)

@@ -68,8 +68,33 @@ namespace BackendDatabase.Controllers.Misc
             return miscItemType;
         }
 
-        // PUT: api/MiscItemTypes/5
-        [HttpPut("{id}")]
+		// GET: api/MiscItemType/count/{userId}
+		[HttpGet("count/{userId}")]
+		public async Task<ActionResult<int>> GetTotalCount(string userId)
+		{
+			List<int> miscItemTypeRecordIds = await _helper.GetRecordIds("MiscItemType", userId);
+			int count = miscItemTypeRecordIds.Count;
+			return count;
+		}
+
+		// GET: api/MiscItemType/paged/{userId}/{page}/{recordsPerPage}
+		[HttpGet("paged/{userId}/{page}/{recordsPerPage}")]
+		public async Task<ActionResult<IEnumerable<MiscItemType>>> GetPagedMiscItemType(string userId, int page, int recordsPerPage)
+		{
+			List<int> miscItemTypeRecordIds = await _helper.GetRecordIds("MiscItemType", userId);
+
+			var miscItemTypes = await _context.MiscItemType
+				.OrderBy(mit => mit.ID)
+				.Where(mit => miscItemTypeRecordIds.Contains(mit.ID))
+				.Skip((page - 1) * recordsPerPage)
+				.Take(recordsPerPage)
+				.ToListAsync();
+
+			return miscItemTypes;
+		}
+
+		// PUT: api/MiscItemTypes/5
+		[HttpPut("{id}")]
         public async Task<IActionResult> PutMiscItemType(int id, MiscItemType miscItemType)
         {
             if (id != miscItemType.ID)

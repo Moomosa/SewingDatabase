@@ -31,9 +31,9 @@ namespace BackendDatabase.Controllers.Fabric
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<SewingModels.Models.Fabric>>> GetFabric()
 		{
-			if(_context.Fabric == null)			
+			if (_context.Fabric == null)
 				return NotFound();
-			
+
 			var fabrics = await _context.Fabric
 				.Include(f => f.FabricType)
 				.Include(f => f.FabricBrand)
@@ -45,8 +45,8 @@ namespace BackendDatabase.Controllers.Fabric
 			return fabrics;
 		}
 
-        // GET: api/Fabric/byIds/{tableName}/{userName}
-        [HttpGet("byIds/{tableName}/{userName}")]
+		// GET: api/Fabric/byIds/{tableName}/{userName}
+		[HttpGet("byIds/{tableName}/{userName}")]
 		public async Task<ActionResult<IEnumerable<SewingModels.Models.Fabric>>> GetFabricByIds(string tableName, string userName)
 		{
 			List<int> ids = await _helper.GetRecordIds(tableName, userName);
@@ -82,6 +82,33 @@ namespace BackendDatabase.Controllers.Fabric
 				return Forbid();
 
 			return fabric;
+		}
+
+		// GET: api/Fabric/count/{userId}
+		[HttpGet("count/{userId}")]
+		public async Task<ActionResult<int>> GetTotalCount(string userId)
+		{
+			List<int> fabricRecordIds = await _helper.GetRecordIds("Fabric", userId);
+			int count = fabricRecordIds.Count;
+			return count;
+		}
+
+		// GET: api/Fabric/paged/{userId}/{page}/{recordsPerPage}
+		[HttpGet("paged/{userId}/{page}/{recordsPerPage}")]
+		public async Task<ActionResult<IEnumerable<SewingModels.Models.Fabric>>> GetPagedFabric(string userId, int page, int recordsPerPage)
+		{
+			List<int> fabricRecordIds = await _helper.GetRecordIds("Fabric", userId);
+
+			var fabrics = await _context.Fabric
+				.Include(f => f.FabricBrand)
+				.Include(f => f.FabricType)
+				.OrderBy(f => f.ID)
+				.Where(f => fabricRecordIds.Contains(f.ID))
+				.Skip((page - 1) * recordsPerPage)
+				.Take(recordsPerPage)
+				.ToListAsync();
+
+			return fabrics;
 		}
 
 		// PUT: api/Fabric/5

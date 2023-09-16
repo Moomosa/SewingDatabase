@@ -84,6 +84,35 @@ namespace BackendDatabase.Controllers.Thread
 			return thread;
 		}
 
+		// GET: api/Thread/count/{userId}
+		[HttpGet("count/{userId}")]
+		public async Task<ActionResult<int>> GetTotalCount(string userId)
+		{
+			List<int> threadRecordIds = await _helper.GetRecordIds("Thread", userId);
+			int count = threadRecordIds.Count;
+			return count;
+		}
+
+		// GET: api/Fabric/paged/{userId}/{page}/{recordsPerPage}
+		[HttpGet("paged/{userId}/{page}/{recordsPerPage}")]
+		public async Task<ActionResult<IEnumerable<SewingModels.Models.Thread>>> GetPagedThread(string userId, int page, int recordsPerPage)
+		{
+			List<int> threadRecordIds = await _helper.GetRecordIds("Thread", userId);
+
+			var threads = await _context.Thread
+				.Include(t => t.ThreadType)
+				.Include(t => t.Color)
+				.Include(t => t.ColorFamily)
+				.OrderBy(f => f.ID)
+				.Where(f => threadRecordIds.Contains(f.ID))
+				.Skip((page - 1) * recordsPerPage)
+				.Take(recordsPerPage)
+				.ToListAsync();
+
+			return threads;
+		}
+
+
 		// PUT: api/Threads/5
 		[HttpPut("{id}")]
 		public async Task<IActionResult> PutThread(int id, SewingModels.Models.Thread thread)

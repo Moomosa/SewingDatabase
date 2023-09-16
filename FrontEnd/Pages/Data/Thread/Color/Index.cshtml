@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{currentpage:int?}"
 @model FrontEnd.Pages.Data.Thread.Color.IndexModel
 
 @{
@@ -39,6 +39,9 @@
 			}
 		</tbody>
 	</table>
+	<div>
+		@await Html.PartialAsync("_Pagination", Model)
+	</div>
 }
 else
 {

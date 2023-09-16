@@ -71,6 +71,31 @@ namespace BackendDatabase.Controllers.Fabric
 			return fabricTypes;
 		}
 
+		// GET: api/FabricTypes/count/{userId}
+		[HttpGet("count/{userId}")]
+		public async Task<ActionResult<int>> GetTotalCount(string userId)
+		{
+			List<int> ftypesRecordIds = await _helper.GetRecordIds("FabricTypes", userId);
+			int count = ftypesRecordIds.Count;
+			return count;
+		}
+
+		// GET: api/FabricTypes/paged/{userId}/{page}/{recordsPerPage}
+		[HttpGet("paged/{userId}/{page}/{recordsPerPage}")]
+		public async Task<ActionResult<IEnumerable<FabricTypes>>> GetPagedTypes(string userId, int page, int recordsPerPage)
+		{
+			List<int> typesRecordIds = await _helper.GetRecordIds("FabricTypes", userId);
+
+			var types = await _context.FabricTypes
+				.OrderBy(ft => ft.ID)
+				.Where(ft => typesRecordIds.Contains(ft.ID))
+				.Skip((page - 1) * recordsPerPage)
+				.Take(recordsPerPage)
+				.ToListAsync();
+
+			return types;
+		}
+
 		// PUT: api/FabricTypes/5
 		[HttpPut("{id}")]
 		public async Task<IActionResult> PutFabricTypes(int id, FabricTypes fabricTypes)

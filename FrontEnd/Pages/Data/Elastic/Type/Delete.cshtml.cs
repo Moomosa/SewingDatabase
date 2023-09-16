@@ -12,47 +12,50 @@ using System.Security.Claims;
 
 namespace FrontEnd.Pages.Data.Elastic.Type
 {
-    [Authorize(Roles = "User,Admin")]
-    public class DeleteModel : PageModel
-    {
-        private readonly ApiService _apiService;
+	[Authorize(Roles = "User,Admin")]
+	public class DeleteModel : PageModel
+	{
+		private readonly ApiService _apiService;
 
-        public DeleteModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
+		public DeleteModel(ApiService apiService)
+		{
+			_apiService = apiService;
+		}
 
-        [BindProperty]
-        public ElasticTypes ElasticTypes { get; set; } = default!;
+		[BindProperty]
+		public ElasticTypes ElasticTypes { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null)
-                return NotFound();
+		public async Task<IActionResult> OnGetAsync(int? id)
+		{
+			if (id == null)
+				return NotFound();
 
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            ElasticTypes = await _apiService.GetSingleItem<ElasticTypes>(id.Value, userId);
+			ElasticTypes = await _apiService.GetSingleItem<ElasticTypes>(id.Value, userId);
 
-            if (ElasticTypes == null)
-                return NotFound();
+			if (ElasticTypes == null)
+				return NotFound();
 
-            return Page();
-        }
+			return Page();
+		}
 
-        public async Task<IActionResult> OnPostAsync(int? id)
-        {
-            if (id == null || ElasticTypes == null)            
-                return NotFound();
+		public async Task<IActionResult> OnPostAsync(int? id)
+		{
+			if (id == null || ElasticTypes == null)
+				return NotFound();
 
-            bool deleted = await _apiService.DeleteItem<ElasticTypes>(id.Value);
-            if (!deleted)
-            {
-                TempData["DeleteFailureMessage"] = "Deletion is not allowed because it is used in an Elastic.";
-                return RedirectToPage("Delete", new { id });
-            }
+			bool deleted = await _apiService.DeleteItem<ElasticTypes>(id.Value);
+			if (!deleted)
+			{
+				TempData["DeleteFailureMessage"] = "Deletion is not allowed because it is used in an Elastic.";
+				return RedirectToPage("Delete", new { id });
+			}
 
-            return RedirectToPage("./Index");
-        }
-    }
+			HttpContext.Session.Remove("ETypes");
+			HttpContext.Session.Remove("ETypesTotalRecords");
+
+			return RedirectToPage("./Index");
+		}
+	}
 }

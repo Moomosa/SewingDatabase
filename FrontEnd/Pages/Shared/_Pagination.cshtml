@@ -1,0 +1,25 @@
+﻿@if (Model.TotalPages > 1)
+{
+	<div>
+		<ul class="pagination">
+			<li class="page-item @(!Model.ShowFirst? "disabled" : "")">
+				<a asp-page="./Index" asp-route-currentpage="1" class="page-link"><i class="fas fa-fast-backward"></i></a>
+			</li>
+			<li class="page-item @(!Model.ShowPrevious? "disabled" : "")">
+				<a asp-page="./Index" asp-route-currentpage="@(Model.CurrentPage -1)" class="page-link"><i class="fas fa-step-backward"></i></a>
+			</li>
+			@for (int i = Math.Max(1, Model.CurrentPage - 2); i <= Math.Min(Model.TotalPages, Model.CurrentPage + 2); i++)
+			{
+				<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+					<a asp-page="./Index" asp-route-currentpage="@i" class="page-link">@i</a>
+				</li>
+			}
+			<li class="page-item @(!Model.ShowNext? "disabled" : "")">
+				<a asp-page="./Index" asp-route-currentpage="@(Model.CurrentPage + 1)" class="page-link"><i class="fas fa-step-forward"></i></a>
+			</li>
+			<li class="page-item @(!Model.ShowLast? "disabled" : "")">
+				<a asp-page="./Index" asp-route-currentpage="@Model.TotalPages" class="page-link"><i class="fas fa-fast-forward"></i></a>
+			</li>
+		</ul>
+	</div>
+}

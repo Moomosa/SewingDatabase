@@ -12,44 +12,47 @@ using System.Security.Claims;
 
 namespace FrontEnd.Pages.Data.Misc.MiscObjects
 {
-    [Authorize(Roles = "User,Admin")]
-    public class DeleteModel : PageModel
-    {
-        private readonly ApiService _apiService;
+	[Authorize(Roles = "User,Admin")]
+	public class DeleteModel : PageModel
+	{
+		private readonly ApiService _apiService;
 
-        public DeleteModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
+		public DeleteModel(ApiService apiService)
+		{
+			_apiService = apiService;
+		}
 
-        [BindProperty]
-        public SewingModels.Models.MiscObjects MiscObjects { get; set; } = default!;
+		[BindProperty]
+		public SewingModels.Models.MiscObjects MiscObjects { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null)
-                return NotFound();
+		public async Task<IActionResult> OnGetAsync(int? id)
+		{
+			if (id == null)
+				return NotFound();
 
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            MiscObjects = await _apiService.GetSingleItem<SewingModels.Models.MiscObjects>(id.Value, userId);
+			MiscObjects = await _apiService.GetSingleItem<SewingModels.Models.MiscObjects>(id.Value, userId);
 
-            if (MiscObjects == null)
-                return NotFound();
+			if (MiscObjects == null)
+				return NotFound();
 
-            return Page();
-        }
+			return Page();
+		}
 
-        public async Task<IActionResult> OnPostAsync(int? id)
-        {
-            if (id == null || MiscObjects == null)            
-                return NotFound();
+		public async Task<IActionResult> OnPostAsync(int? id)
+		{
+			if (id == null || MiscObjects == null)
+				return NotFound();
 
-            bool deleted = await _apiService.DeleteItem<SewingModels.Models.MiscObjects>(id.Value);
-            if (!deleted)
-                return NotFound();
+			bool deleted = await _apiService.DeleteItem<SewingModels.Models.MiscObjects>(id.Value);
+			if (!deleted)
+				return NotFound();
 
-            return RedirectToPage("./Index");
-        }
-    }
+			HttpContext.Session.Remove("MObjects");
+			HttpContext.Session.Remove("MOTotalRecords");
+
+			return RedirectToPage("./Index");
+		}
+	}
 }

@@ -48,7 +48,10 @@ namespace FrontEnd.Pages.Data.Fabric.Fabric
 
 			bool deleted = await _apiService.DeleteItem<SewingModels.Models.Fabric>(id.Value);
 			if (!deleted)
-				return NotFound();			
+				return NotFound();
+
+			HttpContext.Session.Remove("Fabrics");
+			HttpContext.Session.Remove("FabricTotalRecords");
 
 			return RedirectToPage("./Index");
 		}

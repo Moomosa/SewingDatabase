@@ -44,6 +44,7 @@ namespace FrontEnd.Pages.Data.Machine
 			if (response.IsSuccessStatusCode)
 			{
 				HttpContext.Session.Remove("Machines");
+				HttpContext.Session.Remove("MachineTotalRecords");
 				return RedirectToPage("./Index");
 			}
 			else

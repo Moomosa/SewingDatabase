@@ -42,6 +42,7 @@ namespace FrontEnd.Pages.Data.Misc.MiscType
             if (response.IsSuccessStatusCode)
             {
                 HttpContext.Session.Remove("MTypes");
+                HttpContext.Session.Remove("MITypeTotalRecords");
                 return RedirectToPage("./Index");
             }
             else

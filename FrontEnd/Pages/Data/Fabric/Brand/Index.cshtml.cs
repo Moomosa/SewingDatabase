@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace FrontEnd.Pages.Data.Fabric.Brand
 {
@@ -24,22 +26,59 @@ namespace FrontEnd.Pages.Data.Fabric.Brand
 		}
 
 		public IList<FabricBrand> FabricBrand { get; set; } = default!;
+		[BindProperty(SupportsGet = true)]
+		public int CurrentPage { get; set; } = 1;
+		public int PageSize { get; set; } = 1;    //Set this to number of rows seen on page
+		public int TotalRecords { get; set; } = -1;
+		public int TotalPages => (int)Math.Ceiling(decimal.Divide(TotalRecords, PageSize));
+		public bool ShowPrevious => CurrentPage > 1;
+		public bool ShowNext => CurrentPage < TotalPages;
+		public bool ShowFirst => CurrentPage != 1;
+		public bool ShowLast => CurrentPage != TotalPages;
+
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			FabricBrand = HttpContext.Session.GetObjectFromJson<IList<FabricBrand>>("FBrands");
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			if (userId == null) return RedirectToPage("/Account/Login");
 
-			if (FabricBrand == null)
+			if (!HttpContext.Session.TryGetValue("FBrandTotalRecords", out byte[] totalRecordsBytes))
 			{
-				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-				if (userId != null)
+				TotalRecords = await _apiService.GetTotalRecords<FabricBrand>("FabricBrand", userId);
+				HttpContext.Session.SetObjectAsJson("FBrandTotalRecords", TotalRecords);
+			}
+			else
+				TotalRecords = JsonConvert.DeserializeObject<int>(Encoding.UTF8.GetString(totalRecordsBytes));
+
+
+			int lastPageVisited = HttpContext.Session.GetObjectFromJson<int>("FBrandLastPage");
+
+			string referrer = HttpContext.Request.Headers["Referer"];
+			if (!string.IsNullOrEmpty(referrer) && referrer.Contains("Fabric/Brand"))
+			{
+				if (CurrentPage != lastPageVisited)
 				{
-					FabricBrand = await _apiService.GetRecordsForUser<FabricBrand>("FabricBrand", userId);
+					FabricBrand = await _apiService.GetPagedRecords<FabricBrand>("FabricBrand", userId, CurrentPage, PageSize);
 					HttpContext.Session.SetObjectAsJson("FBrands", FabricBrand);
+					HttpContext.Session.SetObjectAsJson("FBrandLastPage", CurrentPage);
 				}
 				else
-					return RedirectToPage("/Account/Login");
+					FabricBrand = HttpContext.Session.GetObjectFromJson<IList<FabricBrand>>("FBrands");
 			}
+			else
+			{
+				if (lastPageVisited != 0)
+				{
+					CurrentPage = lastPageVisited;
+					FabricBrand = HttpContext.Session.GetObjectFromJson<IList<FabricBrand>>("FBrands");
+				}
+				else
+				{
+					FabricBrand = await _apiService.GetPagedRecords<FabricBrand>("FabricBrand", userId, CurrentPage, PageSize);
+					HttpContext.Session.SetObjectAsJson("FBrands", FabricBrand);
+				}
+			}
+
 			return Page();
 		}
 	}

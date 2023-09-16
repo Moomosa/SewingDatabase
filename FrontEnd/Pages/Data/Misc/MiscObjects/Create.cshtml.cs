@@ -13,57 +13,58 @@ using SewingModels.Models;
 
 namespace FrontEnd.Pages.Data.Misc.MiscObjects
 {
-    [Authorize(Roles = "User,Admin")]
-    public class CreateModel : PageModel
-    {
-        private readonly ApiService _apiService;
+	[Authorize(Roles = "User,Admin")]
+	public class CreateModel : PageModel
+	{
+		private readonly ApiService _apiService;
 
-        [BindProperty]
-        public SewingModels.Models.MiscObjects MiscObjects { get; set; } = default!;
-        [BindProperty]
-        public List<MiscItemType> MiscItemTypes { get; set; }
-        public CreateModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
+		[BindProperty]
+		public SewingModels.Models.MiscObjects MiscObjects { get; set; } = default!;
+		[BindProperty]
+		public List<MiscItemType> MiscItemTypes { get; set; }
+		public CreateModel(ApiService apiService)
+		{
+			_apiService = apiService;
+		}
 
-        public async Task<IActionResult> OnGet()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+		public async Task<IActionResult> OnGet()
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            MiscItemTypes = await _apiService.GetRecordsForUser<MiscItemType>("MiscItemType", userId);
+			MiscItemTypes = await _apiService.GetRecordsForUser<MiscItemType>("MiscItemType", userId);
 
-            HttpContext.Session.SetString("MiscItemData", JsonConvert.SerializeObject(MiscItemTypes));
+			HttpContext.Session.SetString("MiscItemData", JsonConvert.SerializeObject(MiscItemTypes));
 
-            return Page();
-        }
+			return Page();
+		}
 
-        public async Task<IActionResult> OnPostAsync()
-        {
-            var serializedItemTypes = HttpContext.Session.GetString("MiscItemData");
-            MiscItemTypes = JsonConvert.DeserializeObject<List<MiscItemType>>(serializedItemTypes);
+		public async Task<IActionResult> OnPostAsync()
+		{
+			var serializedItemTypes = HttpContext.Session.GetString("MiscItemData");
+			MiscItemTypes = JsonConvert.DeserializeObject<List<MiscItemType>>(serializedItemTypes);
 
-            MiscObjects.ItemType = MiscItemTypes.FirstOrDefault(mit => mit.ID == MiscObjects.ItemTypeID);
+			MiscObjects.ItemType = MiscItemTypes.FirstOrDefault(mit => mit.ID == MiscObjects.ItemTypeID);
 
-            ModelState.Remove("MiscObjects.ItemType");
+			ModelState.Remove("MiscObjects.ItemType");
 
-            if (!ModelState.IsValid || _apiService == null)            
-                return Page();
+			if (!ModelState.IsValid || _apiService == null)
+				return Page();
 
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            HttpResponseMessage response = await _apiService.PostNewItem(MiscObjects, "/api/MiscObjects", userId);
+			HttpResponseMessage response = await _apiService.PostNewItem(MiscObjects, "/api/MiscObjects", userId);
 
-            if (response.IsSuccessStatusCode)
-            {
-                HttpContext.Session.Remove("MiscItems");
-                return RedirectToPage("./Index");
-            }
-            else
-            {
-                ModelState.AddModelError("", "Failed to create item");
-                return Page();
-            }
-        }
-    }
+			if (response.IsSuccessStatusCode)
+			{
+				HttpContext.Session.Remove("MObjects");
+				HttpContext.Session.Remove("MOTotalRecords");
+				return RedirectToPage("./Index");
+			}
+			else
+			{
+				ModelState.AddModelError("", "Failed to create item");
+				return Page();
+			}
+		}
+	}
 }

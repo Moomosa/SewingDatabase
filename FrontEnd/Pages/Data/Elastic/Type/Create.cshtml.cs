@@ -42,6 +42,7 @@ namespace FrontEnd.Pages.Data.Elastic.Type
 			if (response.IsSuccessStatusCode)
 			{
 				HttpContext.Session.Remove("ETypes");
+				HttpContext.Session.Remove("ETypesTotalRecords");
 				return RedirectToPage("./Index");
 			}
 			else

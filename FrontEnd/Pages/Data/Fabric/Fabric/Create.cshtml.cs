@@ -74,6 +74,7 @@ namespace FrontEnd.Pages.Data.Fabric.Fabric
 			if (response.IsSuccessStatusCode)
 			{
 				HttpContext.Session.Remove("Fabrics");
+				HttpContext.Session.Remove("FabricTotalRecords");
 				return RedirectToPage("./Index");
 			}
 			else

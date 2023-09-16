@@ -13,44 +13,47 @@ using System.Security.Claims;
 
 namespace FrontEnd.Pages.Data.Elastic.Elastic
 {
-    [Authorize(Roles = "User,Admin")]
-    public class DeleteModel : PageModel
-    {
-        private readonly ApiService _apiService;
+	[Authorize(Roles = "User,Admin")]
+	public class DeleteModel : PageModel
+	{
+		private readonly ApiService _apiService;
 
-        public DeleteModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
+		public DeleteModel(ApiService apiService)
+		{
+			_apiService = apiService;
+		}
 
-        [BindProperty]
-        public SewingModels.Models.Elastic Elastic { get; set; } = default!;
+		[BindProperty]
+		public SewingModels.Models.Elastic Elastic { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null)            
-                return NotFound();
+		public async Task<IActionResult> OnGetAsync(int? id)
+		{
+			if (id == null)
+				return NotFound();
 
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            Elastic = await _apiService.GetSingleItem<SewingModels.Models.Elastic>(id.Value, userId);            
+			Elastic = await _apiService.GetSingleItem<SewingModels.Models.Elastic>(id.Value, userId);
 
-            if (Elastic == null)            
-                return NotFound();            
-            
-            return Page();
-        }
+			if (Elastic == null)
+				return NotFound();
 
-        public async Task<IActionResult> OnPostAsync(int? id)
-        {
-            if (id == null || Elastic == null)            
-                return NotFound();
+			return Page();
+		}
 
-            bool deleted = await _apiService.DeleteItem<SewingModels.Models.Elastic>(id.Value);
-            if (!deleted)
-                return NotFound();
+		public async Task<IActionResult> OnPostAsync(int? id)
+		{
+			if (id == null || Elastic == null)
+				return NotFound();
 
-            return RedirectToPage("./Index");
-        }
-    }
+			bool deleted = await _apiService.DeleteItem<SewingModels.Models.Elastic>(id.Value);
+			if (!deleted)
+				return NotFound();
+
+			HttpContext.Session.Remove("Elastics");
+			HttpContext.Session.Remove("ElasticTotalRecords");
+
+			return RedirectToPage("./Index");
+		}
+	}
 }

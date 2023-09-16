@@ -53,6 +53,9 @@ namespace FrontEnd.Pages.Data.Fabric.Brand
 				return RedirectToPage("Delete", new { id });
 			}
 
+			HttpContext.Session.Remove("FBrands");
+			HttpContext.Session.Remove("FBrandTotalRecords");
+
 			return RedirectToPage("./Index");
 		}
 	}

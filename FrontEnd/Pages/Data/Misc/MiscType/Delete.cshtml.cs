@@ -52,7 +52,10 @@ namespace FrontEnd.Pages.Data.Misc.MiscType
                 return RedirectToPage("Delete", new { id });
             }
 
-            return RedirectToPage("./Index");
+			HttpContext.Session.Remove("MTypes");
+			HttpContext.Session.Remove("MITypeTotalRecords");
+
+			return RedirectToPage("./Index");
         }
     }
 }

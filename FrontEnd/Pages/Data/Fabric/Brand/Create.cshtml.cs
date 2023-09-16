@@ -42,6 +42,7 @@ namespace FrontEnd.Pages.Data.Fabric.Brand
 			if (response.IsSuccessStatusCode)
 			{
 				HttpContext.Session.Remove("FBrands");
+				HttpContext.Session.Remove("FBrandTotalRecords");
 				return RedirectToPage("./Index");
 			}
 			else

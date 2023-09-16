@@ -12,44 +12,47 @@ using System.Security.Claims;
 
 namespace FrontEnd.Pages.Data.Thread.Thread
 {
-    [Authorize(Roles = "User,Admin")]
-    public class DeleteModel : PageModel
-    {
-        private readonly ApiService _apiService;
+	[Authorize(Roles = "User,Admin")]
+	public class DeleteModel : PageModel
+	{
+		private readonly ApiService _apiService;
 
-        public DeleteModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
+		public DeleteModel(ApiService apiService)
+		{
+			_apiService = apiService;
+		}
 
-        [BindProperty]
-        public SewingModels.Models.Thread Thread { get; set; } = default!;
+		[BindProperty]
+		public SewingModels.Models.Thread Thread { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null)            
-                return NotFound();
+		public async Task<IActionResult> OnGetAsync(int? id)
+		{
+			if (id == null)
+				return NotFound();
 
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            Thread = await _apiService.GetSingleItem<SewingModels.Models.Thread>(id.Value, userId);
+			Thread = await _apiService.GetSingleItem<SewingModels.Models.Thread>(id.Value, userId);
 
-            if (Thread == null)            
-                return NotFound();            
-            
-            return Page();
-        }
+			if (Thread == null)
+				return NotFound();
 
-        public async Task<IActionResult> OnPostAsync(int? id)
-        {
-            if (id == null || Thread == null)            
-                return NotFound();
+			return Page();
+		}
 
-            bool deleted = await _apiService.DeleteItem<SewingModels.Models.Thread>(id.Value);
-            if (!deleted)
-                return NotFound();
+		public async Task<IActionResult> OnPostAsync(int? id)
+		{
+			if (id == null || Thread == null)
+				return NotFound();
 
-            return RedirectToPage("./Index");
-        }
-    }
+			bool deleted = await _apiService.DeleteItem<SewingModels.Models.Thread>(id.Value);
+			if (!deleted)
+				return NotFound();
+
+			HttpContext.Session.Remove("Threads");
+			HttpContext.Session.Remove("ThreadTotalRecords");
+
+			return RedirectToPage("./Index");
+		}
+	}
 }

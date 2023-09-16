@@ -78,6 +78,7 @@ namespace FrontEnd.Pages.Data.Thread.Thread
 			if (response.IsSuccessStatusCode)
 			{
 				HttpContext.Session.Remove("Threads");
+				HttpContext.Session.Remove("ThreadTotalRecords");
 				return RedirectToPage("./Index");
 			}
 			else

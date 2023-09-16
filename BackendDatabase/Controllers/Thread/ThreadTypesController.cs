@@ -70,6 +70,31 @@ namespace BackendDatabase.Controllers.Thread
 			return threadTypes;
 		}
 
+		// GET: api/ThreadTypes/count/{userId}
+		[HttpGet("count/{userId}")]
+		public async Task<ActionResult<int>> GetTotalCount(string userId)
+		{
+			List<int> ThreadTypesRecordIds = await _helper.GetRecordIds("ThreadTypes", userId);
+			int count = ThreadTypesRecordIds.Count;
+			return count;
+		}
+
+		// GET: api/ThreadTypes/paged/{userId}/{page}/{recordsPerPage}
+		[HttpGet("paged/{userId}/{page}/{recordsPerPage}")]
+		public async Task<ActionResult<IEnumerable<ThreadTypes>>> GetPagedThreadTypes(string userId, int page, int recordsPerPage)
+		{
+			List<int> ThreadTypesRecordIds = await _helper.GetRecordIds("ThreadTypes", userId);
+
+			var threadTypes = await _context.ThreadTypes
+				.OrderBy(tt => tt.ID)
+				.Where(tt => ThreadTypesRecordIds.Contains(tt.ID))
+				.Skip((page - 1) * recordsPerPage)
+				.Take(recordsPerPage)
+				.ToListAsync();
+
+			return threadTypes;
+		}
+
 		// PUT: api/ThreadTypes/5
 		[HttpPut("{id}")]
 		public async Task<IActionResult> PutThreadTypes(int id, ThreadTypes threadTypes)

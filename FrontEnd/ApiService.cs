@@ -5,6 +5,7 @@ using SewingModels.Models;
 using System.Text;
 using System.Net.Http;
 using ModelLibrary.Models.Database;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace FrontEnd
 {
@@ -40,6 +41,38 @@ namespace FrontEnd
 			{
 				//Handle error
 				return null;
+			}
+		}
+
+		public async Task<int> GetTotalRecords<T>(string tableName, string userId) where T : class
+		{
+			HttpResponseMessage countResponse = await _httpClient.GetAsync($"/api/{tableName}/count/{userId}");
+
+			if (countResponse.IsSuccessStatusCode)
+			{
+				string countJson = await countResponse.Content.ReadAsStringAsync();
+				int count = JsonConvert.DeserializeObject<int>(countJson);
+				return count;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
+		public async Task<List<T>> GetPagedRecords<T>(string tabelName, string userId, int currentPage, int recordsPerPage) where T : class
+		{
+			HttpResponseMessage response = await _httpClient.GetAsync($"/api/{tabelName}/paged/{userId}/{currentPage}/{recordsPerPage}");
+
+			if (response.IsSuccessStatusCode)
+			{
+				string resultJson = await response.Content.ReadAsStringAsync();
+				List<T> values = JsonConvert.DeserializeObject<List<T>>(resultJson);
+				return values;
+			}
+			else
+			{
+				return new List<T>();
 			}
 		}
 

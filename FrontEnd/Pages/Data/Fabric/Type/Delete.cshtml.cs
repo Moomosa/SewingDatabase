@@ -53,6 +53,9 @@ namespace FrontEnd.Pages.Data.Fabric.Type
 				return RedirectToPage("Delete", new { id });
 			}
 
+			HttpContext.Session.Remove("FTypes");
+			HttpContext.Session.Remove("FTypesTotalRecords");
+
 			return RedirectToPage("./Index");
 		}
 	}

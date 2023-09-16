@@ -79,8 +79,35 @@ namespace BackendDatabase.Controllers.Thread
             return threadColor;
         }
 
-        // PUT: api/ThreadColors/5
-        [HttpPut("{id}")]
+		// GET: api/ThreadColor/count/{userId}
+		[HttpGet("count/{userId}")]
+		public async Task<ActionResult<int>> GetTotalCount(string userId)
+		{
+			List<int> colorRecordIds = await _helper.GetRecordIds("ThreadColor", userId);
+			int count = colorRecordIds.Count;
+			return count;
+		}
+
+		// GET: api/ThreadColor/paged/{userId}/{page}/{recordsPerPage}
+		[HttpGet("paged/{userId}/{page}/{recordsPerPage}")]
+		public async Task<ActionResult<IEnumerable<ThreadColor>>> GetPagedThreadColor(string userId, int page, int recordsPerPage)
+		{
+			List<int> colorRecordIds = await _helper.GetRecordIds("ThreadColor", userId);
+
+			var colors = await _context.ThreadColor
+				.Include(tc => tc.ColorFamily)
+				.OrderBy(tc => tc.ID)
+				.Where(tc => colorRecordIds.Contains(tc.ID))
+				.Skip((page - 1) * recordsPerPage)
+				.Take(recordsPerPage)
+				.ToListAsync();
+
+			return colors;
+		}
+
+
+		// PUT: api/ThreadColors/5
+		[HttpPut("{id}")]
         public async Task<IActionResult> PutThreadColor(int id, ThreadColor threadColor)
         {
             if (id != threadColor.ID)

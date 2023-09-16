@@ -42,6 +42,7 @@ namespace FrontEnd.Pages.Data.Fabric.Type
 			if (response.IsSuccessStatusCode)
 			{
 				HttpContext.Session.Remove("FTypes");
+				HttpContext.Session.Remove("FTypesTotalRecords");
 				return RedirectToPage("./Index");
 			}
 			else

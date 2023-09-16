@@ -69,8 +69,34 @@ namespace BackendDatabase.Controllers.Thread
             return threadColorFamily;
         }
 
-        // PUT: api/ThreadColorFamily/5
-        [HttpPut("{id}")]
+		// GET: api/ThreadColorFamily/count/{userId}
+		[HttpGet("count/{userId}")]
+		public async Task<ActionResult<int>> GetTotalCount(string userId)
+		{
+			List<int> fabricRecordIds = await _helper.GetRecordIds("ThreadColorFamily", userId);
+			int count = fabricRecordIds.Count;
+			return count;
+		}
+
+		// GET: api/ThreadColorFamily/paged/{userId}/{page}/{recordsPerPage}
+		[HttpGet("paged/{userId}/{page}/{recordsPerPage}")]
+		public async Task<ActionResult<IEnumerable<ThreadColorFamily>>> GetPagedThreadColorFamily(string userId, int page, int recordsPerPage)
+		{
+			List<int> TCFamily = await _helper.GetRecordIds("ThreadColorFamily", userId);
+
+			var families = await _context.ThreadColorFamily
+				.OrderBy(tcf => tcf.ID)
+				.Where(tcf => TCFamily.Contains(tcf.ID))
+				.Skip((page - 1) * recordsPerPage)
+				.Take(recordsPerPage)
+				.ToListAsync();
+
+			return families;
+		}
+
+
+		// PUT: api/ThreadColorFamily/5
+		[HttpPut("{id}")]
         public async Task<IActionResult> PutThreadColorFamily(int id, ThreadColorFamily threadColorFamily)
         {
             if (id != threadColorFamily.ID)

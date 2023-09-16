@@ -58,6 +58,7 @@ namespace FrontEnd.Pages.Data.Thread.Color
             if (response.IsSuccessStatusCode)
             {
                 HttpContext.Session.Remove("TColor");
+                HttpContext.Session.Remove("TColorTotalRecords");
                 return RedirectToPage("./Index");
             }
             else

@@ -78,6 +78,32 @@ namespace BackendDatabase.Controllers.Misc
 			return miscObjects;
 		}
 
+		// GET: api/MiscObjects/count/{userId}
+		[HttpGet("count/{userId}")]
+		public async Task<ActionResult<int>> GetTotalCount(string userId)
+		{
+			List<int> miscObjectRecordIds = await _helper.GetRecordIds("MiscObjects", userId);
+			int count = miscObjectRecordIds.Count;
+			return count;
+		}
+
+		// GET: api/MiscObjects/paged/{userId}/{page}/{recordsPerPage}
+		[HttpGet("paged/{userId}/{page}/{recordsPerPage}")]
+		public async Task<ActionResult<IEnumerable<MiscObjects>>> GetPagedMiscObjects(string userId, int page, int recordsPerPage)
+		{
+			List<int> miscObjectRecordIds = await _helper.GetRecordIds("MiscObjects", userId);
+
+			var miscObjects = await _context.MiscObjects
+				.Include(mo => mo.ItemType)
+				.OrderBy(mo => mo.ID)
+				.Where(mo => miscObjectRecordIds.Contains(mo.ID))
+				.Skip((page - 1) * recordsPerPage)
+				.Take(recordsPerPage)
+				.ToListAsync();
+
+			return miscObjects;
+		}
+
 		// PUT: api/MiscObjects/5
 		[HttpPut("{id}")]
 		public async Task<IActionResult> PutMiscObjects(int id, SewingModels.Models.MiscObjects miscObjects)

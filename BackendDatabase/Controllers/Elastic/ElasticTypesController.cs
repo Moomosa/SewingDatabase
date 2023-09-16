@@ -68,6 +68,31 @@ namespace BackendDatabase.Controllers.Elastic
 			return elasticTypes;
 		}
 
+		// GET: api/ElasticTypes/count/{userId}
+		[HttpGet("count/{userId}")]
+		public async Task<ActionResult<int>> GetTotalCount(string userId)
+		{
+			List<int> etypesRecordIds = await _helper.GetRecordIds("ElasticTypes", userId);
+			int count = etypesRecordIds.Count;
+			return count;
+		}
+
+		// GET: api/ElasticTypes/paged/{userId}/{page}/{recordsPerPage}
+		[HttpGet("paged/{userId}/{page}/{recordsPerPage}")]
+		public async Task<ActionResult<IEnumerable<ElasticTypes>>> GetPagedElasticTypes(string userId, int page, int recordsPerPage)
+		{
+			List<int> etypesRecordIds = await _helper.GetRecordIds("ElasticTypes", userId);
+
+			var eTypes = await _context.ElasticTypes
+				.OrderBy(et => et.ID)
+				.Where(et => etypesRecordIds.Contains(et.ID))
+				.Skip((page - 1) * recordsPerPage)
+				.Take(recordsPerPage)
+				.ToListAsync();
+
+			return eTypes;
+		}
+
 		// PUT: api/ElasticTypes/5
 		[HttpPut("{id}")]
 		public async Task<IActionResult> PutElasticTypes(int id, ElasticTypes elasticTypes)

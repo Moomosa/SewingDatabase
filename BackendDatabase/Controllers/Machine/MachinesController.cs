@@ -25,7 +25,7 @@ namespace BackendDatabase.Controllers.Machine
 			_helper = helper;
 		}
 
-		// GET: api/Machines
+		// GET: api/Machine
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<SewingModels.Models.Machine>>> GetMachine()
 		{
@@ -35,7 +35,7 @@ namespace BackendDatabase.Controllers.Machine
 			return await _context.Machine.ToListAsync();
 		}
 
-		// GET: api/Machines/byIds/{tableName}/{userName}
+		// GET: api/Machine/byIds/{tableName}/{userName}
 		[HttpGet("byIds/{tableName}/{userName}")]
 		public async Task<ActionResult<IEnumerable<SewingModels.Models.Machine>>> GetMachinesByIds(string tableName, string userName)
 		{
@@ -51,7 +51,7 @@ namespace BackendDatabase.Controllers.Machine
 			return machines;
 		}
 
-		// GET: api/Machines/5/{userId}
+		// GET: api/Machine/5/{userId}
 		[HttpGet("{id}/{userId}")]
 		public async Task<ActionResult<SewingModels.Models.Machine>> GetMachine(int id, string userId)
 		{
@@ -69,7 +69,32 @@ namespace BackendDatabase.Controllers.Machine
 			return machine;
 		}
 
-		// PUT: api/Machines/5
+		// GET: api/Machine/count/{userId}
+		[HttpGet("count/{userId}")]
+		public async Task<ActionResult<int>> GetTotalCount(string userId)
+		{
+			List<int> machineRecordIds = await _helper.GetRecordIds("Machine", userId);
+			int count = machineRecordIds.Count;
+			return count;
+		}
+
+		// GET: api/Machine/paged/{userId}/{page}/{recordsPerPage}
+		[HttpGet("paged/{userId}/{page}/{recordsPerPage}")]
+		public async Task<ActionResult<IEnumerable<SewingModels.Models.Machine>>> GetPagedMachine(string userId, int page, int recordsPerPage)
+		{
+			List<int> machineRecordIds = await _helper.GetRecordIds("Machine", userId);
+
+			var machines = await _context.Machine
+				.OrderBy(m => m.ID)
+				.Where(m => machineRecordIds.Contains(m.ID))
+				.Skip((page - 1) * recordsPerPage)
+				.Take(recordsPerPage)
+				.ToListAsync();
+
+			return machines;
+		}
+
+		// PUT: api/Machine/5
 		[HttpPut("{id}")]
 		public async Task<IActionResult> PutMachine(int id, SewingModels.Models.Machine machine)
 		{
@@ -99,7 +124,7 @@ namespace BackendDatabase.Controllers.Machine
 			return NoContent();
 		}
 
-		// POST: api/Machines
+		// POST: api/Machine
 		[HttpPost]
 		public async Task<ActionResult<SewingModels.Models.Machine>> PostMachine(SewingModels.Models.Machine machine, string userId)
 		{
@@ -136,7 +161,7 @@ namespace BackendDatabase.Controllers.Machine
 			}
 		}
 
-		// DELETE: api/Machines/5
+		// DELETE: api/Machine/5
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteMachine(int id)
 		{

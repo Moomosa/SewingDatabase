@@ -59,6 +59,7 @@ namespace FrontEnd.Pages.Data.Elastic.Elastic
             if (response.IsSuccessStatusCode)
             {
                 HttpContext.Session.Remove("Elastics");
+                HttpContext.Session.Remove("ElasticTotalRecords");
                 return RedirectToPage("./Index");
             }
             else
