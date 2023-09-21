@@ -31,7 +31,9 @@ builder.Services.AddRazorPages()
 	.AddRazorRuntimeCompilation();
 
 builder.Services.AddSession();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<ApiService>();
+builder.Services.AddScoped<FrontHelpers>();
 
 var configuration = builder.Configuration;
 var baseUrl = configuration.GetSection("AppSettings:BaseUrl").Value;
@@ -43,6 +45,7 @@ if (!app.Environment.IsDevelopment())
 {
 	app.UseExceptionHandler("/Error");
 }
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

@@ -6,11 +6,14 @@
 }
 <h1>Elastic</h1>
 
-@if (Model.Elastic.Count != 0)
+@if (Model.Items.Count != 0)
 {
-	<h4>
-		<a asp-page="Create">Add New Elastic</a>
-	</h4>
+	<div class="d-flex justify-content-between align-items-center">
+		<h4>
+			<a asp-page="Create">Add New Elastic</a>
+		</h4>
+		<partial name="_PageSizeDropdown" model="Model" />
+	</div>
 	<table class="table table-colors">
 		<thead>
 			<tr>
@@ -22,7 +25,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			@foreach (var item in Model.Elastic)
+			@foreach (var item in Model.Items)
 			{
 				<tr class="table-row-clickable" data-href='@Url.Page("./Details", new {id = item.ID})'>
 					<td>

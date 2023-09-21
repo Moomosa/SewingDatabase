@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Shared\_PageSizeDropdown.cshtml" />
     <Content Remove="Pages\Shared\_Pagination.cshtml" />
   </ItemGroup>
 
@@ -43,6 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Pages\Shared\_PageSizeDropdown.cshtml" />
     <None Include="Pages\Shared\_Pagination.cshtml" />
   </ItemGroup>
 

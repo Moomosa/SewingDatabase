@@ -1,0 +1,12 @@
+﻿<div class="form-group">
+	<form method="post" asp-page-handler="ChangePageSize" class="form-inline">
+		<label for="pageSizeDropdown">Records per Page:</label>
+		<select class="form-control form-select" id="pageSizeDropdown" name="selectedPageSize" onchange="this.form.submit()">
+			@foreach (var pageSize in Model.PageSizes)
+			{
+				<option value="@pageSize" selected="@(Model.PageSize == pageSize)">@pageSize</option>
+			}
+		</select>
+		<button type="submit" class="btn" id="hiddenButton" style="display: none;"></button>
+	</form>
+</div>
