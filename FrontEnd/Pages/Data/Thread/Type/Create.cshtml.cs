@@ -9,47 +9,26 @@ using SewingModels.Models;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using FrontEnd.Common;
 
 namespace FrontEnd.Pages.Data.Thread.Type
 {
 	[Authorize(Roles = "User,Admin")]
-	public class CreateModel : PageModel
+	public class CreateModel : BaseCreateModel<ThreadTypes>
 	{
-		private readonly ApiService _apiService;
-
-		[BindProperty]
-		public ThreadTypes ThreadTypes { get; set; } = default!;
-
-		public CreateModel(ApiService apiService)
+		public CreateModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
+			: base(apiService, frontHelpers, httpContextAccessor)
 		{
-			_apiService = apiService;
 		}
 
-		public IActionResult OnGet()
+		public override async Task<IActionResult> OnGetAsync()
 		{
-			return Page();
+			return await base.OnGetAsync();
 		}
 
-		public async Task<IActionResult> OnPostAsync()
+		public override async Task<IActionResult> OnPostAsync()
 		{
-			if (!ModelState.IsValid || _apiService == null)
-				return Page();
-
-			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-			HttpResponseMessage response = await _apiService.PostNewItem(ThreadTypes, "/api/ThreadTypes", userId);
-
-			if (response.IsSuccessStatusCode)
-			{
-				HttpContext.Session.Remove("TTypes");
-				HttpContext.Session.Remove("TTypesTotalRecords");
-				return RedirectToPage("./Index");
-			}
-			else
-			{
-				ModelState.AddModelError("", "Failed to create item");
-				return Page();
-			}
+			return await base.OnPostAsync();
 		}
 	}
 }

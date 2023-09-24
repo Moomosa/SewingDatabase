@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Newtonsoft.Json;
 
-namespace FrontEnd.Pages.Data.Fabric.Fabric
+namespace FrontEnd.Pages.Data.Fabric.Item
 {
 	[Authorize(Roles = "User,Admin")]
 	public class EditModel : PageModel

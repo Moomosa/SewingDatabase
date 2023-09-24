@@ -95,7 +95,6 @@ namespace BackendDatabase.Controllers.Misc
 
 			var miscObjects = await _context.MiscObjects
 				.Include(mo => mo.ItemType)
-				.OrderBy(mo => mo.ID)
 				.Where(mo => miscObjectRecordIds.Contains(mo.ID))
 				.Skip((page - 1) * recordsPerPage)
 				.Take(recordsPerPage)

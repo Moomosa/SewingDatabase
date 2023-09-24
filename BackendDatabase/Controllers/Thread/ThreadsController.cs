@@ -103,7 +103,6 @@ namespace BackendDatabase.Controllers.Thread
 				.Include(t => t.ThreadType)
 				.Include(t => t.Color)
 				.Include(t => t.ColorFamily)
-				.OrderBy(f => f.ID)
 				.Where(f => threadRecordIds.Contains(f.ID))
 				.Skip((page - 1) * recordsPerPage)
 				.Take(recordsPerPage)

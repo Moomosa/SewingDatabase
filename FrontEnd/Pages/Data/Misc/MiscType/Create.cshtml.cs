@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FrontEnd.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,43 +14,22 @@ using SewingModels.Models;
 namespace FrontEnd.Pages.Data.Misc.MiscType
 {
     [Authorize(Roles = "User,Admin")]
-    public class CreateModel : PageModel
+    public class CreateModel : BaseCreateModel<MiscItemType>
     {
-        private readonly ApiService _apiService;
+		public CreateModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
+			: base(apiService, frontHelpers, httpContextAccessor)
+		{
+		}
 
-        public CreateModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
+		public override async Task<IActionResult> OnGetAsync()
+		{
+			await base.OnGetAsync();
+			return Page();
+		}
 
-        public IActionResult OnGet()
-        {
-            return Page();
-        }
-
-        [BindProperty]
-        public MiscItemType MiscItemType { get; set; } = default!;
-
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (!ModelState.IsValid || _apiService == null)
-                return Page();
-
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            HttpResponseMessage response = await _apiService.PostNewItem(MiscItemType, "/api/MiscItemType", userId);
-
-            if (response.IsSuccessStatusCode)
-            {
-                HttpContext.Session.Remove("MTypes");
-                HttpContext.Session.Remove("MITypeTotalRecords");
-                return RedirectToPage("./Index");
-            }
-            else
-            {
-                ModelState.AddModelError("", "Failed to create item");
-                return Page();
-            }
-        }
-    }
+		public override async Task<IActionResult> OnPostAsync()
+		{
+			return await base.OnPostAsync();
+		}
+	}
 }

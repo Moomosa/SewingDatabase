@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FrontEnd.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,51 +14,30 @@ using SewingModels.Models;
 namespace FrontEnd.Pages.Data.Machine
 {
 	[Authorize(Roles = "User,Admin")]
-	public class CreateModel : PageModel
+	public class CreateModel : BaseCreateModel<SewingModels.Models.Machine>
 	{
-		private readonly ApiService _apiService;
-
-		[BindProperty]
-		public SewingModels.Models.Machine Machine { get; set; } = default!;
-
-		public CreateModel(ApiService apiService)
+		public CreateModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
+			: base(apiService, frontHelpers, httpContextAccessor)
 		{
-			_apiService = apiService;
 		}
 
-		public IActionResult OnGet()
+		public override async Task<IActionResult> OnGetAsync()
 		{
+			await base.OnGetAsync();
 			return Page();
 		}
 
-		public async Task<IActionResult> OnPostAsync()
+		public override async Task<IActionResult> OnPostAsync()
 		{
 			UpdateLastServiced();
 
-			if (!ModelState.IsValid || _apiService == null)
-				return Page();
-
-			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-			HttpResponseMessage response = await _apiService.PostNewItem(Machine, "/api/Machine", userId);
-
-			if (response.IsSuccessStatusCode)
-			{
-				HttpContext.Session.Remove("Machines");
-				HttpContext.Session.Remove("MachineTotalRecords");
-				return RedirectToPage("./Index");
-			}
-			else
-			{
-				ModelState.AddModelError("", "Failed to create item");
-				return Page();
-			}
+			return await base.OnPostAsync();
 		}
 
 		public void UpdateLastServiced()
 		{
-			if(Machine.LastServiced == null || Machine.LastServiced == default(DateTime))			
-				Machine.LastServiced = Machine.PurchaseDate;			
+			if(Item.LastServiced == null || Item.LastServiced == default(DateTime))			
+				Item.LastServiced = Item.PurchaseDate;			
 		}
 	}
 }

@@ -85,7 +85,6 @@ namespace BackendDatabase.Controllers.Machine
 			List<int> machineRecordIds = await _helper.GetRecordIds("Machine", userId);
 
 			var machines = await _context.Machine
-				.OrderBy(m => m.ID)
 				.Where(m => machineRecordIds.Contains(m.ID))
 				.Skip((page - 1) * recordsPerPage)
 				.Take(recordsPerPage)

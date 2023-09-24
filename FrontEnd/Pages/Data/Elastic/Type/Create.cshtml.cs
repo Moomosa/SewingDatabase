@@ -9,47 +9,27 @@ using SewingModels.Models;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using FrontEnd.Common;
 
 namespace FrontEnd.Pages.Data.Elastic.Type
 {
 	[Authorize(Roles = "User,Admin")]
-	public class CreateModel : PageModel
+	public class CreateModel : BaseCreateModel<ElasticTypes>
 	{
-		private readonly ApiService _apiService;
-
-		[BindProperty]
-		public ElasticTypes ElasticTypes { get; set; } = default!;
-
-		public CreateModel(ApiService apiService)
+		public CreateModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
+			: base(apiService, frontHelpers, httpContextAccessor)
 		{
-			_apiService = apiService;
 		}
 
-		public IActionResult OnGet()
+		public override async Task<IActionResult> OnGetAsync()
 		{
+			await base.OnGetAsync();
 			return Page();
 		}
 
-		public async Task<IActionResult> OnPostAsync()
+		public override async Task<IActionResult> OnPostAsync()
 		{
-			if (!ModelState.IsValid || _apiService == null)
-				return Page();
-
-			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-			HttpResponseMessage response = await _apiService.PostNewItem(ElasticTypes, "/api/ElasticTypes", userId);
-
-			if (response.IsSuccessStatusCode)
-			{
-				HttpContext.Session.Remove("ETypes");
-				HttpContext.Session.Remove("ETypesTotalRecords");
-				return RedirectToPage("./Index");
-			}
-			else
-			{
-				ModelState.AddModelError("", "Failed to create item");
-				return Page();
-			}
+			return await base.OnPostAsync();
 		}
 	}
 }

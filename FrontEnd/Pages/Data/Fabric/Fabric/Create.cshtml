@@ -1,5 +1,5 @@
 ﻿@page
-@model FrontEnd.Pages.Data.Fabric.Fabric.CreateModel
+@model FrontEnd.Pages.Data.Fabric.Item.CreateModel
 
 @{
 	ViewData["Title"] = "Create";
@@ -14,59 +14,59 @@
 		<form method="post">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 			<div class="form-group">
-					<label asp-for="Fabric.FabricTypeID" class="control-label required-label">Fabric Type</label>
-					<select asp-for="Fabric.FabricTypeID" class="form-control form-select" required>
+					<label asp-for="Item.FabricTypeID" class="control-label required-label">Fabric Type</label>
+					<select asp-for="Item.FabricTypeID" class="form-control form-select" required>
 						<option value=""></option>
 						@foreach (var fabricType in Model.FabricTypes)
 						{
 							<option value="@fabricType.ID">@fabricType.Type</option>
 						}
 					</select>
-					<span asp-validation-for="Fabric.FabricType.ID" class="text-danger"></span>
+					<span asp-validation-for="Item.FabricType.ID" class="text-danger"></span>
 				@if (Model.FabricTypes.Count == 0)
 				{
 					<p class="text-danger m-lg-2">You haven't created any Fabric Types yet. Click <a asp-page="../Type/Create">here</a> to create one.</p>
 				}
 			</div>
 			<div class="form-group">
-				<label asp-for="Fabric.FabricBrandID" class="control-label required-label">Fabric Brand</label>
-				<select asp-for="Fabric.FabricBrandID" class="form-control form-select" required>
+				<label asp-for="Item.FabricBrandID" class="control-label required-label">Fabric Brand</label>
+				<select asp-for="Item.FabricBrandID" class="form-control form-select" required>
 					<option value=""></option>
 					@foreach (var fabricBrand in Model.FabricBrands)
 					{
 						<option value="@fabricBrand.ID">@fabricBrand.FullName</option>
 					}
 				</select>
-					<span asp-validation-for="Fabric.FabricBrand.ID" class="text-danger"></span>
+					<span asp-validation-for="Item.FabricBrand.ID" class="text-danger"></span>
 				@if(Model.FabricBrands.Count == 0)
 				{
 					<p class="text-danger m-lg-2">You haven't created any Fabric Brands yet. Click <a asp-page="../Brand/Create">here</a> to create one.</p>
 				}
 			</div>
 			<div class="form-group">
-				<label asp-for="Fabric.PurchasePrice" class="control-label required-label">Purchase Price</label>
-				<input asp-for="Fabric.PurchasePrice" class="form-control" required/>
-				<span asp-validation-for="Fabric.PurchasePrice" class="text-danger"></span>
+				<label asp-for="Item.PurchasePrice" class="control-label required-label">Purchase Price</label>
+				<input asp-for="Item.PurchasePrice" class="form-control" required/>
+				<span asp-validation-for="Item.PurchasePrice" class="text-danger"></span>
 			</div>
 			<div class="form-group">
-				<label asp-for="Fabric.Value" class="control-label required-label"></label>
-				<input asp-for="Fabric.Value" class="form-control" required/>
-				<span asp-validation-for="Fabric.Value" class="text-danger"></span>
+				<label asp-for="Item.Value" class="control-label required-label"></label>
+				<input asp-for="Item.Value" class="form-control" required/>
+				<span asp-validation-for="Item.Value" class="text-danger"></span>
 			</div>
 			<div class="form-group">
-				<label asp-for="Fabric.Appearance" class="control-label required-label"></label>
-				<input asp-for="Fabric.Appearance" class="form-control" />
-				<span asp-validation-for="Fabric.Appearance" class="text-danger"></span>
+				<label asp-for="Item.Appearance" class="control-label required-label"></label>
+				<input asp-for="Item.Appearance" class="form-control" />
+				<span asp-validation-for="Item.Appearance" class="text-danger"></span>
 			</div>
 			<div class="form-group form-check">
 				<label class="form-check-label">
-					<input class="form-check-input" asp-for="Fabric.SolidOrPrint" />Print
+					<input class="form-check-input" asp-for="Item.SolidOrPrint" />Print
 				</label>
 			</div>
 			<div class="form-group">
-				<label asp-for="Fabric.Amount" class="control-label required-label"></label>
-				<input asp-for="Fabric.Amount" class="form-control" />
-				<span asp-validation-for="Fabric.Amount" class="text-danger"></span>
+				<label asp-for="Item.Amount" class="control-label required-label"></label>
+				<input asp-for="Item.Amount" class="form-control" />
+				<span asp-validation-for="Item.Amount" class="text-danger"></span>
 			</div>
 			<div class="form-group">
 				<input type="submit" value="Create" class="btn btn-primary" />

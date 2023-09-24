@@ -87,7 +87,6 @@ namespace BackendDatabase.Controllers.Fabric
 			List<int> typesRecordIds = await _helper.GetRecordIds("FabricTypes", userId);
 
 			var types = await _context.FabricTypes
-				.OrderBy(ft => ft.ID)
 				.Where(ft => typesRecordIds.Contains(ft.ID))
 				.Skip((page - 1) * recordsPerPage)
 				.Take(recordsPerPage)

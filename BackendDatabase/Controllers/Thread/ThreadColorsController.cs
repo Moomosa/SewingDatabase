@@ -96,7 +96,6 @@ namespace BackendDatabase.Controllers.Thread
 
 			var colors = await _context.ThreadColor
 				.Include(tc => tc.ColorFamily)
-				.OrderBy(tc => tc.ID)
 				.Where(tc => colorRecordIds.Contains(tc.ID))
 				.Skip((page - 1) * recordsPerPage)
 				.Take(recordsPerPage)

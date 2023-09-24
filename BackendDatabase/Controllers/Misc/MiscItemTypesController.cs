@@ -84,7 +84,6 @@ namespace BackendDatabase.Controllers.Misc
 			List<int> miscItemTypeRecordIds = await _helper.GetRecordIds("MiscItemType", userId);
 
 			var miscItemTypes = await _context.MiscItemType
-				.OrderBy(mit => mit.ID)
 				.Where(mit => miscItemTypeRecordIds.Contains(mit.ID))
 				.Skip((page - 1) * recordsPerPage)
 				.Take(recordsPerPage)

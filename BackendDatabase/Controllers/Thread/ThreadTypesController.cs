@@ -86,7 +86,6 @@ namespace BackendDatabase.Controllers.Thread
 			List<int> ThreadTypesRecordIds = await _helper.GetRecordIds("ThreadTypes", userId);
 
 			var threadTypes = await _context.ThreadTypes
-				.OrderBy(tt => tt.ID)
 				.Where(tt => ThreadTypesRecordIds.Contains(tt.ID))
 				.Skip((page - 1) * recordsPerPage)
 				.Take(recordsPerPage)

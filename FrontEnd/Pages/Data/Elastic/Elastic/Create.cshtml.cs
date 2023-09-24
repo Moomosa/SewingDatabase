@@ -10,63 +10,41 @@ using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Newtonsoft.Json;
+using FrontEnd.Common;
 
 namespace FrontEnd.Pages.Data.Elastic.Elastic
 {
     [Authorize(Roles = "User,Admin")]
-    public class CreateModel : PageModel
+    public class CreateModel : BaseCreateModel<SewingModels.Models.Elastic>
     {
-        private readonly ApiService _apiService;
-
-        [BindProperty]
-        public SewingModels.Models.Elastic Elastic { get; set; } = default!;
         [BindProperty]
         public List<ElasticTypes> ElasticTypes { get; set; }
 
-        public CreateModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
+		public CreateModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
+			: base(apiService, frontHelpers, httpContextAccessor)
+		{
+		}
 
-        public async Task<IActionResult> OnGet()
+		public override async Task<IActionResult> OnGetAsync()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            ElasticTypes = await _apiService.GetRecordsForUser<ElasticTypes>("ElasticTypes", userId);
+            ElasticTypes = await _apiService.GatherAllRecords<ElasticTypes>("ElasticTypes", userId, 20);
 
-            HttpContext.Session.SetString("ElasticTypeData", JsonConvert.SerializeObject(ElasticTypes));
-
+            await base.OnGetAsync();
             return Page();
         }
 
 
-        public async Task<IActionResult> OnPostAsync()
-        {
-            var serializedTypes = HttpContext.Session.GetString("ElasticTypeData");
-            ElasticTypes = JsonConvert.DeserializeObject<List<ElasticTypes>>(serializedTypes);
+        public override async Task<IActionResult> OnPostAsync()
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            Elastic.ElasticType = ElasticTypes.FirstOrDefault(et => et.ID == Elastic.ElasticTypeID);
+            Item.ElasticType = await _apiService.GetSingleItem<ElasticTypes>(Item.ElasticTypeID, userId);
 
-            ModelState.Remove("Elastic.ElasticType");
+            ModelState.Remove("Item.ElasticType");
 
-            if (!ModelState.IsValid || _apiService == null)
-                return Page();
-
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            HttpResponseMessage response = await _apiService.PostNewItem(Elastic, "/api/Elastic", userId);
-
-            if (response.IsSuccessStatusCode)
-            {
-                HttpContext.Session.Remove("Elastics");
-                HttpContext.Session.Remove("ElasticTotalRecords");
-                return RedirectToPage("./Index");
-            }
-            else
-            {
-                ModelState.AddModelError("", "Failed to create item");
-                return Page();
-            }
-        }
-    }
+			return await base.OnPostAsync();
+		}
+	}
 }

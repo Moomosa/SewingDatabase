@@ -1,55 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using SewingModels.Models;
-using System.Security.Claims;
-using System.Data;
 using Microsoft.AspNetCore.Authorization;
+using FrontEnd.Common;
 
 namespace FrontEnd.Pages.Data.Fabric.Type
 {
 	[Authorize(Roles = "User,Admin")]
-	public class CreateModel : PageModel
+	public class CreateModel : BaseCreateModel<FabricTypes>
 	{
-		private readonly ApiService _apiService;
-
-		[BindProperty]
-		public FabricTypes FabricTypes { get; set; } = default!;
-
-		public CreateModel(ApiService apiService)
+		public CreateModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
+			: base(apiService, frontHelpers, httpContextAccessor)
 		{
-			_apiService = apiService;
 		}
 
-		public IActionResult OnGet()
+		public override async Task<IActionResult> OnGetAsync()
 		{
+			await base.OnGetAsync();
 			return Page();
 		}
 
-		public async Task<IActionResult> OnPostAsync()
+		public override async Task<IActionResult> OnPostAsync()
 		{
-			if (!ModelState.IsValid || _apiService == null)
-				return Page();
-
-			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-			HttpResponseMessage response = await _apiService.PostNewItem(FabricTypes, "/api/FabricTypes", userId);
-
-			if (response.IsSuccessStatusCode)
-			{
-				HttpContext.Session.Remove("FTypes");
-				HttpContext.Session.Remove("FTypesTotalRecords");
-				return RedirectToPage("./Index");
-			}
-			else
-			{
-				ModelState.AddModelError("", "Failed to create item");
-				return Page();
-			}
+			return await base.OnPostAsync();
 		}
 	}
 }

@@ -76,6 +76,37 @@ namespace FrontEnd
 			}
 		}
 
+		public async Task<List<T>> GatherAllRecords<T>(string tableName, string userId, int chunkSize) where T : class
+		{
+			List<T> allRecords = new List<T>();
+			int currentPage = 1;
+
+			while (true)
+			{
+				HttpResponseMessage response = await _httpClient.GetAsync($"api/{tableName}/paged/{userId}/{currentPage}/{chunkSize}");
+
+				if (response.IsSuccessStatusCode)
+				{
+					string result = await response.Content.ReadAsStringAsync();
+					List<T> chunk = JsonConvert.DeserializeObject<List<T>>(result);
+
+					if (chunk.Count == 0)
+						break;
+
+					allRecords.AddRange(chunk);
+
+					if (chunk.Count < chunkSize)
+						break;
+
+					currentPage++;
+				}
+				else
+					break;
+			}
+
+			return allRecords;
+		}
+
 		public async Task<HttpResponseMessage> PostNewItem<T>(T item, string url, string userId) where T : class
 		{
 			var json = JsonConvert.SerializeObject(item);

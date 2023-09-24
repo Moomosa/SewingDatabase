@@ -1,5 +1,5 @@
 ﻿@page "{currentpage:int?}"
-@model FrontEnd.Pages.Data.Fabric.Fabric.IndexModel
+@model FrontEnd.Pages.Data.Fabric.Item.IndexModel
 
 @{
 	ViewData["Title"] = "Index";
@@ -63,7 +63,7 @@
 		</tbody>
 	</table>
 	<div>
-		@await Html.PartialAsync("_Pagination", Model)
+		<partial name="_Pagination" model="Model" />
 	</div>
 }
 else

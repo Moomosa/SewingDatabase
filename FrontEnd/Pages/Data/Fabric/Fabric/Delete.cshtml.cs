@@ -11,7 +11,7 @@ using System.Security.Claims;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
 
-namespace FrontEnd.Pages.Data.Fabric.Fabric
+namespace FrontEnd.Pages.Data.Fabric.Item
 {
 	[Authorize(Roles = "User,Admin")]
 	public class DeleteModel : PageModel

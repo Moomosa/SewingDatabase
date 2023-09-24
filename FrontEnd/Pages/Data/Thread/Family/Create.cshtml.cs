@@ -10,46 +10,26 @@ using ModelLibrary.Models.Thread;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using FrontEnd.Common;
 
 namespace FrontEnd.Pages.Data.Thread.Family
 {
     [Authorize(Roles = "User,Admin")]
-    public class CreateModel : PageModel
+    public class CreateModel : BaseCreateModel<ThreadColorFamily>
     {
-        private readonly ApiService _apiService;
+		public CreateModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
+			: base(apiService, frontHelpers, httpContextAccessor)
+		{
+		}
 
-        [BindProperty]
-        public ThreadColorFamily ThreadColorFamily { get; set; } = default!;
+		public override async Task<IActionResult> OnGetAsync()
+		{
+			return await base.OnGetAsync();
+		}
 
-        public CreateModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
-
-        public IActionResult OnGet()
-        {
-            return Page();
-        }
-
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (!ModelState.IsValid || _apiService == null)
-                return Page();
-
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            HttpResponseMessage response = await _apiService.PostNewItem(ThreadColorFamily, "/api/ThreadColorFamily", userId);
-
-            if (response.IsSuccessStatusCode)
-            {
-                HttpContext.Session.Remove("TFamily");
-                return RedirectToPage("./Index");
-            }
-            else
-            {
-                ModelState.AddModelError("", "Failed to create item");
-                return Page();
-            }
-        }
-    }
+		public override async Task<IActionResult> OnPostAsync()
+		{
+			return await base.OnPostAsync();
+		}
+	}
 }

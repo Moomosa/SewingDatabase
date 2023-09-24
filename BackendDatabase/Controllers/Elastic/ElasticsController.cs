@@ -96,7 +96,6 @@ namespace BackendDatabase.Controllers.Elastic
 
 			var elastics = await _context.Elastic
 				.Include(e => e.ElasticType)
-				.OrderBy(e => e.ID)
 				.Where(e => elasticRecordIds.Contains(e.ID))
 				.Skip((page - 1) * recordsPerPage)
 				.Take(recordsPerPage)

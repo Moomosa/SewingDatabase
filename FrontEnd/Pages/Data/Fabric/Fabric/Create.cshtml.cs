@@ -1,87 +1,50 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using SewingModels.Models;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.Globalization;
 using Newtonsoft.Json;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
+using FrontEnd.Common;
 
-namespace FrontEnd.Pages.Data.Fabric.Fabric
+namespace FrontEnd.Pages.Data.Fabric.Item
 {
 	[Authorize(Roles = "User,Admin")]
-	public class CreateModel : PageModel
+	public class CreateModel : BaseCreateModel<SewingModels.Models.Fabric>
 	{
-		private readonly ApiService _apiService;
-
-		[BindProperty]
-		public SewingModels.Models.Fabric Fabric { get; set; }
 		[BindProperty]
 		public List<FabricBrand> FabricBrands { get; set; }
 		[BindProperty]
 		public List<FabricTypes> FabricTypes { get; set; }
 
-		public CreateModel(ApiService apiService)
+		public CreateModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
+			: base(apiService, frontHelpers, httpContextAccessor)
 		{
-			_apiService = apiService;
 		}
 
-		public async Task<IActionResult> OnGet()
+		public override async Task<IActionResult> OnGetAsync()
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			//Filling the lists with data from the DB according to the user
-			FabricBrands = await _apiService.GetRecordsForUser<FabricBrand>("FabricBrand", userId);
-			FabricTypes = await _apiService.GetRecordsForUser<FabricTypes>("FabricTypes", userId);
+			FabricBrands = await _apiService.GatherAllRecords<FabricBrand>("FabricBrand", userId, 20);
+			FabricTypes = await _apiService.GatherAllRecords<FabricTypes>("FabricTypes", userId, 20);
 
-			//Setting the Lists to Session states for use in OnPost
-			HttpContext.Session.SetString("FabricBrandData", JsonConvert.SerializeObject(FabricBrands));
-			HttpContext.Session.SetString("FabricTypeData", JsonConvert.SerializeObject(FabricTypes));
-
-			return Page();
+			return await base.OnGetAsync();			
 		}
 
-		public async Task<IActionResult> OnPostAsync()
+		public override async Task<IActionResult> OnPostAsync()
 		{
-			//This is pulling the Lists from Session states
-			var serializedBrands = HttpContext.Session.GetString("FabricBrandData");
-			FabricBrands = JsonConvert.DeserializeObject<List<FabricBrand>>(serializedBrands);
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			var serializedTypes = HttpContext.Session.GetString("FabricTypeData");
-			FabricTypes = JsonConvert.DeserializeObject<List<FabricTypes>>(serializedTypes);
-
-			//So we can assign the values properly without another pull from DB
-			Fabric.FabricBrand = FabricBrands.FirstOrDefault(fb => fb.ID == Fabric.FabricBrandID);
-			Fabric.FabricType = FabricTypes.FirstOrDefault(ft => ft.ID == Fabric.FabricTypeID);
+			Item.FabricBrand = await _apiService.GetSingleItem<FabricBrand>(Item.FabricBrandID, userId);
+			Item.FabricType = await _apiService.GetSingleItem<FabricTypes>(Item.FabricTypeID, userId);
 
 			//If we don't remove these, the ModelState becomes invalid even though properly configured
-			ModelState.Remove("Fabric.FabricBrand");
-			ModelState.Remove("Fabric.FabricType");
+			ModelState.Remove("Item.FabricBrand");
+			ModelState.Remove("Item.FabricType");
 
-			if (!ModelState.IsValid || _apiService == null)
-				return Page();
-
-			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-			HttpResponseMessage response = await _apiService.PostNewItem(Fabric, "/api/Fabric", userId);
-
-			if (response.IsSuccessStatusCode)
-			{
-				HttpContext.Session.Remove("Fabrics");
-				HttpContext.Session.Remove("FabricTotalRecords");
-				return RedirectToPage("./Index");
-			}
-			else
-			{
-				ModelState.AddModelError("", "Failed to create item");
-				return Page();
-			}
+			return await base.OnPostAsync();
 		}
 	}
 }

@@ -85,7 +85,6 @@ namespace BackendDatabase.Controllers.Thread
 			List<int> TCFamily = await _helper.GetRecordIds("ThreadColorFamily", userId);
 
 			var families = await _context.ThreadColorFamily
-				.OrderBy(tcf => tcf.ID)
 				.Where(tcf => TCFamily.Contains(tcf.ID))
 				.Skip((page - 1) * recordsPerPage)
 				.Take(recordsPerPage)

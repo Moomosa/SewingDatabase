@@ -6,7 +6,7 @@ using SewingModels.Models;
 using Microsoft.AspNetCore.Authorization;
 using FrontEnd.Common;
 
-namespace FrontEnd.Pages.Data.Fabric.Fabric
+namespace FrontEnd.Pages.Data.Fabric.Item
 {
 	[Authorize(Roles = "User,Admin")]
 	public class IndexModel : BaseIndexModel<SewingModels.Models.Fabric>

@@ -38,36 +38,47 @@ namespace FrontEnd.Common
 			UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 			if (UserId == null) return RedirectToPage("/Account/Login");
 
-			TotalRecords = await _frontHelpers.GetTotalRecords<T>(TypeName, UserId, _httpContextAccessor, _apiService);
 			PageSize = _frontHelpers.GetCurrentPageSize(TypeName, _httpContextAccessor);
+			TotalRecords = await _frontHelpers.GetTotalRecords<T>(TypeName, UserId, _httpContextAccessor, _apiService);
 			LastPageVisited = _frontHelpers.GetLastPageVisited(TypeName, _httpContextAccessor);
+
 
 			string referrer = HttpContext.Request.Headers["Referer"];
 			if (!string.IsNullOrEmpty(referrer) && referrer.Contains(PagePath))
 			{
 				if (CurrentPage != LastPageVisited) // Handle changing pagination page				
 					Items = await _frontHelpers.CallForRecords<T>(TypeName, UserId, CurrentPage, PageSize, _httpContextAccessor, _apiService);
-				else // Handle refresh possibility				
+				else                                // Handle refresh possibility				
 					Items = _frontHelpers.GetRecordsFromSession<T>(TypeName, _httpContextAccessor);
 			}
 			else
 			{
-				if (LastPageVisited != 0) // Handle coming from not this page
+				if (LastPageVisited != 0)           // Handle coming from not this page
 				{
 					CurrentPage = LastPageVisited;
 					Items = _frontHelpers.GetRecordsFromSession<T>(TypeName, _httpContextAccessor);
 				}
-				else // Handle the first time coming to the page				
+				else                                // Handle the first time coming to the page				
 					Items = await _frontHelpers.CallForRecords<T>(TypeName, UserId, CurrentPage, PageSize, _httpContextAccessor, _apiService);
 			}
 
 			return Page();
 		}
 
-		public async Task<IActionResult> OnPost(int selectedPageSize)
+		public virtual async Task<IActionResult> OnPost(int selectedPageSize)
 		{
+			UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);			
+			int totalRecords = await _frontHelpers.GetTotalRecords<T>(TypeName, UserId, _httpContextAccessor, _apiService);
+			int totalPages = (int)Math.Ceiling((decimal)totalRecords / selectedPageSize);
+
+			if (CurrentPage > totalPages)
+				CurrentPage = totalPages;
+			else if (CurrentPage < 1)
+				CurrentPage = 1;
+
 			_frontHelpers.SetPageValues(TypeName, 0, selectedPageSize, _httpContextAccessor);
-			return RedirectToPage();
+
+			return RedirectToPage("./Index", new { currentPage = CurrentPage });
 		}
 	}
 }

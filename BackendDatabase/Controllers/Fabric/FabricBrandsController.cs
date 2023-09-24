@@ -86,7 +86,6 @@ namespace BackendDatabase.Controllers.Fabric
 			List<int> fabricBrandRecordIds = await _helper.GetRecordIds("FabricBrand", userId);
 
 			var brands = await _context.FabricBrand
-				.OrderBy(fb => fb.ID)
 				.Where(fb => fabricBrandRecordIds.Contains(fb.ID))
 				.Skip((page - 1) * recordsPerPage)
 				.Take(recordsPerPage)

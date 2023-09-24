@@ -84,7 +84,6 @@ namespace BackendDatabase.Controllers.Elastic
 			List<int> etypesRecordIds = await _helper.GetRecordIds("ElasticTypes", userId);
 
 			var eTypes = await _context.ElasticTypes
-				.OrderBy(et => et.ID)
 				.Where(et => etypesRecordIds.Contains(et.ID))
 				.Skip((page - 1) * recordsPerPage)
 				.Take(recordsPerPage)

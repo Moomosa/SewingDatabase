@@ -10,7 +10,7 @@ using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
-namespace FrontEnd.Pages.Data.Fabric.Fabric
+namespace FrontEnd.Pages.Data.Fabric.Item
 {
 	[Authorize(Roles = "User,Admin")]
 	public class DetailsModel : PageModel

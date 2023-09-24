@@ -102,7 +102,6 @@ namespace BackendDatabase.Controllers.Fabric
 			var fabrics = await _context.Fabric
 				.Include(f => f.FabricBrand)
 				.Include(f => f.FabricType)
-				.OrderBy(f => f.ID)
 				.Where(f => fabricRecordIds.Contains(f.ID))
 				.Skip((page - 1) * recordsPerPage)
 				.Take(recordsPerPage)

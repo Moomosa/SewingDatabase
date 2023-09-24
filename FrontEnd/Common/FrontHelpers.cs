@@ -23,7 +23,7 @@ namespace FrontEnd
         }
 
         public int GetLastPageVisited(string typeName, IHttpContextAccessor httpContextAccessor)
-        {
+        {            
             return httpContextAccessor.HttpContext.Session.GetObjectFromJson<int>($"{typeName}LastPageVisited");
         }
 
@@ -36,7 +36,17 @@ namespace FrontEnd
             return 5;
         }
 
-        public void SetPageValues(string type, int currentPage, int pageSize, IHttpContextAccessor httpContextAccessor)
+        public int GetCurrentPage(string typeName, IHttpContextAccessor httpContextAccessor)
+        {
+			if (httpContextAccessor.HttpContext.Session.TryGetValue($"{typeName}LastPageVisited", out byte[] currentPageBytes))
+				if (int.TryParse(Encoding.UTF8.GetString(currentPageBytes), out int currentPage))
+					return currentPage;
+
+			return 1;
+
+		}
+
+		public void SetPageValues(string type, int currentPage, int pageSize, IHttpContextAccessor httpContextAccessor)
         {
 			var session = httpContextAccessor.HttpContext.Session;
             session.SetObjectAsJson($"{type}PageSize", pageSize);
@@ -57,6 +67,12 @@ namespace FrontEnd
             return httpContextAccessor.HttpContext.Session.GetObjectFromJson<IList<T>>($"{type}Records");
         }
 
-        
+        public void ClearSessionData(string type, IHttpContextAccessor httpContextAccessor)
+        {
+            var session = httpContextAccessor.HttpContext.Session;
+            session.Remove($"{type}Records");
+            session.Remove($"{type}TotalRecords");
+			session.SetObjectAsJson($"{type}LastPageVisited", 0);			
+        }
     }
 }

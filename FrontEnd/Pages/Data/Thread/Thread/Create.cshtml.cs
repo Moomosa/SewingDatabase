@@ -11,16 +11,13 @@ using Microsoft.AspNetCore.Authorization;
 using ModelLibrary.Models.Thread;
 using System.Security.Claims;
 using Newtonsoft.Json;
+using FrontEnd.Common;
 
 namespace FrontEnd.Pages.Data.Thread.Thread
 {
 	[Authorize(Roles = "User,Admin")]
-	public class CreateModel : PageModel
+	public class CreateModel : BaseCreateModel<SewingModels.Models.Thread>
 	{
-		private readonly ApiService _apiService;
-
-		[BindProperty]
-		public SewingModels.Models.Thread Thread { get; set; } = default!;
 		[BindProperty]
 		public List<ThreadTypes> ThreadTypes { get; set; }
 		[BindProperty]
@@ -28,64 +25,36 @@ namespace FrontEnd.Pages.Data.Thread.Thread
 		[BindProperty]
 		public List<ThreadColorFamily> ColorFamilies { get; set; }
 
-		public CreateModel(ApiService apiService)
+		public CreateModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
+			: base(apiService, frontHelpers, httpContextAccessor)
 		{
-			_apiService = apiService;
 		}
 
-		public async Task<IActionResult> OnGet()
+		public override async Task<IActionResult> OnGetAsync()
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			ThreadTypes = await _apiService.GetRecordsForUser<ThreadTypes>("ThreadTypes", userId);
-			ThreadColors = await _apiService.GetRecordsForUser<ThreadColor>("ThreadColor", userId);
-			ColorFamilies = await _apiService.GetRecordsForUser<ThreadColorFamily>("ThreadColorFamily", userId);
+			ThreadTypes = await _apiService.GatherAllRecords<ThreadTypes>("ThreadTypes", userId, 20);
+			ThreadColors = await _apiService.GatherAllRecords<ThreadColor>("ThreadColor", userId, 20);
+			ColorFamilies = await _apiService.GatherAllRecords<ThreadColorFamily>("ThreadColorFamily", userId, 20);
 
-			HttpContext.Session.SetString("ThreadTypeData", JsonConvert.SerializeObject(ThreadTypes));
-			HttpContext.Session.SetString("ThreadColorData", JsonConvert.SerializeObject(ThreadColors));
-			HttpContext.Session.SetString("ThreadFamilyData", JsonConvert.SerializeObject(ColorFamilies));
-
-			return Page();
+			return await base.OnGetAsync();
 		}
 
-		public async Task<IActionResult> OnPostAsync()
+		public override async Task<IActionResult> OnPostAsync()
 		{
-			var serializedTypes = HttpContext.Session.GetString("ThreadTypeData");
-			ThreadTypes = JsonConvert.DeserializeObject<List<ThreadTypes>>(serializedTypes);
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			var serializedColors = HttpContext.Session.GetString("ThreadColorData");
-			ThreadColors = JsonConvert.DeserializeObject<List<ThreadColor>>(serializedColors);
+			Item.ThreadType = await _apiService.GetSingleItem<ThreadTypes>(Item.ThreadTypeID, userId);
+			Item.Color = await _apiService.GetSingleItem<ThreadColor>(Item.ColorID, userId);
+			Item.ColorFamily = Item.Color.ColorFamily;
+			Item.ColorFamilyID = Item.Color.ColorFamilyID;
 
-			var serializedFamilies = HttpContext.Session.GetString("ThreadFamilyData");
-			ColorFamilies = JsonConvert.DeserializeObject<List<ThreadColorFamily>>(serializedFamilies);
+			ModelState.Remove("Item.ThreadType");
+			ModelState.Remove("Item.Color");
+			ModelState.Remove("Item.ColorFamily");
 
-			Thread.ThreadType = ThreadTypes.FirstOrDefault(tt => tt.ID == Thread.ThreadTypeID);
-			Thread.Color = ThreadColors.FirstOrDefault(tc => tc.ID == Thread.ColorID);
-			Thread.ColorFamily = ColorFamilies.FirstOrDefault(cf => cf.ID == Thread.Color.ColorFamilyID);
-			Thread.ColorFamilyID = Thread.Color.ColorFamilyID;
-
-			ModelState.Remove("Thread.ThreadType");
-			ModelState.Remove("Thread.Color");
-			ModelState.Remove("Thread.ColorFamily");
-
-			if (!ModelState.IsValid || _apiService == null)
-				return Page();
-
-			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-			HttpResponseMessage response = await _apiService.PostNewItem(Thread, "/api/Thread", userId);
-
-			if (response.IsSuccessStatusCode)
-			{
-				HttpContext.Session.Remove("Threads");
-				HttpContext.Session.Remove("ThreadTotalRecords");
-				return RedirectToPage("./Index");
-			}
-			else
-			{
-				ModelState.AddModelError("", "Failed to create item");
-				return Page();
-			}
+			return await base.OnPostAsync();
 		}
 	}
 }
