@@ -10,53 +10,16 @@ using System.Security.Claims;
 using Microsoft.OpenApi.Exceptions;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
+using FrontEnd.Common;
 
 namespace FrontEnd.Pages.Data.Fabric.Type
 {
 	[Authorize(Roles = "User,Admin")]
-	public class DeleteModel : PageModel
+	public class DeleteModel : BaseDeleteModel<FabricTypes>
 	{
-		private readonly ApiService _apiService;
-
-		public DeleteModel(ApiService apiService)
+		public DeleteModel(IHttpContextAccessor httpContextAccessor)
+			: base(httpContextAccessor)
 		{
-			_apiService = apiService;
-		}
-
-		[BindProperty]
-		public FabricTypes FabricTypes { get; set; } = default!;
-
-		public async Task<IActionResult> OnGetAsync(int? id)
-		{
-			if (id == null)
-				return NotFound();
-
-			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-			FabricTypes = await _apiService.GetSingleItem<FabricTypes>(id.Value, userId);
-
-			if (FabricTypes == null)
-				return NotFound();
-
-			return Page();
-		}
-
-		public async Task<IActionResult> OnPostAsync(int? id)
-		{
-			if (id == null || FabricTypes == null)
-				return NotFound();
-
-			bool deleted = await _apiService.DeleteItem<FabricTypes>(id.Value);
-			if (!deleted)
-			{
-				TempData["DeleteFailureMessage"] = "Deletion is not allowed because it is used in a Fabric.";
-				return RedirectToPage("Delete", new { id });
-			}
-
-			HttpContext.Session.Remove("FTypes");
-			HttpContext.Session.Remove("FTypesTotalRecords");
-
-			return RedirectToPage("./Index");
 		}
 	}
 }

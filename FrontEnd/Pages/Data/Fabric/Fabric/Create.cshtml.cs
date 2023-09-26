@@ -8,18 +8,18 @@ using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using FrontEnd.Common;
 
-namespace FrontEnd.Pages.Data.Fabric.Item
+namespace FrontEnd.Pages.Data.Fabric.Fabric
 {
 	[Authorize(Roles = "User,Admin")]
 	public class CreateModel : BaseCreateModel<SewingModels.Models.Fabric>
 	{
 		[BindProperty]
-		public List<FabricBrand> FabricBrands { get; set; }
+		public List<FabricBrand> FabricBrands { get; set; } = default!;
 		[BindProperty]
-		public List<FabricTypes> FabricTypes { get; set; }
+		public List<FabricTypes> FabricTypes { get; set; } = default!;
 
-		public CreateModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
-			: base(apiService, frontHelpers, httpContextAccessor)
+		public CreateModel(IHttpContextAccessor httpContextAccessor)
+			: base(httpContextAccessor)
 		{
 		}
 
@@ -27,8 +27,8 @@ namespace FrontEnd.Pages.Data.Fabric.Item
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			FabricBrands = await _apiService.GatherAllRecords<FabricBrand>("FabricBrand", userId, 20);
-			FabricTypes = await _apiService.GatherAllRecords<FabricTypes>("FabricTypes", userId, 20);
+			FabricBrands = await ApiService.GatherAllRecords<FabricBrand>("FabricBrand", userId, 20);
+			FabricTypes = await ApiService.GatherAllRecords<FabricTypes>("FabricTypes", userId, 20);
 
 			return await base.OnGetAsync();			
 		}
@@ -37,8 +37,8 @@ namespace FrontEnd.Pages.Data.Fabric.Item
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			Item.FabricBrand = await _apiService.GetSingleItem<FabricBrand>(Item.FabricBrandID, userId);
-			Item.FabricType = await _apiService.GetSingleItem<FabricTypes>(Item.FabricTypeID, userId);
+			Item.FabricBrand = await ApiService.GetSingleItem<FabricBrand>(Item.FabricBrandID, userId);
+			Item.FabricType = await ApiService.GetSingleItem<FabricTypes>(Item.FabricTypeID, userId);
 
 			//If we don't remove these, the ModelState becomes invalid even though properly configured
 			ModelState.Remove("Item.FabricBrand");

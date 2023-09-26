@@ -1,20 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Data;
 using System.Security.Claims;
 
 namespace FrontEnd.Common
 {
+	[Authorize(Roles = "User,Admin")]
 	public abstract class BaseIndexModel<T> : PageModel where T : class
 	{
 		protected readonly string TypeName = typeof(T).Name;
-		protected readonly ApiService _apiService;
-		protected readonly FrontHelpers _frontHelpers;
 		protected readonly IHttpContextAccessor _httpContextAccessor;
 
-		public BaseIndexModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
+		public BaseIndexModel(IHttpContextAccessor httpContextAccessor)
 		{
-			_apiService = apiService;
-			_frontHelpers = frontHelpers;
 			_httpContextAccessor = httpContextAccessor;
 		}
 
@@ -35,31 +34,31 @@ namespace FrontEnd.Common
 
 		public virtual async Task<IActionResult> OnGetAsync()
 		{
-			UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			UserId = FrontHelpers.GetUserId(User);
 			if (UserId == null) return RedirectToPage("/Account/Login");
 
-			PageSize = _frontHelpers.GetCurrentPageSize(TypeName, _httpContextAccessor);
-			TotalRecords = await _frontHelpers.GetTotalRecords<T>(TypeName, UserId, _httpContextAccessor, _apiService);
-			LastPageVisited = _frontHelpers.GetLastPageVisited(TypeName, _httpContextAccessor);
+			PageSize = FrontHelpers.GetCurrentPageSize(TypeName, _httpContextAccessor);
+			TotalRecords = await FrontHelpers.GetTotalRecords<T>(TypeName, UserId, _httpContextAccessor);
+			LastPageVisited = FrontHelpers.GetLastPageVisited(TypeName, _httpContextAccessor);
 
 
 			string referrer = HttpContext.Request.Headers["Referer"];
 			if (!string.IsNullOrEmpty(referrer) && referrer.Contains(PagePath))
 			{
 				if (CurrentPage != LastPageVisited) // Handle changing pagination page				
-					Items = await _frontHelpers.CallForRecords<T>(TypeName, UserId, CurrentPage, PageSize, _httpContextAccessor, _apiService);
+					Items = await FrontHelpers.CallForRecords<T>(TypeName, UserId, CurrentPage, PageSize, _httpContextAccessor);
 				else                                // Handle refresh possibility				
-					Items = _frontHelpers.GetRecordsFromSession<T>(TypeName, _httpContextAccessor);
+					Items = FrontHelpers.GetRecordsFromSession<T>(TypeName, _httpContextAccessor);
 			}
 			else
 			{
 				if (LastPageVisited != 0)           // Handle coming from not this page
 				{
 					CurrentPage = LastPageVisited;
-					Items = _frontHelpers.GetRecordsFromSession<T>(TypeName, _httpContextAccessor);
+					Items = FrontHelpers.GetRecordsFromSession<T>(TypeName, _httpContextAccessor);
 				}
 				else                                // Handle the first time coming to the page				
-					Items = await _frontHelpers.CallForRecords<T>(TypeName, UserId, CurrentPage, PageSize, _httpContextAccessor, _apiService);
+					Items = await FrontHelpers.CallForRecords<T>(TypeName, UserId, CurrentPage, PageSize, _httpContextAccessor);
 			}
 
 			return Page();
@@ -68,7 +67,7 @@ namespace FrontEnd.Common
 		public virtual async Task<IActionResult> OnPost(int selectedPageSize)
 		{
 			UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);			
-			int totalRecords = await _frontHelpers.GetTotalRecords<T>(TypeName, UserId, _httpContextAccessor, _apiService);
+			int totalRecords = await FrontHelpers.GetTotalRecords<T>(TypeName, UserId, _httpContextAccessor);
 			int totalPages = (int)Math.Ceiling((decimal)totalRecords / selectedPageSize);
 
 			if (CurrentPage > totalPages)
@@ -76,7 +75,7 @@ namespace FrontEnd.Common
 			else if (CurrentPage < 1)
 				CurrentPage = 1;
 
-			_frontHelpers.SetPageValues(TypeName, 0, selectedPageSize, _httpContextAccessor);
+			FrontHelpers.SetPageValues(TypeName, 0, selectedPageSize, _httpContextAccessor);
 
 			return RedirectToPage("./Index", new { currentPage = CurrentPage });
 		}

@@ -9,12 +9,10 @@ namespace FrontEnd.Pages
 	public class IndexModel : PageModel
 	{
 		private readonly ILogger<IndexModel> _logger;
-		private readonly ApiService _apiService;
 
-		public IndexModel(ILogger<IndexModel> logger, ApiService apiService)
+		public IndexModel(ILogger<IndexModel> logger)
 		{
 			_logger = logger;
-			_apiService = apiService;
 		}
 
 		public MultiDataDTO multiData { get; set; }
@@ -23,8 +21,9 @@ namespace FrontEnd.Pages
 		{
 			if (User.IsInRole("User"))
 			{
-				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-				multiData = await _apiService.GetMultiData(userId, 5);
+				string userId = FrontHelpers.GetUserId(User);
+				//var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);				
+				multiData = await ApiService.GetMultiData(userId, 5);
 			}
 		}
 	}

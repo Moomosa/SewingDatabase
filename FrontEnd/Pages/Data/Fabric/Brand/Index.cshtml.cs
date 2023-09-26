@@ -12,17 +12,10 @@ namespace FrontEnd.Pages.Data.Fabric.Brand
     public class IndexModel : BaseIndexModel<FabricBrand>
     {
 
-        public IndexModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
-            : base(apiService, frontHelpers, httpContextAccessor)
+        public IndexModel(IHttpContextAccessor httpContextAccessor)
+            : base(httpContextAccessor)
         {
             PagePath = "/Data/Fabric/Brand";
-        }
-
-        public override async Task<IActionResult> OnGetAsync()
-        {
-            await base.OnGetAsync();
-
-            return Page();
         }
     }
 }

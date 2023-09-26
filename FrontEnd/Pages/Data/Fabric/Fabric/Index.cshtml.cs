@@ -6,23 +6,15 @@ using SewingModels.Models;
 using Microsoft.AspNetCore.Authorization;
 using FrontEnd.Common;
 
-namespace FrontEnd.Pages.Data.Fabric.Item
+namespace FrontEnd.Pages.Data.Fabric.Fabric
 {
 	[Authorize(Roles = "User,Admin")]
 	public class IndexModel : BaseIndexModel<SewingModels.Models.Fabric>
 	{
-		public IndexModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
-			: base(apiService, frontHelpers, httpContextAccessor)
+		public IndexModel(IHttpContextAccessor httpContextAccessor)
+			: base(httpContextAccessor)
 		{
 			PagePath = "/Data/Fabric/Fabric";
 		}
-
-
-		public override async Task<IActionResult> OnGetAsync()
-		{
-			await base.OnGetAsync();
-
-			return Page();
-		}				
 	}
 }

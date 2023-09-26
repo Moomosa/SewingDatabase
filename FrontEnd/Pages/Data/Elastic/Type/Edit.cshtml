@@ -13,13 +13,14 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ElasticTypes.ID" />
+            <input type="hidden" asp-for="Item.ID" />
             <div class="form-group">
-                <label asp-for="ElasticTypes.Type" class="control-label"></label>
-                <input asp-for="ElasticTypes.Type" class="form-control" />
-                <span asp-validation-for="ElasticTypes.Type" class="text-danger"></span>
+                <label asp-for="Item.Type" class="control-label"></label>
+                <input asp-for="Item.Type" class="form-control" />
+                <span asp-validation-for="Item.Type" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <input type="hidden" asp-for="Item.ID" />
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>

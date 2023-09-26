@@ -9,35 +9,15 @@ using SewingModels.Models;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using FrontEnd.Common;
 
 namespace FrontEnd.Pages.Data.Elastic.Type
 {
-    [Authorize(Roles = "User,Admin")]
-    public class DetailsModel : PageModel
-    {
-        private readonly ApiService _apiService;
-
-        public DetailsModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
-
-      public ElasticTypes ElasticTypes { get; set; } = default!; 
-
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null || _apiService == null)            
-                return NotFound();
-
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var elastictypes = await _apiService.GetSingleItem<ElasticTypes>(id.Value, userId);
-            if (elastictypes == null)            
-                return NotFound();            
-            else             
-                ElasticTypes = elastictypes;
-            
-            return Page();
-        }
-    }
+	[Authorize(Roles = "User,Admin")]
+	public class DetailsModel : BaseDetailsModel<ElasticTypes>
+	{
+		public DetailsModel() : base()
+		{
+		}
+	}
 }

@@ -13,33 +13,34 @@
 	<div class="col-md-4">
 		<form method="post">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-			<input type="hidden" asp-for="Machine.ID" />
+			<input type="hidden" asp-for="Item.ID" />
 			<div class="form-group">
-				<label asp-for="Machine.Brand" class="control-label"></label>
-				<input asp-for="Machine.Brand" class="form-control" />
-				<span asp-validation-for="Machine.Brand" class="text-danger"></span>
+				<label asp-for="Item.Brand" class="control-label"></label>
+				<input asp-for="Item.Brand" class="form-control" />
+				<span asp-validation-for="Item.Brand" class="text-danger"></span>
 			</div>
 			<div class="form-group">
-				<label asp-for="Machine.Model" class="control-label"></label>
-				<input asp-for="Machine.Model" class="form-control" />
-				<span asp-validation-for="Machine.Model" class="text-danger"></span>
+				<label asp-for="Item.Model" class="control-label"></label>
+				<input asp-for="Item.Model" class="form-control" />
+				<span asp-validation-for="Item.Model" class="text-danger"></span>
 			</div>
 			<div class="form-group">
-				<label asp-for="Machine.PurchaseDate" class="control-label"></label>
-				<input asp-for="Machine.PurchaseDate" class="form-control" id="PurchaseDate" />
-				<span asp-validation-for="Machine.PurchaseDate" class="text-danger"></span>
+				<label asp-for="Item.PurchaseDate" class="control-label"></label>
+				<input asp-for="Item.PurchaseDate" class="form-control" id="PurchaseDate" />
+				<span asp-validation-for="Item.PurchaseDate" class="text-danger"></span>
 			</div>
 			<div class="form-group">
-				<label asp-for="Machine.PurchasePrice" class="control-label"></label>
-				<input asp-for="Machine.PurchasePrice" class="form-control" />
-				<span asp-validation-for="Machine.PurchasePrice" class="text-danger"></span>
+				<label asp-for="Item.PurchasePrice" class="control-label"></label>
+				<input asp-for="Item.PurchasePrice" class="form-control" />
+				<span asp-validation-for="Item.PurchasePrice" class="text-danger"></span>
 			</div>
 			<div class="form-group">
-				<label asp-for="Machine.LastServiced" class="control-label"></label>
-				<input asp-for="Machine.LastServiced" class="form-control" id="LastServicedInput" />
-				<span asp-validation-for="Machine.LastServiced" class="text-danger"></span>
+				<label asp-for="Item.LastServiced" class="control-label"></label>
+				<input asp-for="Item.LastServiced" class="form-control" id="LastServicedInput" />
+				<span asp-validation-for="Item.LastServiced" class="text-danger"></span>
 			</div>
 			<div class="form-group">
+				<input type="hidden" asp-for="Item.ID" />
 				<input type="submit" value="Save" class="btn btn-primary" />
 			</div>
 		</form>

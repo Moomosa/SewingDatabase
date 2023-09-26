@@ -1,23 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Data;
 using System.Security.Claims;
 
 namespace FrontEnd.Common
 {
+	[Authorize(Roles = "User,Admin")]
 	public abstract class BaseCreateModel<T> : PageModel where T : class
 	{
-		protected readonly ApiService _apiService;
-		protected readonly FrontHelpers _frontHelpers;
-		protected readonly IHttpContextAccessor _httpContextAccessor;
 		protected readonly string TypeName = typeof(T).Name;
+		protected readonly IHttpContextAccessor _httpContextAccessor;
 
 		[BindProperty]
-		public T Item { get; set; }
+		public T Item { get; set; } = default!;
 
-		protected BaseCreateModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
+		protected BaseCreateModel(IHttpContextAccessor httpContextAccessor)
 		{
-			_apiService = apiService;
-			_frontHelpers = frontHelpers;
 			_httpContextAccessor = httpContextAccessor;
 		}
 
@@ -28,16 +27,16 @@ namespace FrontEnd.Common
 
 		public virtual async Task<IActionResult> OnPostAsync()
 		{
-			if (!ModelState.IsValid || _apiService == null)
+			if (!ModelState.IsValid)
 				return Page();
 
-			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			string userId = FrontHelpers.GetUserId(User);
 
-			HttpResponseMessage response = await _apiService.PostNewItem(Item, $"/api/{TypeName}", userId);
+			HttpResponseMessage response = await ApiService.PostNewItem(Item, $"/api/{TypeName}", userId);
 
 			if (response.IsSuccessStatusCode)
 			{
-				_frontHelpers.ClearSessionData(TypeName, _httpContextAccessor);
+				FrontHelpers.ClearSessionData(TypeName, _httpContextAccessor);
 				return RedirectToPage("./Index");
 			}
 			else

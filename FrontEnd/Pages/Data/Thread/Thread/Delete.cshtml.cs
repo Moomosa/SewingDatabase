@@ -9,50 +9,16 @@ using SewingModels.Models;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using FrontEnd.Common;
 
 namespace FrontEnd.Pages.Data.Thread.Thread
 {
 	[Authorize(Roles = "User,Admin")]
-	public class DeleteModel : PageModel
+	public class DeleteModel : BaseDeleteModel<SewingModels.Models.Thread>
 	{
-		private readonly ApiService _apiService;
-
-		public DeleteModel(ApiService apiService)
+		public DeleteModel(IHttpContextAccessor httpContextAccessor)
+			: base(httpContextAccessor)
 		{
-			_apiService = apiService;
-		}
-
-		[BindProperty]
-		public SewingModels.Models.Thread Thread { get; set; } = default!;
-
-		public async Task<IActionResult> OnGetAsync(int? id)
-		{
-			if (id == null)
-				return NotFound();
-
-			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-			Thread = await _apiService.GetSingleItem<SewingModels.Models.Thread>(id.Value, userId);
-
-			if (Thread == null)
-				return NotFound();
-
-			return Page();
-		}
-
-		public async Task<IActionResult> OnPostAsync(int? id)
-		{
-			if (id == null || Thread == null)
-				return NotFound();
-
-			bool deleted = await _apiService.DeleteItem<SewingModels.Models.Thread>(id.Value);
-			if (!deleted)
-				return NotFound();
-
-			HttpContext.Session.Remove("Threads");
-			HttpContext.Session.Remove("ThreadTotalRecords");
-
-			return RedirectToPage("./Index");
 		}
 	}
 }

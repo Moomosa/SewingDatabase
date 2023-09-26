@@ -20,8 +20,8 @@ namespace FrontEnd.Pages.Data.Elastic.Elastic
         [BindProperty]
         public List<ElasticTypes> ElasticTypes { get; set; }
 
-		public CreateModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
-			: base(apiService, frontHelpers, httpContextAccessor)
+		public CreateModel(IHttpContextAccessor httpContextAccessor)
+			: base(httpContextAccessor)
 		{
 		}
 
@@ -29,7 +29,7 @@ namespace FrontEnd.Pages.Data.Elastic.Elastic
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            ElasticTypes = await _apiService.GatherAllRecords<ElasticTypes>("ElasticTypes", userId, 20);
+            ElasticTypes = await ApiService.GatherAllRecords<ElasticTypes>("ElasticTypes", userId, 20);
 
             await base.OnGetAsync();
             return Page();
@@ -40,7 +40,7 @@ namespace FrontEnd.Pages.Data.Elastic.Elastic
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            Item.ElasticType = await _apiService.GetSingleItem<ElasticTypes>(Item.ElasticTypeID, userId);
+            Item.ElasticType = await ApiService.GetSingleItem<ElasticTypes>(Item.ElasticTypeID, userId);
 
             ModelState.Remove("Item.ElasticType");
 

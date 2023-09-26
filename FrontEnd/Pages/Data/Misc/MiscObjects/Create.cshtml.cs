@@ -20,8 +20,8 @@ namespace FrontEnd.Pages.Data.Misc.MiscObjects
 		[BindProperty]
 		public List<MiscItemType> MiscItemTypes { get; set; }
 
-		public CreateModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
-			: base(apiService, frontHelpers, httpContextAccessor)
+		public CreateModel(IHttpContextAccessor httpContextAccessor)
+			: base(httpContextAccessor)
 		{
 		}
 
@@ -29,7 +29,7 @@ namespace FrontEnd.Pages.Data.Misc.MiscObjects
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			MiscItemTypes = await _apiService.GatherAllRecords<MiscItemType>("MiscItemType", userId, 20);
+			MiscItemTypes = await ApiService.GatherAllRecords<MiscItemType>("MiscItemType", userId, 20);
 
 			return await base.OnGetAsync();			
 		}
@@ -38,7 +38,7 @@ namespace FrontEnd.Pages.Data.Misc.MiscObjects
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			Item.ItemType = await _apiService.GetSingleItem<MiscItemType>(Item.ItemTypeID, userId);
+			Item.ItemType = await ApiService.GetSingleItem<MiscItemType>(Item.ItemTypeID, userId);
 
 			ModelState.Remove("Item.ItemType");
 

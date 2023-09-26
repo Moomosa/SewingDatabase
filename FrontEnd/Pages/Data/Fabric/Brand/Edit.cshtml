@@ -13,23 +13,24 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="FabricBrand.ID" />
+            <input type="hidden" asp-for="Item.ID" />
             <div class="form-group">
-                <label asp-for="FabricBrand.FullName" class="control-label"></label>
-                <input asp-for="FabricBrand.FullName" class="form-control" />
-                <span asp-validation-for="FabricBrand.FullName" class="text-danger"></span>
+                <label asp-for="Item.FullName" class="control-label"></label>
+                <input asp-for="Item.FullName" class="form-control" />
+                <span asp-validation-for="Item.FullName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FabricBrand.Website" class="control-label"></label>
-                <input asp-for="FabricBrand.Website" class="form-control" />
-                <span asp-validation-for="FabricBrand.Website" class="text-danger"></span>
+                <label asp-for="Item.Website" class="control-label"></label>
+                <input asp-for="Item.Website" class="form-control" />
+                <span asp-validation-for="Item.Website" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FabricBrand.AdditionalInfo" class="control-label"></label>
-                <input asp-for="FabricBrand.AdditionalInfo" class="form-control" />
-                <span asp-validation-for="FabricBrand.AdditionalInfo" class="text-danger"></span>
+                <label asp-for="Item.AdditionalInfo" class="control-label"></label>
+                <input asp-for="Item.AdditionalInfo" class="form-control" />
+                <span asp-validation-for="Item.AdditionalInfo" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <input type="hidden" asp-for="Item.ID" />
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>

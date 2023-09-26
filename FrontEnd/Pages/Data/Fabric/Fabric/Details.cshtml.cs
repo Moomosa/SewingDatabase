@@ -9,35 +9,15 @@ using SewingModels.Models;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using FrontEnd.Common;
 
-namespace FrontEnd.Pages.Data.Fabric.Item
+namespace FrontEnd.Pages.Data.Fabric.Fabric
 {
 	[Authorize(Roles = "User,Admin")]
-	public class DetailsModel : PageModel
+	public class DetailsModel : BaseDetailsModel<SewingModels.Models.Fabric>
 	{
-		private readonly ApiService _apiService;
-
-		public DetailsModel(ApiService apiService)
+		public DetailsModel() : base()
 		{
-			_apiService = apiService;
-		}
-
-		public SewingModels.Models.Fabric Fabric { get; set; } = default!;
-
-		public async Task<IActionResult> OnGetAsync(int? id)
-		{
-			if (id == null || _apiService == null)
-				return NotFound();
-
-			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-			var fabric = await _apiService.GetSingleItem<SewingModels.Models.Fabric>(id.Value, userId);
-			if (fabric == null)
-				return NotFound();
-			else
-				Fabric = fabric;
-
-			return Page();
 		}
 	}
 }

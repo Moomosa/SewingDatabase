@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FrontEnd.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,50 +15,10 @@ using SewingModels.Models;
 namespace FrontEnd.Pages.Data.Fabric.Type
 {
 	[Authorize(Roles = "User,Admin")]
-	public class EditModel : PageModel
+	public class EditModel : BaseEditModel<FabricTypes>
 	{
-		private readonly ApiService _apiService;
-
-		public EditModel(ApiService apiService)
+		public EditModel(IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
 		{
-			_apiService = apiService;
-		}
-
-		[BindProperty]
-		public FabricTypes FabricTypes { get; set; } = default!;
-
-		public async Task<IActionResult> OnGetAsync(int? id)
-		{
-			if (id == null || _apiService == null)
-				return NotFound();
-
-			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-			var fabrictypes = await _apiService.GetSingleItem<FabricTypes>(id.Value, userId);
-			if (fabrictypes == null)
-				return NotFound();
-
-			FabricTypes = fabrictypes;
-			return Page();
-		}
-
-		public async Task<IActionResult> OnPostAsync()
-		{
-			if (!ModelState.IsValid)
-				return Page();
-
-			try
-			{
-				bool updated = await _apiService.UpdateItem<FabricTypes>(FabricTypes.ID, FabricTypes);
-				if (!updated)
-					return NotFound();
-
-				return RedirectToPage("./Index");
-			}
-			catch
-			{
-				return StatusCode(500, "An error occured while updating the item.");
-			}
 		}
 	}
 }

@@ -1,5 +1,5 @@
 ﻿@page
-@model FrontEnd.Pages.Data.Fabric.Item.EditModel
+@model FrontEnd.Pages.Data.Fabric.Fabric.EditModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -13,43 +13,44 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Fabric.ID" />
+            <input type="hidden" asp-for="Item.ID" />
             <div class="form-group">
-                <label asp-for="Fabric.FabricTypeID" class="control-label"></label>
-                <select asp-for="Fabric.FabricTypeID" class="form-control form-select" asp-items="ViewBag.FabricTypeID"></select>
-                <span asp-validation-for="Fabric.FabricTypeID" class="text-danger"></span>note
+                <label asp-for="Item.FabricTypeID" class="control-label"></label>
+                <select asp-for="Item.FabricTypeID" class="form-control form-select" asp-items="ViewBag.FabricTypeID"></select>
+                <span asp-validation-for="Item.FabricTypeID" class="text-danger"></span>note
             </div>
             <div class="form-group">
-                <label asp-for="Fabric.FabricBrandID" class="control-label"></label>
-                <select asp-for="Fabric.FabricBrandID" class="form-control form-select" asp-items="ViewBag.FabricBrandID"></select>
-                <span asp-validation-for="Fabric.FabricBrandID" class="text-danger"></span>
+                <label asp-for="Item.FabricBrandID" class="control-label"></label>
+                <select asp-for="Item.FabricBrandID" class="form-control form-select" asp-items="ViewBag.FabricBrandID"></select>
+                <span asp-validation-for="Item.FabricBrandID" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Fabric.PurchasePrice" class="control-label"></label>
-                <input asp-for="Fabric.PurchasePrice" class="form-control" />
-                <span asp-validation-for="Fabric.PurchasePrice" class="text-danger"></span>
+                <label asp-for="Item.PurchasePrice" class="control-label"></label>
+                <input asp-for="Item.PurchasePrice" class="form-control" />
+                <span asp-validation-for="Item.PurchasePrice" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Fabric.Value" class="control-label"></label>
-                <input asp-for="Fabric.Value" class="form-control" />
-                <span asp-validation-for="Fabric.Value" class="text-danger"></span>
+                <label asp-for="Item.Value" class="control-label"></label>
+                <input asp-for="Item.Value" class="form-control" />
+                <span asp-validation-for="Item.Value" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Fabric.SolidOrPrint" /> @Html.DisplayNameFor(model => model.Fabric.SolidOrPrint)
+                    <input class="form-check-input" asp-for="Item.SolidOrPrint" /> @Html.DisplayNameFor(model => model.Item.SolidOrPrint)
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="Fabric.Appearance" class="control-label"></label>
-                <input asp-for="Fabric.Appearance" class="form-control" />
-                <span asp-validation-for="Fabric.Appearance" class="text-danger"></span>
+                <label asp-for="Item.Appearance" class="control-label"></label>
+                <input asp-for="Item.Appearance" class="form-control" />
+                <span asp-validation-for="Item.Appearance" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Fabric.Amount" class="control-label"></label>
-                <input asp-for="Fabric.Amount" class="form-control" />
-                <span asp-validation-for="Fabric.Amount" class="text-danger"></span>
+                <label asp-for="Item.Amount" class="control-label"></label>
+                <input asp-for="Item.Amount" class="form-control" />
+                <span asp-validation-for="Item.Amount" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <input type="hidden" asp-for="Item.ID" />
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>

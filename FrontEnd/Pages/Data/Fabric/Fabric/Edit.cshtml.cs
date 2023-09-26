@@ -12,84 +12,50 @@ using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Newtonsoft.Json;
+using FrontEnd.Common;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
-namespace FrontEnd.Pages.Data.Fabric.Item
+namespace FrontEnd.Pages.Data.Fabric.Fabric
 {
 	[Authorize(Roles = "User,Admin")]
-	public class EditModel : PageModel
+	public class EditModel : BaseEditModel<SewingModels.Models.Fabric>
 	{
-		private readonly ApiService _apiService;
-
-		public EditModel(ApiService apiService)
+		public EditModel(IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
 		{
-			_apiService = apiService;
 		}
 
 		[BindProperty]
-		public SewingModels.Models.Fabric Fabric { get; set; } = default!;
+		public List<FabricBrand> FabricBrands { get; set; } = default!;
 		[BindProperty]
-		public List<FabricBrand> FabricBrands { get; set; }
-		[BindProperty]
-		public List<FabricTypes> FabricTypes { get; set; }
+		public List<FabricTypes> FabricTypes { get; set; } = default!;
 
-		public async Task<IActionResult> OnGetAsync(int? id)
+		public override async Task<IActionResult> OnGetAsync(int? id)
 		{
-			if (id == null || _apiService == null)
-				return NotFound();
+			await base.OnGetAsync(id);
 
-			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-			var fabric = await _apiService.GetSingleItem<SewingModels.Models.Fabric>(id.Value, userId);
-			if (fabric == null)
-				return NotFound();
-
-			Fabric = fabric;
+			string userId = FrontHelpers.GetUserId(User);
 
 			//Filling the lists with data from the DB according to the user
-			FabricBrands = await _apiService.GetRecordsForUser<FabricBrand>("FabricBrand", userId);
-			FabricTypes = await _apiService.GetRecordsForUser<FabricTypes>("FabricTypes", userId);
-
-			//Setting the Lists to Session states for use in OnPost
-			HttpContext.Session.SetString("FabricBrandData", JsonConvert.SerializeObject(FabricBrands));
-			HttpContext.Session.SetString("FabricTypeData", JsonConvert.SerializeObject(FabricTypes));
+			FabricBrands = await ApiService.GatherAllRecords<FabricBrand>("FabricBrand", userId, 20);
+			FabricTypes = await ApiService.GatherAllRecords<FabricTypes>("FabricTypes", userId, 20);
 
 			ViewData["FabricBrandID"] = new SelectList(FabricBrands, "ID", "FullName");
 			ViewData["FabricTypeID"] = new SelectList(FabricTypes, "ID", "Type");
 			return Page();
 		}
 
-		public async Task<IActionResult> OnPostAsync()
+		public override async Task<IActionResult> OnPostAsync(int? id)
 		{
-			//This is pulling the Lists from Session states
-			var serializedBrands = HttpContext.Session.GetString("FabricBrandData");
-			FabricBrands = JsonConvert.DeserializeObject<List<FabricBrand>>(serializedBrands);
+			string userId = FrontHelpers.GetUserId(User);
 
-			var serializedTypes = HttpContext.Session.GetString("FabricTypeData");
-			FabricTypes = JsonConvert.DeserializeObject<List<FabricTypes>>(serializedTypes);
+            Item.FabricBrand = await ApiService.GetSingleItem<FabricBrand>(Item.FabricBrandID, userId);
+            Item.FabricType = await ApiService.GetSingleItem<FabricTypes>(Item.FabricTypeID, userId);
 
-			//So we can assign the values properly without another pull from DB
-			Fabric.FabricBrand = FabricBrands.FirstOrDefault(fb => fb.ID == Fabric.FabricBrandID);
-			Fabric.FabricType = FabricTypes.FirstOrDefault(ft => ft.ID == Fabric.FabricTypeID);
+            //If we don't remove these, the ModelState becomes invalid even though properly configured
+            ModelState.Remove("Item.FabricBrand");
+			ModelState.Remove("Item.FabricType");
 
-			//If we don't remove these, the ModelState becomes invalid even though properly configured
-			ModelState.Remove("Fabric.FabricBrand");
-			ModelState.Remove("Fabric.FabricType");
-
-			if (!ModelState.IsValid)
-				return Page();
-
-			try
-			{
-				bool updated = await _apiService.UpdateItem<SewingModels.Models.Fabric>(Fabric.ID, Fabric);
-				if (!updated)
-					return NotFound();
-
-				return RedirectToPage("./Index");
-			}
-			catch
-			{
-				return StatusCode(500, "An error occured while updating the item.");
-			}
+			return await base.OnPostAsync(id);
 		}
 	}
 }

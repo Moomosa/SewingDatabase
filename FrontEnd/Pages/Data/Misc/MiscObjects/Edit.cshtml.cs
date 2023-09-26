@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FrontEnd.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,65 +15,37 @@ using SewingModels.Models;
 
 namespace FrontEnd.Pages.Data.Misc.MiscObjects
 {
-    [Authorize(Roles = "User,Admin")]
-    public class EditModel : PageModel
-    {
-        private readonly ApiService _apiService;
+	[Authorize(Roles = "User,Admin")]
+	public class EditModel : BaseEditModel<SewingModels.Models.MiscObjects>
+	{
+		public EditModel(IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+		{
+		}
 
-        public EditModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
+		[BindProperty]
+		public List<MiscItemType> MiscItemTypes { get; set; } = default!;
 
-        [BindProperty]
-        public SewingModels.Models.MiscObjects MiscObjects { get; set; } = default!;
-        [BindProperty]
-        public List<MiscItemType> MiscItemTypes { get; set; }
+		public override async Task<IActionResult> OnGetAsync(int? id)
+		{
+			await base.OnGetAsync(id);
 
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null || _apiService == null)
-                return NotFound();
+			string userId = FrontHelpers.GetUserId(User);
 
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			MiscItemTypes = await ApiService.GatherAllRecords<MiscItemType>("MiscItemType", userId, 20);
 
-            var miscobjects = await _apiService.GetSingleItem<SewingModels.Models.MiscObjects>(id.Value, userId);
-            if (miscobjects == null)
-                return NotFound();
+			ViewData["ItemTypeID"] = new SelectList(MiscItemTypes, "ID", "Item");
+			return Page();
+		}
 
-            MiscObjects = miscobjects;
+		public override async Task<IActionResult> OnPostAsync(int? id)
+		{
+			string userId = FrontHelpers.GetUserId(User);
 
-            MiscItemTypes = await _apiService.GetRecordsForUser<MiscItemType>("MiscItemType", userId);
+			Item.ItemType = await ApiService.GetSingleItem<MiscItemType>(Item.ItemTypeID, userId);
 
-            HttpContext.Session.SetString("MiscItemData", JsonConvert.SerializeObject(MiscItemTypes));
+			ModelState.Remove("Item.ItemType");
 
-            ViewData["ItemTypeID"] = new SelectList(MiscItemTypes, "ID", "Item");
-            return Page();
-        }
-
-        public async Task<IActionResult> OnPostAsync()
-        {
-            var serializedItems = HttpContext.Session.GetString("MiscItemData");
-            MiscItemTypes = JsonConvert.DeserializeObject<List<MiscItemType>>(serializedItems);
-            MiscObjects.ItemType = MiscItemTypes.FirstOrDefault(mit => mit.ID == MiscObjects.ItemTypeID);
-
-            ModelState.Remove("MiscObjects.ItemType");
-
-            if (!ModelState.IsValid)
-                return Page();
-
-            try
-            {
-                bool updated = await _apiService.UpdateItem<SewingModels.Models.MiscObjects>(MiscObjects.ID, MiscObjects);
-                if (!updated)
-                    return NotFound();
-
-                return RedirectToPage("./Index");
-            }
-            catch
-            {
-                return StatusCode(500, "An error occured while updating the item.");
-            }
-        }
-    }
+			return await base.OnPostAsync(id);
+		}
+	}
 }

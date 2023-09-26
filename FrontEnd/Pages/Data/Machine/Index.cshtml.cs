@@ -11,17 +11,10 @@ namespace FrontEnd.Pages.Data.Machine
     [Authorize(Roles = "User,Admin")]
     public class IndexModel : BaseIndexModel<SewingModels.Models.Machine>
     {
-        public IndexModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
-            : base(apiService, frontHelpers, httpContextAccessor)
+        public IndexModel(IHttpContextAccessor httpContextAccessor)
+            : base(httpContextAccessor)
         {
             PagePath = "/Data/Machine";
-        }
-
-        public override async Task<IActionResult> OnGetAsync()
-        {
-            await base.OnGetAsync();
-
-            return Page();
         }
     }
 }

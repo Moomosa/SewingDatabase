@@ -13,39 +13,39 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Machine.Brand)
+            @Html.DisplayNameFor(model => model.Item.Brand)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Machine.Brand)
+            @Html.DisplayFor(model => model.Item.Brand)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Machine.Model)
+            @Html.DisplayNameFor(model => model.Item.Model)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Machine.Model)
+            @Html.DisplayFor(model => model.Item.Model)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Machine.PurchaseDate)
+            @Html.DisplayNameFor(model => model.Item.PurchaseDate)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Machine.PurchaseDate)
+            @Html.DisplayFor(model => model.Item.PurchaseDate)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Machine.PurchasePrice)
+            @Html.DisplayNameFor(model => model.Item.PurchasePrice)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Machine.PurchasePrice)
+            @Html.DisplayFor(model => model.Item.PurchasePrice)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Machine.LastServiced)
+            @Html.DisplayNameFor(model => model.Item.LastServiced)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Machine.LastServiced)
+            @Html.DisplayFor(model => model.Item.LastServiced)
         </dd>
     </dl>
     
     <form method="post">
-        <input type="hidden" asp-for="Machine.ID" />
+        <input type="hidden" asp-for="Item.ID" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-page="./Index">Back to List</a>
     </form>

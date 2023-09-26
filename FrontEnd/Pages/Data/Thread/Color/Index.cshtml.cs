@@ -11,17 +11,10 @@ namespace FrontEnd.Pages.Data.Thread.Color
 	[Authorize(Roles = "User,Admin")]
 	public class IndexModel : BaseIndexModel<ThreadColor>
 	{
-        public IndexModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
-            : base(apiService, frontHelpers, httpContextAccessor)
+        public IndexModel(IHttpContextAccessor httpContextAccessor)
+            : base(httpContextAccessor)
         {
 			PagePath = "/Data/Thread/Color";
         }
-
-        public override async Task<IActionResult> OnGetAsync()
-		{
-			await base.OnGetAsync();
-
-            return Page();
-		}
 	}
 }

@@ -25,8 +25,8 @@ namespace FrontEnd.Pages.Data.Thread.Thread
 		[BindProperty]
 		public List<ThreadColorFamily> ColorFamilies { get; set; }
 
-		public CreateModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
-			: base(apiService, frontHelpers, httpContextAccessor)
+		public CreateModel(IHttpContextAccessor httpContextAccessor)
+			: base(httpContextAccessor)
 		{
 		}
 
@@ -34,9 +34,9 @@ namespace FrontEnd.Pages.Data.Thread.Thread
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			ThreadTypes = await _apiService.GatherAllRecords<ThreadTypes>("ThreadTypes", userId, 20);
-			ThreadColors = await _apiService.GatherAllRecords<ThreadColor>("ThreadColor", userId, 20);
-			ColorFamilies = await _apiService.GatherAllRecords<ThreadColorFamily>("ThreadColorFamily", userId, 20);
+			ThreadTypes = await ApiService.GatherAllRecords<ThreadTypes>("ThreadTypes", userId, 20);
+			ThreadColors = await ApiService.GatherAllRecords<ThreadColor>("ThreadColor", userId, 20);
+			ColorFamilies = await ApiService.GatherAllRecords<ThreadColorFamily>("ThreadColorFamily", userId, 20);
 
 			return await base.OnGetAsync();
 		}
@@ -45,8 +45,8 @@ namespace FrontEnd.Pages.Data.Thread.Thread
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			Item.ThreadType = await _apiService.GetSingleItem<ThreadTypes>(Item.ThreadTypeID, userId);
-			Item.Color = await _apiService.GetSingleItem<ThreadColor>(Item.ColorID, userId);
+			Item.ThreadType = await ApiService.GetSingleItem<ThreadTypes>(Item.ThreadTypeID, userId);
+			Item.Color = await ApiService.GetSingleItem<ThreadColor>(Item.ColorID, userId);
 			Item.ColorFamily = Item.Color.ColorFamily;
 			Item.ColorFamilyID = Item.Color.ColorFamilyID;
 

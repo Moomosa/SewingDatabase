@@ -9,35 +9,15 @@ using SewingModels.Models;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using FrontEnd.Common;
 
 namespace FrontEnd.Pages.Data.Thread.Type
 {
-    [Authorize(Roles = "User,Admin")]
-    public class DetailsModel : PageModel
-    {
-        private readonly ApiService _apiService;
-
-        public DetailsModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
-
-        public ThreadTypes ThreadTypes { get; set; } = default!;
-
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null || _apiService == null)
-                return NotFound();
-
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var threadtypes = await _apiService.GetSingleItem<ThreadTypes>(id.Value, userId);
-            if (threadtypes == null)
-                return NotFound();
-            else
-                ThreadTypes = threadtypes;
-
-            return Page();
-        }
-    }
+	[Authorize(Roles = "User,Admin")]
+	public class DetailsModel : BaseDetailsModel<ThreadTypes>
+	{
+		public DetailsModel() : base()
+		{
+		}
+	}
 }

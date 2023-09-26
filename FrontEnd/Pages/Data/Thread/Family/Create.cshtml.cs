@@ -17,19 +17,9 @@ namespace FrontEnd.Pages.Data.Thread.Family
     [Authorize(Roles = "User,Admin")]
     public class CreateModel : BaseCreateModel<ThreadColorFamily>
     {
-		public CreateModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
-			: base(apiService, frontHelpers, httpContextAccessor)
+		public CreateModel(IHttpContextAccessor httpContextAccessor)
+			: base(httpContextAccessor)
 		{
-		}
-
-		public override async Task<IActionResult> OnGetAsync()
-		{
-			return await base.OnGetAsync();
-		}
-
-		public override async Task<IActionResult> OnPostAsync()
-		{
-			return await base.OnPostAsync();
 		}
 	}
 }

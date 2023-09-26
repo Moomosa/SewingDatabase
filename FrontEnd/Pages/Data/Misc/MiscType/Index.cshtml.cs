@@ -11,18 +11,11 @@ namespace FrontEnd.Pages.Data.Misc.MiscType
 	[Authorize(Roles = "User,Admin")]
 	public class IndexModel : BaseIndexModel<MiscItemType>
 	{
-        public IndexModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
-            : base(apiService, frontHelpers, httpContextAccessor)
+        public IndexModel(IHttpContextAccessor httpContextAccessor)
+            : base(httpContextAccessor)
         {
 			PagePath = "/Data/Misc/MiscType";
         }
-
-        public override async Task<IActionResult> OnGetAsync()
-		{
-			await base.OnGetAsync();
-
-            return Page();
-		}
 	}
 }
 

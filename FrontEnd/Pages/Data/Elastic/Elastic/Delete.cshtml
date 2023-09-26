@@ -13,33 +13,33 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Elastic.ElasticType)
+            @Html.DisplayNameFor(model => model.Item.ElasticType)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Elastic.ElasticType.Type)
+            @Html.DisplayFor(model => model.Item.ElasticType.Type)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Elastic.Color)
+            @Html.DisplayNameFor(model => model.Item.Color)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Elastic.Color)
+            @Html.DisplayFor(model => model.Item.Color)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Elastic.Width)
+            @Html.DisplayNameFor(model => model.Item.Width)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Elastic.Width)
+            @Html.DisplayFor(model => model.Item.Width)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Elastic.Length)
+            @Html.DisplayNameFor(model => model.Item.Length)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Elastic.Length)
+            @Html.DisplayFor(model => model.Item.Length)
         </dd>
     </dl>
     
     <form method="post">
-        <input type="hidden" asp-for="Elastic.ID" />
+        <input type="hidden" asp-for="Item.ID" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-page="./Index">Back to List</a>
     </form>

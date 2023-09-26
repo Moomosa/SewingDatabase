@@ -12,50 +12,50 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MiscObjects.ItemType)
+            @Html.DisplayNameFor(model => model.Item.ItemType)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MiscObjects.ItemType.Item)
+            @Html.DisplayFor(model => model.Item.ItemType.Item)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MiscObjects.Quantity)
+            @Html.DisplayNameFor(model => model.Item.Quantity)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MiscObjects.Quantity)
+            @Html.DisplayFor(model => model.Item.Quantity)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MiscObjects.AdditionalNotes)
+            @Html.DisplayNameFor(model => model.Item.AdditionalNotes)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MiscObjects.AdditionalNotes)
+            @Html.DisplayFor(model => model.Item.AdditionalNotes)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MiscObjects.Brand)
+            @Html.DisplayNameFor(model => model.Item.Brand)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MiscObjects.Brand)
+            @Html.DisplayFor(model => model.Item.Brand)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MiscObjects.SpecificInfo)
+            @Html.DisplayNameFor(model => model.Item.SpecificInfo)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MiscObjects.SpecificInfo)
+            @Html.DisplayFor(model => model.Item.SpecificInfo)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MiscObjects.Value)
+            @Html.DisplayNameFor(model => model.Item.Value)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MiscObjects.Value)
+            @Html.DisplayFor(model => model.Item.Value)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MiscObjects.PurchasePrice)
+            @Html.DisplayNameFor(model => model.Item.PurchasePrice)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MiscObjects.PurchasePrice)
+            @Html.DisplayFor(model => model.Item.PurchasePrice)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.MiscObjects?.ID">Edit</a> |
+    <a asp-page="./Edit" asp-route-id="@Model.Item?.ID">Edit</a> |
     <a asp-page="./Index">Back to List</a>
 </div>

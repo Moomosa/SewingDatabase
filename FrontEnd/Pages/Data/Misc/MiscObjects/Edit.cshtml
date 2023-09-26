@@ -2,7 +2,7 @@
 @model FrontEnd.Pages.Data.Misc.MiscObjects.EditModel
 
 @{
-    ViewData["Title"] = "Edit";
+	ViewData["Title"] = "Edit";
 }
 
 <h1>Edit</h1>
@@ -10,62 +10,65 @@
 <h4>MiscObjects</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="MiscObjects.ID" />
-            <div class="form-group">
-                <label asp-for="MiscObjects.ItemTypeID" class="control-label"></label>
-                <select asp-for="MiscObjects.ItemTypeID" class="form-control" >
-                    <option value=""></option>
-                    @foreach(var miscItem in Model.MiscItemTypes)
-                    {
-                        <option value="@miscItem.ID">@miscItem.Item</option>
-                    }
-                </select>
-                <span asp-validation-for="MiscObjects.ItemTypeID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MiscObjects.Quantity" class="control-label"></label>
-                <input asp-for="MiscObjects.Quantity" class="form-control" />
-                <span asp-validation-for="MiscObjects.Quantity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MiscObjects.AdditionalNotes" class="control-label"></label>
-                <input asp-for="MiscObjects.AdditionalNotes" class="form-control" />
-                <span asp-validation-for="MiscObjects.AdditionalNotes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MiscObjects.Brand" class="control-label"></label>
-                <input asp-for="MiscObjects.Brand" class="form-control" />
-                <span asp-validation-for="MiscObjects.Brand" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MiscObjects.SpecificInfo" class="control-label"></label>
-                <input asp-for="MiscObjects.SpecificInfo" class="form-control" />
-                <span asp-validation-for="MiscObjects.SpecificInfo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MiscObjects.Value" class="control-label"></label>
-                <input asp-for="MiscObjects.Value" class="form-control" />
-                <span asp-validation-for="MiscObjects.Value" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MiscObjects.PurchasePrice" class="control-label"></label>
-                <input asp-for="MiscObjects.PurchasePrice" class="form-control" />
-                <span asp-validation-for="MiscObjects.PurchasePrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+	<div class="col-md-4">
+		<form method="post">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="Item.ID" />
+			<div class="form-group">
+				<label asp-for="Item.ItemTypeID" class="control-label"></label>
+				<select asp-for="Item.ItemTypeID" class="form-control">
+					<option value=""></option>
+					@foreach (var miscItem in Model.MiscItemTypes)
+					{
+						<option value="@miscItem.ID">@miscItem.Item</option>
+					}
+				</select>
+				<span asp-validation-for="Item.ItemTypeID" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Item.Quantity" class="control-label"></label>
+				<input asp-for="Item.Quantity" class="form-control" />
+				<span asp-validation-for="Item.Quantity" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Item.AdditionalNotes" class="control-label"></label>
+				<input asp-for="Item.AdditionalNotes" class="form-control" />
+				<span asp-validation-for="Item.AdditionalNotes" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Item.Brand" class="control-label"></label>
+				<input asp-for="Item.Brand" class="form-control" />
+				<span asp-validation-for="Item.Brand" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Item.SpecificInfo" class="control-label"></label>
+				<input asp-for="Item.SpecificInfo" class="form-control" />
+				<span asp-validation-for="Item.SpecificInfo" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Item.Value" class="control-label"></label>
+				<input asp-for="Item.Value" class="form-control" />
+				<span asp-validation-for="Item.Value" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Item.PurchasePrice" class="control-label"></label>
+				<input asp-for="Item.PurchasePrice" class="form-control" />
+				<span asp-validation-for="Item.PurchasePrice" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<input type="hidden" asp-for="Item.ID" />
+				<input type="submit" value="Save" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
 </div>
 
 <div>
-    <a asp-page="./Index">Back to List</a>
+	<a asp-page="./Index">Back to List</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 }

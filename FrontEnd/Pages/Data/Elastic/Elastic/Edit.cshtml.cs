@@ -11,69 +11,41 @@ using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Newtonsoft.Json;
+using FrontEnd.Common;
 
 namespace FrontEnd.Pages.Data.Elastic.Elastic
 {
-    [Authorize(Roles = "User,Admin")]
-    public class EditModel : PageModel
-    {
-        private readonly ApiService _apiService;
+	[Authorize(Roles = "User,Admin")]
+	public class EditModel : BaseEditModel<SewingModels.Models.Elastic>
+	{
+		[BindProperty]
+		public List<ElasticTypes> ElasticTypes { get; set; } = default!;
 
-        [BindProperty]
-        public SewingModels.Models.Elastic Elastic { get; set; } = default!;
-        [BindProperty]
-        public List<ElasticTypes> ElasticTypes { get; set; }
+		public EditModel(IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+		{
+		}
 
-        public EditModel(ApiService apiService)
-        {
-            _apiService = apiService;
-        }
+		public override async Task<IActionResult> OnGetAsync(int? id)
+		{
+			await base.OnGetAsync(id);
 
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null || _apiService == null)
-                return NotFound();
+			string userId = FrontHelpers.GetUserId(User);
 
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			ElasticTypes = await ApiService.GetRecordsForUser<ElasticTypes>("ElasticTypes", userId);
 
-            var elastic = await _apiService.GetSingleItem<SewingModels.Models.Elastic>(id.Value, userId);
-            if (elastic == null)
-                return NotFound();
+			ViewData["ElasticTypeID"] = new SelectList(ElasticTypes, "ID", "Type");
+			return Page();
+		}
 
-            Elastic = elastic;
+		public override async Task<IActionResult> OnPostAsync(int? id)
+		{
+			string userId = FrontHelpers.GetUserId(User);
 
-            ElasticTypes = await _apiService.GetRecordsForUser<ElasticTypes>("ElasticTypes", userId);
+			Item.ElasticType = await ApiService.GetSingleItem<ElasticTypes>(Item.ElasticTypeID, userId);
 
-            HttpContext.Session.SetString("ElasticTypeData", JsonConvert.SerializeObject(ElasticTypes));
+			ModelState.Remove("Item.ElasticType");
 
-            ViewData["ElasticTypeID"] = new SelectList(ElasticTypes, "ID", "Type");
-            return Page();
-        }
-
-        public async Task<IActionResult> OnPostAsync()
-        {
-            var serializedTypes = HttpContext.Session.GetString("ElasticTypeData");
-            ElasticTypes = JsonConvert.DeserializeObject<List<ElasticTypes>>(serializedTypes);
-
-            Elastic.ElasticType = ElasticTypes.FirstOrDefault(et => et.ID == Elastic.ElasticTypeID);
-
-            ModelState.Remove("Elastic.ElasticType");
-
-            if (!ModelState.IsValid)
-                return Page();
-
-            try
-            {
-                bool updated = await _apiService.UpdateItem<SewingModels.Models.Elastic>(Elastic.ID, Elastic);
-                if (!updated)
-                    return NotFound();
-
-                return RedirectToPage("./Index");
-            }
-            catch
-            {
-                return StatusCode(500, "An error occured while updating the item.");
-            }
-        }
-    }
+			return await base.OnPostAsync(id);
+		}
+	}
 }

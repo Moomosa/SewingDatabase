@@ -16,15 +16,9 @@ namespace FrontEnd.Pages.Data.Machine
 	[Authorize(Roles = "User,Admin")]
 	public class CreateModel : BaseCreateModel<SewingModels.Models.Machine>
 	{
-		public CreateModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
-			: base(apiService, frontHelpers, httpContextAccessor)
+		public CreateModel(IHttpContextAccessor httpContextAccessor)
+			: base(httpContextAccessor)
 		{
-		}
-
-		public override async Task<IActionResult> OnGetAsync()
-		{
-			await base.OnGetAsync();
-			return Page();
 		}
 
 		public override async Task<IActionResult> OnPostAsync()
@@ -36,7 +30,7 @@ namespace FrontEnd.Pages.Data.Machine
 
 		public void UpdateLastServiced()
 		{
-			if(Item.LastServiced == null || Item.LastServiced == default(DateTime))			
+			if(Item.LastServiced == null || Item.LastServiced == default)			
 				Item.LastServiced = Item.PurchaseDate;			
 		}
 	}

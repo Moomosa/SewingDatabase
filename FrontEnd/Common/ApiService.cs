@@ -6,14 +6,15 @@ using System.Text;
 using System.Net.Http;
 using ModelLibrary.Models.Database;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using System.Configuration;
 
 namespace FrontEnd
 {
-	public class ApiService
+	public static class ApiService
 	{
-		private readonly HttpClient _httpClient;
+		private static HttpClient _httpClient;
 
-		public ApiService(IConfiguration configuration)
+		public static void Initialize(IConfiguration configuration)
 		{
 			string baseUrl = configuration.GetSection("AppSettings:BaseUrl").Value;
 
@@ -23,7 +24,7 @@ namespace FrontEnd
 			};
 		}
 
-		public async Task<List<T>> GetRecordsForUser<T>(string tableName, string userName) where T : class
+		public static async Task<List<T>> GetRecordsForUser<T>(string tableName, string userName) where T : class
 		{
 			HttpResponseMessage recordResponse = await _httpClient.GetAsync($"/api/{tableName}/byIds/{tableName}/{userName}");
 
@@ -44,7 +45,7 @@ namespace FrontEnd
 			}
 		}
 
-		public async Task<int> GetTotalRecords<T>(string tableName, string userId) where T : class
+		public static async Task<int> GetTotalRecords<T>(string tableName, string userId) where T : class
 		{
 			HttpResponseMessage countResponse = await _httpClient.GetAsync($"/api/{tableName}/count/{userId}");
 
@@ -60,7 +61,7 @@ namespace FrontEnd
 			}
 		}
 
-		public async Task<List<T>> GetPagedRecords<T>(string tabelName, string userId, int currentPage, int recordsPerPage) where T : class
+		public static async Task<List<T>> GetPagedRecords<T>(string tabelName, string userId, int currentPage, int recordsPerPage) where T : class
 		{
 			HttpResponseMessage response = await _httpClient.GetAsync($"/api/{tabelName}/paged/{userId}/{currentPage}/{recordsPerPage}");
 
@@ -76,7 +77,7 @@ namespace FrontEnd
 			}
 		}
 
-		public async Task<List<T>> GatherAllRecords<T>(string tableName, string userId, int chunkSize) where T : class
+		public static async Task<List<T>> GatherAllRecords<T>(string tableName, string userId, int chunkSize) where T : class
 		{
 			List<T> allRecords = new List<T>();
 			int currentPage = 1;
@@ -107,7 +108,7 @@ namespace FrontEnd
 			return allRecords;
 		}
 
-		public async Task<HttpResponseMessage> PostNewItem<T>(T item, string url, string userId) where T : class
+		public static async Task<HttpResponseMessage> PostNewItem<T>(T item, string url, string userId) where T : class
 		{
 			var json = JsonConvert.SerializeObject(item);
 			var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -117,7 +118,7 @@ namespace FrontEnd
 			return await _httpClient.PostAsync(fullUrl, content);
 		}
 
-		public async Task<bool> DeleteItem<T>(int id) where T : class
+		public static async Task<bool> DeleteItem<T>(int id) where T : class
 		{
 			string tableName = typeof(T).Name;
 
@@ -126,7 +127,7 @@ namespace FrontEnd
 			return response.IsSuccessStatusCode;
 		}
 
-		public async Task<T> GetSingleItem<T>(int id, string userId) where T : class
+		public static async Task<T> GetSingleItem<T>(int id, string userId) where T : class
 		{
 			HttpResponseMessage response = await _httpClient.GetAsync($"/api/{typeof(T).Name}/{id}/{userId}");
 
@@ -140,7 +141,7 @@ namespace FrontEnd
 				return null;
 		}
 
-		public async Task<bool> UpdateItem<T>(int id, T item) where T : class
+		public static async Task<bool> UpdateItem<T>(int id, T item) where T : class
 		{
 			var json = JsonConvert.SerializeObject(item);
 			var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -149,7 +150,7 @@ namespace FrontEnd
 			return response.IsSuccessStatusCode;
 		}
 
-		public async Task<MultiDataDTO> GetMultiData(string userName, int count)
+		public static async Task<MultiDataDTO> GetMultiData(string userName, int count)
 		{
 			HttpResponseMessage response = await _httpClient.GetAsync($"api/Multi/{userName}/{count}");
 

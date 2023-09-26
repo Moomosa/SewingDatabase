@@ -32,11 +32,11 @@ builder.Services.AddRazorPages()
 
 builder.Services.AddSession();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddScoped<ApiService>();
-builder.Services.AddScoped<FrontHelpers>();
 
 var configuration = builder.Configuration;
-var baseUrl = configuration.GetSection("AppSettings:BaseUrl").Value;
+ApiService.Initialize(configuration);
+
+//var baseUrl = configuration.GetSection("AppSettings:BaseUrl").Value;
 
 var app = builder.Build();
 

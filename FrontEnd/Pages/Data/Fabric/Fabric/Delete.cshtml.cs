@@ -10,50 +10,16 @@ using SewingModels.Models;
 using System.Security.Claims;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
+using FrontEnd.Common;
 
-namespace FrontEnd.Pages.Data.Fabric.Item
+namespace FrontEnd.Pages.Data.Fabric.Fabric
 {
 	[Authorize(Roles = "User,Admin")]
-	public class DeleteModel : PageModel
+	public class DeleteModel : BaseDeleteModel<SewingModels.Models.Fabric>
 	{
-		private readonly ApiService _apiService;
-
-		public DeleteModel(ApiService apiService)
-		{
-			_apiService = apiService;
-		}
-
-		[BindProperty]
-		public SewingModels.Models.Fabric Fabric { get; set; } = default!;
-
-		public async Task<IActionResult> OnGetAsync(int? id)
-		{
-			if (id == null)
-				return NotFound();
-
-			string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-			Fabric = await _apiService.GetSingleItem<SewingModels.Models.Fabric>(id.Value, userId);
-
-			if (Fabric == null)
-				return NotFound();
-
-			return Page();
-		}
-
-		public async Task<IActionResult> OnPostAsync(int? id)
-		{
-			if (id == null || Fabric == null)
-				return NotFound();
-
-			bool deleted = await _apiService.DeleteItem<SewingModels.Models.Fabric>(id.Value);
-			if (!deleted)
-				return NotFound();
-
-			HttpContext.Session.Remove("Fabrics");
-			HttpContext.Session.Remove("FabricTotalRecords");
-
-			return RedirectToPage("./Index");
+		public DeleteModel(IHttpContextAccessor httpContextAccessor)
+			: base (httpContextAccessor)
+		{			
 		}
 	}
 }

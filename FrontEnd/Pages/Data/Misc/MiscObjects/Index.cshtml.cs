@@ -11,17 +11,10 @@ namespace FrontEnd.Pages.Data.Misc.MiscObjects
 	[Authorize(Roles = "User,Admin")]
 	public class IndexModel : BaseIndexModel<SewingModels.Models.MiscObjects>
 	{
-        public IndexModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
-            : base(apiService, frontHelpers, httpContextAccessor)
+        public IndexModel(IHttpContextAccessor httpContextAccessor)
+            : base(httpContextAccessor)
         {
 			PagePath = "/Data/Misc/MiscObjects";
         }
-
-        public override async Task<IActionResult> OnGetAsync()
-		{
-			await base.OnGetAsync();
-
-            return Page();
-		}
 	}
 }

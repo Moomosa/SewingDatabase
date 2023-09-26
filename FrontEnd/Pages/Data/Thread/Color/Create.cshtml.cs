@@ -20,8 +20,8 @@ namespace FrontEnd.Pages.Data.Thread.Color
         [BindProperty]
         public List<ThreadColorFamily> ThreadColorFamily {get;set;}
 
-		public CreateModel(ApiService apiService, FrontHelpers frontHelpers, IHttpContextAccessor httpContextAccessor)
-			: base(apiService, frontHelpers, httpContextAccessor)
+		public CreateModel(IHttpContextAccessor httpContextAccessor)
+			: base(httpContextAccessor)
 		{
 		}
 
@@ -29,7 +29,7 @@ namespace FrontEnd.Pages.Data.Thread.Color
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            ThreadColorFamily = await _apiService.GatherAllRecords<ThreadColorFamily>("ThreadColorFamily", userId, 20);
+            ThreadColorFamily = await ApiService.GatherAllRecords<ThreadColorFamily>("ThreadColorFamily", userId, 20);
 
             return await base.OnGetAsync();            
         }
@@ -38,7 +38,7 @@ namespace FrontEnd.Pages.Data.Thread.Color
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            Item.ColorFamily = await _apiService.GetSingleItem<ThreadColorFamily>(Item.ColorFamilyID, userId);
+            Item.ColorFamily = await ApiService.GetSingleItem<ThreadColorFamily>(Item.ColorFamilyID, userId);
 
             ModelState.Remove("Item.ColorFamily");
 
