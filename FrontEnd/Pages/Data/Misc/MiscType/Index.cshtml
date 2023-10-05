@@ -1,8 +1,15 @@
-﻿@page "{currentpage:int?}"
+﻿@page "{currentpage=1}/{sort?}/{sortDirection?}"
+@using ModelLibrary.Models.Shared;
 @model FrontEnd.Pages.Data.Misc.MiscType.IndexModel
 
 @{
 	ViewData["Title"] = "Index";
+	var currentSortProperty = Model.Sort;
+	var currentSortDirection = Model.SortDirection;
+	var columns = new List<TableHeaderModel>
+	{
+		new TableHeaderModel("Item", "Item Type", currentSortProperty, currentSortDirection)
+	};
 }
 
 <h1>Miscellaneous Item Types</h1>
@@ -18,7 +25,10 @@
 	<table class="table table-colors">
 		<thead>
 			<tr>
-				<th>Item Type</th>
+				@foreach (var column in columns)
+				{
+					<partial name="_SortableHeader" model="column" />
+				}
 				<th></th>
 			</tr>
 		</thead>

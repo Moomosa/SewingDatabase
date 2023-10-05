@@ -1,8 +1,18 @@
-﻿@page "{currentpage:int?}"
+﻿@page "{currentpage=1}/{sort?}/{sortDirection?}"
+@using ModelLibrary.Models.Shared;
 @model FrontEnd.Pages.Data.Fabric.Brand.IndexModel
 
 @{
 	ViewData["Title"] = "Index";
+	var currentSortProperty = Model.Sort;
+	var currentSortDirection = Model.SortDirection;
+	var columns = new List<TableHeaderModel>
+	{
+		new TableHeaderModel("FullName", "Brand Name", currentSortProperty, currentSortDirection),
+		new TableHeaderModel("Website", "Website", currentSortProperty, currentSortDirection),
+		new TableHeaderModel("AdditionalInfo", "Additional Info", currentSortProperty, currentSortDirection)
+	};
+
 }
 
 <h1>Fabric Brands</h1>
@@ -18,9 +28,10 @@
 	<table class="table table-colors">
 		<thead>
 			<tr>
-				<th>Brand Name</th>
-				<th>Website</th>
-				<th>Additional Info</th>
+				@foreach (var column in columns)
+				{
+					<partial name="_SortableHeader" model="column" />
+				}
 				<th></th>
 			</tr>
 		</thead>

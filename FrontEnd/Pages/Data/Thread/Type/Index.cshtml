@@ -1,8 +1,15 @@
-﻿@page "{currentpage:int?}"
+﻿@page "{currentpage=1}/{sort?}/{sortDirection?}"
+@using ModelLibrary.Models.Shared;
 @model FrontEnd.Pages.Data.Thread.Type.IndexModel
 
 @{
 	ViewData["Title"] = "Index";
+	var currentSortProperty = Model.Sort;
+	var currentSortDirection = Model.SortDirection;
+	var columns = new List<TableHeaderModel>
+	{
+		new TableHeaderModel("Name", "Name", currentSortProperty, currentSortDirection)
+	};
 }
 
 <h1>Thread Type</h1>
@@ -18,7 +25,10 @@
 	<table class="table table-colors">
 		<thead>
 			<tr>
-				<th>Name</th>
+				@foreach (var column in columns)
+				{
+					<partial name="_SortableHeader" model="column" />
+				}
 				<th></th>
 			</tr>
 		</thead>

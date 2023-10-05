@@ -5,6 +5,7 @@ using System.Text;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.JSInterop;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace FrontEnd
 {
@@ -46,14 +47,25 @@ namespace FrontEnd
 					return currentPage;
 
 			return 1;
-
 		}
 
-		public static void SetPageValues(string type, int currentPage, int pageSize, IHttpContextAccessor httpContextAccessor)
+		public static string GetSortBy(string typeName, IHttpContextAccessor httpContextAccessor)
+		{
+			if (httpContextAccessor.HttpContext.Session.TryGetValue($"{typeName}SortType", out byte[] currentSortBytes))
+			{
+				string sortAs = Encoding.UTF8.GetString(currentSortBytes);
+				return sortAs;
+			}
+
+			return "ID";
+		}
+
+		public static void SetPageValues(string type, int currentPage, int pageSize, string sortedAs, IHttpContextAccessor httpContextAccessor)
 		{
 			var session = httpContextAccessor.HttpContext.Session;
 			session.SetObjectAsJson($"{type}PageSize", pageSize);
 			session.SetObjectAsJson($"{type}LastPageVisited", currentPage);
+			session.SetObjectAsJson($"{type}SortType", sortedAs);
 		}
 
 		public static async Task<IList<T>> CallForRecords<T>(string type, string userId, int currentPage, int pageSize, IHttpContextAccessor httpContextAccessor) where T : class
@@ -63,7 +75,18 @@ namespace FrontEnd
 			session.SetObjectAsJson($"{type}Records", items);
 			session.SetObjectAsJson($"{type}LastPageVisited", currentPage);
 			return items;
-		}		
+		}
+
+		public static async Task<IList<T>> CallForRecords<T>(string type, string userId, int currentPage, int pageSize, string sortBy, string sortDirection, IHttpContextAccessor httpContextAccessor) where T : class
+		{
+			var items = await ApiService.GetPagedRecords<T>(type, userId, currentPage, pageSize, sortBy, sortDirection);
+			var session = httpContextAccessor.HttpContext.Session;
+			session.SetObjectAsJson($"{type}Records", items);
+			session.SetObjectAsJson($"{type}LastPageVisited", currentPage);
+			session.SetObjectAsJson($"{type}SortType", sortBy);
+			return items;
+		}
+
 
 		public static IList<T> GetRecordsFromSession<T>(string type, IHttpContextAccessor httpContextAccessor) where T : class
 		{

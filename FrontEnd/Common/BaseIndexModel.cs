@@ -18,8 +18,13 @@ namespace FrontEnd.Common
 		}
 
 		public IList<T> Items { get; set; } = default!;
+		protected string UserId { get; private set; }
+		public string PagePath { get; set; }
+		#region Paging Properties
 		[BindProperty(SupportsGet = true)]
-		public int CurrentPage { get; set; } = 1;
+		public int CurrentPage { get; set; }
+		protected int LastPageVisited { get; set; }
+
 		public int PageSize { get; set; }
 		public List<int> PageSizes { get; } = new() { 5, 10, 20, 50 };
 		public int TotalRecords { get; set; } = -1;
@@ -28,12 +33,18 @@ namespace FrontEnd.Common
 		public bool ShowNext => CurrentPage < TotalPages;
 		public bool ShowFirst => CurrentPage != 1;
 		public bool ShowLast => CurrentPage != TotalPages;
-		protected int LastPageVisited { get; set; }
-		protected string UserId { get; private set; }
-		public string PagePath { get; set; }
+		#endregion
+		#region Sort Properties
+		[BindProperty(SupportsGet = true)]
+		public string Sort { get; set; }
+		[BindProperty(SupportsGet = true)]
+		public string SortDirection { get; set; }
+		protected string SortedAs { get; set; }
+		#endregion
 
 		public virtual async Task<IActionResult> OnGetAsync()
 		{
+			#region Set Properties
 			UserId = FrontHelpers.GetUserId(User);
 			if (UserId == null) return RedirectToPage("/Account/Login");
 
@@ -41,24 +52,26 @@ namespace FrontEnd.Common
 			TotalRecords = await FrontHelpers.GetTotalRecords<T>(TypeName, UserId, _httpContextAccessor);
 			LastPageVisited = FrontHelpers.GetLastPageVisited(TypeName, _httpContextAccessor);
 
+			SortedAs = FrontHelpers.GetSortBy(TypeName, _httpContextAccessor);
+			#endregion
 
 			string referrer = HttpContext.Request.Headers["Referer"];
 			if (!string.IsNullOrEmpty(referrer) && referrer.Contains(PagePath))
 			{
-				if (CurrentPage != LastPageVisited) // Handle changing pagination page				
-					Items = await FrontHelpers.CallForRecords<T>(TypeName, UserId, CurrentPage, PageSize, _httpContextAccessor);
+				if (CurrentPage != LastPageVisited || Sort != SortedAs) // Handle changing pagination page				
+					Items = await FrontHelpers.CallForRecords<T>(TypeName, UserId, CurrentPage, PageSize, Sort, SortDirection, _httpContextAccessor);
 				else                                // Handle refresh possibility				
 					Items = FrontHelpers.GetRecordsFromSession<T>(TypeName, _httpContextAccessor);
 			}
 			else
 			{
-				if (LastPageVisited != 0)           // Handle coming from not this page
+				if (LastPageVisited != 0 || Sort != null && Sort != SortedAs)           // Handle coming from not this page
 				{
 					CurrentPage = LastPageVisited;
 					Items = FrontHelpers.GetRecordsFromSession<T>(TypeName, _httpContextAccessor);
 				}
 				else                                // Handle the first time coming to the page				
-					Items = await FrontHelpers.CallForRecords<T>(TypeName, UserId, CurrentPage, PageSize, _httpContextAccessor);
+					Items = await FrontHelpers.CallForRecords<T>(TypeName, UserId, CurrentPage, PageSize, Sort, SortDirection, _httpContextAccessor);
 			}
 
 			return Page();
@@ -66,7 +79,7 @@ namespace FrontEnd.Common
 
 		public virtual async Task<IActionResult> OnPost(int selectedPageSize)
 		{
-			UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);			
+			UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 			int totalRecords = await FrontHelpers.GetTotalRecords<T>(TypeName, UserId, _httpContextAccessor);
 			int totalPages = (int)Math.Ceiling((decimal)totalRecords / selectedPageSize);
 
@@ -75,9 +88,14 @@ namespace FrontEnd.Common
 			else if (CurrentPage < 1)
 				CurrentPage = 1;
 
-			FrontHelpers.SetPageValues(TypeName, 0, selectedPageSize, _httpContextAccessor);
+			FrontHelpers.SetPageValues(TypeName, 0, selectedPageSize, Sort, _httpContextAccessor);
 
-			return RedirectToPage("./Index", new { currentPage = CurrentPage });
+			return RedirectToPage("./Index", new { currentPage = CurrentPage, sort = Sort, sortDirection = SortDirection });
+		}
+
+		public IActionResult OnGetSort(string sort)
+		{
+			return RedirectToPage("./Index", new { CurrentPage = 1, sort, SortDirection });
 		}
 	}
 }

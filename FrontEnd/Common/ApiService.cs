@@ -1,12 +1,17 @@
 ﻿using BackendDatabase.Data;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Linq.Dynamic.Core;
 using SewingModels.Models;
 using System.Text;
 using System.Net.Http;
 using ModelLibrary.Models.Database;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System.Configuration;
+using System.Linq.Expressions;
+using Microsoft.Data.SqlClient;
+using System.Linq;
+using System;
 
 namespace FrontEnd
 {
@@ -75,6 +80,53 @@ namespace FrontEnd
 			{
 				return new List<T>();
 			}
+		}
+
+		public static async Task<List<T>> GetPagedRecords<T>(string tableName, string userId, int currentPage, int recordsPerPage, string sortBy, string sortDirection) where T : class
+		{
+			List<T> sortedList = await GatherAllRecords<T>(tableName, userId, recordsPerPage);
+
+			if (sortDirection == "desc")
+			{
+				return sortedList
+						.AsQueryable()
+						.OrderByDescending((T item) => GetPropertyValue(item, sortBy))
+						.Skip((currentPage - 1) * recordsPerPage)
+						.Take(recordsPerPage)
+						.ToList();
+			}
+			else if (sortDirection == "asc")
+			{
+				return sortedList
+						.AsQueryable()
+						.OrderBy((T item) => GetPropertyValue(item, sortBy))
+						.Skip((currentPage - 1) * recordsPerPage)
+						.Take(recordsPerPage)
+						.ToList();
+			}
+			else
+				return sortedList
+						.AsQueryable()
+						.Skip((currentPage - 1) * recordsPerPage)
+						.Take(recordsPerPage)
+						.ToList();
+		}
+
+		private static object GetPropertyValue(object item, string propertyName)
+		{
+			var parts = propertyName.Split('.');
+			foreach (var part in parts)
+			{
+				if (item == null)
+					return null;
+
+				var prop = item.GetType().GetProperty(part);
+				if (prop == null)
+					return null;
+
+				item = prop.GetValue(item, null);
+			}
+			return item;
 		}
 
 		public static async Task<List<T>> GatherAllRecords<T>(string tableName, string userId, int chunkSize) where T : class

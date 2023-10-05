@@ -1,8 +1,21 @@
-﻿@page "{currentpage:int?}"
+﻿@page "{currentpage=1}/{sort?}/{sortDirection?}"
+@using ModelLibrary.Models.Shared;
 @model FrontEnd.Pages.Data.Misc.MiscObjects.IndexModel
 
 @{
 	ViewData["Title"] = "Index";
+	var currentSortProperty = Model.Sort;
+	var currentSortDirection = Model.SortDirection;
+	var columns = new List<TableHeaderModel>
+	{
+		new TableHeaderModel("ItemType.Item", "Item Type", currentSortProperty, currentSortDirection),
+		new TableHeaderModel("Quantity", "Quantity", currentSortProperty, currentSortDirection),
+		new TableHeaderModel("Brand", "Brand", currentSortProperty, currentSortDirection),
+		new TableHeaderModel("SpecificInfo", "Specific Info", currentSortProperty, currentSortDirection),
+		new TableHeaderModel("AdditionalNotes", "Additional Notes", currentSortProperty, currentSortDirection),
+		new TableHeaderModel("Value", "Value", currentSortProperty, currentSortDirection),
+		new TableHeaderModel("PurchasePrice", "Purchase Price", currentSortProperty, currentSortDirection)
+	};
 }
 
 <h1>Miscellaneous Items</h1>
@@ -18,13 +31,10 @@
 	<table class="table table-colors">
 		<thead>
 			<tr>
-				<th>Item Type</th>
-				<th>Quantity</th>
-				<th>Brand</th>
-				<th>Specific Info</th>
-				<th>Additional Notes</th>
-				<th class="hide-on-mobile">Value</th>
-				<th class="hide-on-mobile">Purchase Price</th>
+				@foreach (var column in columns)
+				{
+					<partial name="_SortableHeader" model="column" />
+				}
 				<th></th>
 			</tr>
 		</thead>

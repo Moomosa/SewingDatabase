@@ -1,8 +1,19 @@
-﻿@page "{currentpage:int?}"
+﻿@page "{currentpage=1}/{sort?}/{sortDirection?}"
+@using ModelLibrary.Models.Shared;
 @model FrontEnd.Pages.Data.Machine.IndexModel
 
 @{
 	ViewData["Title"] = "Index";
+	var currentSortProperty = Model.Sort;
+	var currentSortDirection = Model.SortDirection;
+	var columns = new List<TableHeaderModel>
+	{
+		new TableHeaderModel("Brand", "Brand", currentSortProperty, currentSortDirection),
+		new TableHeaderModel("Model", "Model", currentSortProperty, currentSortDirection),
+		new TableHeaderModel("PurchaseDate", "Purchase Date", currentSortProperty, currentSortDirection),
+		new TableHeaderModel("PurchasePrice", "Purchase Price", currentSortProperty, currentSortDirection),
+		new TableHeaderModel("LastServiced", "Date Last Serviced", currentSortProperty, currentSortDirection)
+	};
 }
 
 <h1>Machines</h1>
@@ -18,11 +29,10 @@
 	<table class="table table-colors">
 		<thead>
 			<tr>
-				<th>Brand</th>
-				<th>Model</th>
-				<th>Purchase Date</th>
-				<th>Purchase Price</th>
-				<th>Date Last Serviced</th>
+				@foreach (var column in columns)
+				{
+					<partial name="_SortableHeader" model="column" />
+				}
 				<th></th>
 			</tr>
 		</thead>
