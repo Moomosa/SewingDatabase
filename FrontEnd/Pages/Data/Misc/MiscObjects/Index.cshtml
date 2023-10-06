@@ -8,13 +8,13 @@
 	var currentSortDirection = Model.SortDirection;
 	var columns = new List<TableHeaderModel>
 	{
-		new TableHeaderModel("ItemType.Item", "Item Type", currentSortProperty, currentSortDirection),
-		new TableHeaderModel("Quantity", "Quantity", currentSortProperty, currentSortDirection),
-		new TableHeaderModel("Brand", "Brand", currentSortProperty, currentSortDirection),
-		new TableHeaderModel("SpecificInfo", "Specific Info", currentSortProperty, currentSortDirection),
-		new TableHeaderModel("AdditionalNotes", "Additional Notes", currentSortProperty, currentSortDirection),
-		new TableHeaderModel("Value", "Value", currentSortProperty, currentSortDirection),
-		new TableHeaderModel("PurchasePrice", "Purchase Price", currentSortProperty, currentSortDirection)
+		new TableHeaderModel("ItemType.Item", "Item Type", currentSortProperty, currentSortDirection, false),
+		new TableHeaderModel("Quantity", "Quantity", currentSortProperty, currentSortDirection, false),
+		new TableHeaderModel("Brand", "Brand", currentSortProperty, currentSortDirection, false),
+		new TableHeaderModel("SpecificInfo", "Specific Info", currentSortProperty, currentSortDirection, false),
+		new TableHeaderModel("AdditionalNotes", "Additional Notes", currentSortProperty, currentSortDirection, false),
+		new TableHeaderModel("Value", "Value", currentSortProperty, currentSortDirection, true),
+		new TableHeaderModel("PurchasePrice", "Purchase Price", currentSortProperty, currentSortDirection, true)
 	};
 }
 

@@ -1,15 +1,10 @@
 ﻿@model ModelLibrary.Models.Shared.TableHeaderModel
 
 @{
-	var currentSortDirection = "";
-
-	if (Model.SortProperty != Model.CurrentSort)
-		currentSortDirection = "asc";
-	else
-		currentSortDirection = Model.SortDirection == "asc" ? "desc" : "asc";
+	var currentSortDirection = Model.SortProperty != Model.CurrentSort ? "asc" : (Model.SortDirection == "asc" ? "desc" : "asc");
 }
 
-<th>
+<th class="@(Model.HideOnMobile ? "hide-on-mobile" : "")">
 	<a class="sort-link" asp-page-handler="Sort" asp-route-sort="@Model.SortProperty" asp-route-sortDirection="@currentSortDirection">
 		@Model.HeaderText</a>
 	@if (Model.SortProperty == Model.CurrentSort)

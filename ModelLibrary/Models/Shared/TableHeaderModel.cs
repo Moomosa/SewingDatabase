@@ -12,13 +12,15 @@ namespace ModelLibrary.Models.Shared
         public string CurrentSort { get; set; }
         public string SortDirection { get; set; }
         public string HeaderText { get; set; }
+        public bool HideOnMobile { get; set; }
 
-        public TableHeaderModel(string sortProperty, string headerText, string currentSort, string sortDirection)
+        public TableHeaderModel(string sortProperty, string headerText, string currentSort, string sortDirection, bool hideOnMobile)
         {
 			SortProperty = sortProperty;
 			HeaderText = headerText;
 			CurrentSort = currentSort;
 			SortDirection = sortDirection;
+            HideOnMobile = hideOnMobile;
 		}
     }
 }

@@ -8,13 +8,13 @@
 	var currentSortDirection = Model.SortDirection;
 	var columns = new List<TableHeaderModel>
 	{
-		new TableHeaderModel("FabricType.Type", "Fabric Type", currentSortProperty, currentSortDirection),
-		new TableHeaderModel("FabricBrand.FullName", "Fabric Brand", currentSortProperty, currentSortDirection),
-		new TableHeaderModel("Appearance", "Appearance", currentSortProperty, currentSortDirection),
-		new TableHeaderModel("SolidOrPrint", "Print", currentSortProperty, currentSortDirection),
-		new TableHeaderModel("Amount", "Amount", currentSortProperty, currentSortDirection),
-		new TableHeaderModel("Value", "Value", currentSortProperty, currentSortDirection),
-		new TableHeaderModel("PurchasePrice", "Purchase Price", currentSortProperty, currentSortDirection)
+		new TableHeaderModel("FabricType.Type", "Fabric Type", currentSortProperty, currentSortDirection, false),
+		new TableHeaderModel("FabricBrand.FullName", "Fabric Brand", currentSortProperty, currentSortDirection, false),
+		new TableHeaderModel("Appearance", "Appearance", currentSortProperty, currentSortDirection, false),
+		new TableHeaderModel("SolidOrPrint", "Print", currentSortProperty, currentSortDirection, true),
+		new TableHeaderModel("Amount", "Amount", currentSortProperty, currentSortDirection, false),
+		new TableHeaderModel("Value", "Value", currentSortProperty, currentSortDirection, true),
+		new TableHeaderModel("PurchasePrice", "Purchase Price", currentSortProperty, currentSortDirection, true)
 	};
 }
 
@@ -51,7 +51,7 @@
 					<td>
 						@Html.DisplayFor(modelItem => item.Appearance)
 					</td>
-					<td>
+					<td class="hide-on-mobile">
 						@Html.DisplayFor(modelItem => item.SolidOrPrint)
 					</td>
 					<td>
