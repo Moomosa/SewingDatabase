@@ -45,27 +45,27 @@
 			</div>
 			<div class="form-group">
 				<label asp-for="Item.PurchasePrice" class="control-label required-label">Purchase Price</label>
-				<input asp-for="Item.PurchasePrice" class="form-control" required/>
+				<input asp-for="Item.PurchasePrice" class="form-control" type="number" min="0.01" max="9999.99" required/>
 				<span asp-validation-for="Item.PurchasePrice" class="text-danger"></span>
 			</div>
 			<div class="form-group">
-				<label asp-for="Item.Value" class="control-label required-label"></label>
-				<input asp-for="Item.Value" class="form-control" required/>
+				<label asp-for="Item.Value" class="control-label required-label">Dollar Value</label>
+				<input asp-for="Item.Value" class="form-control" type="number" min="0.01" max="9999.99" required />
 				<span asp-validation-for="Item.Value" class="text-danger"></span>
 			</div>
 			<div class="form-group">
 				<label asp-for="Item.Appearance" class="control-label required-label"></label>
-				<input asp-for="Item.Appearance" class="form-control" />
+				<input asp-for="Item.Appearance" class="form-control" maxlength="50" />
 				<span asp-validation-for="Item.Appearance" class="text-danger"></span>
 			</div>
 			<div class="form-group form-check">
 				<label class="form-check-label">
-					<input class="form-check-input" asp-for="Item.SolidOrPrint" />Print
+					<input class="form-check-input" asp-for="Item.SolidOrPrint" />Is a Print
 				</label>
 			</div>
 			<div class="form-group">
-				<label asp-for="Item.Amount" class="control-label required-label"></label>
-				<input asp-for="Item.Amount" class="form-control" />
+				<label asp-for="Item.Amount" class="control-label required-label">Amount in Yards</label>
+				<input asp-for="Item.Amount" class="form-control" type="number" min="0.01" max="9999.99" />
 				<span asp-validation-for="Item.Amount" class="text-danger"></span>
 			</div>
 			<div class="form-group">

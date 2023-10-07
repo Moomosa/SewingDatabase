@@ -49,9 +49,7 @@
 						@Html.DisplayFor(modelItem => item.AdditionalInfo)
 					</td>
 					<td>
-						<a asp-page="./Edit" asp-route-id="@item.ID" class="btn btn-primary btn-sm hide-on-mobile" title="Edit"><i class="fas fa-edit"></i></a>
-						<a asp-page="./Details" asp-route-id="@item.ID" class="btn btn-info btn-sm hide-on-mobile" title="Details"><i class="fas fa-info-circle text-white"></i></a>
-						<a asp-page="./Delete" asp-route-id="@item.ID" class="btn btn-danger btn-sm hide-on-mobile" title="Delete"><i class="fas fa-trash-alt"></i></a>
+						<partial name="_IndexActionPartial" model="@item.ID" />
 					</td>
 				</tr>
 			}

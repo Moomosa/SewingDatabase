@@ -6,7 +6,7 @@
 	ViewData["Title"] = "Index";
 	var currentSortProperty = Model.Sort;
 	var currentSortDirection = Model.SortDirection;
-	var columns = new List<TableHeaderModel>
+	var columnHeaders = new List<TableHeaderModel>
 	{
 		new TableHeaderModel("FabricType.Type", "Fabric Type", currentSortProperty, currentSortDirection, false),
 		new TableHeaderModel("FabricBrand.FullName", "Fabric Brand", currentSortProperty, currentSortDirection, false),
@@ -31,7 +31,7 @@
 	<table class="table table-colors">
 		<thead>
 			<tr>
-				@foreach(var column in columns)
+				@foreach(var column in columnHeaders)
 				{
 					<partial name="_SortableHeader" model="column" />
 				}
@@ -52,7 +52,14 @@
 						@Html.DisplayFor(modelItem => item.Appearance)
 					</td>
 					<td class="hide-on-mobile">
-						@Html.DisplayFor(modelItem => item.SolidOrPrint)
+						@if (item.SolidOrPrint)
+						{
+							<i class="fa-solid fa-square-check fa-lg" style="color: #26c975;"></i>
+						}
+						else
+						{
+							<i class="fa-regular fa-square fa-lg" style="color: #26c975;"></i>
+						}
 					</td>
 					<td>
 						@Html.DisplayFor(modelItem => item.Amount) Yards
@@ -64,9 +71,7 @@
 						$@Html.DisplayFor(modelItem => item.PurchasePrice) / Yard
 					</td>
 					<td>
-						<a asp-page="./Edit" asp-route-id="@item.ID" class="btn btn-primary btn-sm hide-on-mobile" title="Edit"><i class="fas fa-edit"></i></a>
-						<a asp-page="./Details" asp-route-id="@item.ID" class="btn btn-info btn-sm hide-on-mobile" title="Details"><i class="fas fa-info-circle text-white"></i></a>
-						<a asp-page="./Delete" asp-route-id="@item.ID" class="btn btn-danger btn-sm hide-on-mobile" title="Delete"><i class="fas fa-trash-alt"></i></a>
+						<partial name="_IndexActionPartial" model="@item.ID" />
 					</td>
 				</tr>
 			}

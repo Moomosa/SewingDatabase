@@ -11,6 +11,7 @@ namespace ModelLibrary.Models.Thread
     {
         [Key]
         public int ID { get; set; }
-        public string ColorFamily { get; set; }
+		[MaxLength(25)]
+		public string ColorFamily { get; set; }
     }
 }

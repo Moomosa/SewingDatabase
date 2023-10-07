@@ -24,15 +24,12 @@ namespace FrontEnd.Common
 		[BindProperty(SupportsGet = true)]
 		public int CurrentPage { get; set; }
 		protected int LastPageVisited { get; set; }
-
 		public int PageSize { get; set; }
 		public List<int> PageSizes { get; } = new() { 5, 10, 20, 50 };
 		public int TotalRecords { get; set; } = -1;
 		public int TotalPages => (int)Math.Ceiling(decimal.Divide(TotalRecords, PageSize));
 		public bool ShowPrevious => CurrentPage > 1;
 		public bool ShowNext => CurrentPage < TotalPages;
-		public bool ShowFirst => CurrentPage != 1;
-		public bool ShowLast => CurrentPage != TotalPages;
 		#endregion
 		#region Sort Properties
 		[BindProperty(SupportsGet = true)]

@@ -1,0 +1,11 @@
+﻿@model int
+
+<a asp-page="./Edit" asp-route-id="@Model" class="btn btn-primary btn-sm hide-on-mobile" title="Edit">
+	<i class="fa-solid fa-pen-to-square fa-lg" style="color: black;"></i>
+</a>
+<a asp-page="./Details" asp-route-id="@Model" class="btn btn-info btn-sm hide-on-mobile" title="Details">
+	<i class="fa-solid fa-table-list fa-lg" style="color: black;"></i>
+</a>
+<a asp-page="./Delete" asp-route-id="@Model" class="btn btn-danger btn-sm hide-on-mobile" title="Delete">
+	<i class="fa-regular fa-trash-can fa-lg" style="color: white;"></i>
+</a>

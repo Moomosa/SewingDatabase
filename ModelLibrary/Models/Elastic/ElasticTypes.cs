@@ -10,6 +10,7 @@ namespace SewingModels.Models
     public class ElasticTypes
     {
         public int ID { get; set; }
+        [MaxLength(25)]
         public string Type { get; set; }
     }
 }

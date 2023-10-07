@@ -11,6 +11,7 @@ namespace SewingModels.Models
     {
         [Key]
         public int ID { get; set; }
-        public string Name { get; set; }
+		[MaxLength(25)]
+		public string Name { get; set; }
     }
 }

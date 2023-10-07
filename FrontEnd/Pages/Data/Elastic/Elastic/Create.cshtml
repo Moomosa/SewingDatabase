@@ -30,17 +30,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="Item.Color" class="control-label required-label"></label>
-                <input asp-for="Item.Color" class="form-control" />
+                <input asp-for="Item.Color" class="form-control" maxlength="50"/>
                 <span asp-validation-for="Item.Color" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Item.Width" class="control-label required-label"></label>
-                <input asp-for="Item.Width" class="form-control" />
+                <input asp-for="Item.Width" class="form-control" type="number" min="0.01" max="99.99"/>
                 <span asp-validation-for="Item.Width" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Item.Length" class="control-label required-label"></label>
-                <input asp-for="Item.Length" class="form-control" />
+                <input asp-for="Item.Length" class="form-control" type="number" min="0.01" max="9999.99" />
                 <span asp-validation-for="Item.Length" class="text-danger"></span>
             </div>
             <div class="form-group">

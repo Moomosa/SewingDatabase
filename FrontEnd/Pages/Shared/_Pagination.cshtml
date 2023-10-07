@@ -2,11 +2,15 @@
 {
 	<div>
 		<ul class="pagination">
-			<li class="page-item @(!Model.ShowFirst? "disabled" : "")">
-				<a asp-page="./Index" asp-route-currentpage="1" asp-route-sort="@Model.Sort" asp-route-sortDirection="@Model.SortDirection" class="page-link"><i class="fas fa-fast-backward"></i></a>
+			<li class="page-item @(!Model.ShowPrevious? "disabled" : "")">
+				<a asp-page="./Index" asp-route-currentpage="1" asp-route-sort="@Model.Sort" asp-route-sortDirection="@Model.SortDirection" class="page-link">
+					<i class="fa-solid fa-angles-left fa-lg @(!Model.ShowPrevious ? "text-muted" : "")"></i>
+				</a>
 			</li>
 			<li class="page-item @(!Model.ShowPrevious? "disabled" : "")">
-				<a asp-page="./Index" asp-route-currentpage="@(Model.CurrentPage -1)" asp-route-sort="@Model.Sort" asp-route-sortDirection="@Model.SortDirection" class="page-link"><i class="fas fa-step-backward"></i></a>
+				<a asp-page="./Index" asp-route-currentpage="@(Model.CurrentPage -1)" asp-route-sort="@Model.Sort" asp-route-sortDirection="@Model.SortDirection" class="page-link">
+					<i class="fa-solid fa-chevron-left fa-lg @(!Model.ShowPrevious ? "text-muted" : "")"></i>
+				</a>
 			</li>
 			@for (int i = Math.Max(1, Model.CurrentPage - 2); i <= Math.Min(Model.TotalPages, Model.CurrentPage + 2); i++)
 			{
@@ -15,10 +19,14 @@
 				</li>
 			}
 			<li class="page-item @(!Model.ShowNext? "disabled" : "")">
-				<a asp-page="./Index" asp-route-currentpage="@(Model.CurrentPage + 1)" asp-route-sort="@Model.Sort" asp-route-sortDirection="@Model.SortDirection" class="page-link"><i class="fas fa-step-forward"></i></a>
+				<a asp-page="./Index" asp-route-currentpage="@(Model.CurrentPage + 1)" asp-route-sort="@Model.Sort" asp-route-sortDirection="@Model.SortDirection" class="page-link">
+					<i class="fa-solid fa-chevron-right fa-lg @(!Model.ShowNext ? "text-muted" : "")"></i>
+				</a>
 			</li>
-			<li class="page-item @(!Model.ShowLast? "disabled" : "")">
-				<a asp-page="./Index" asp-route-currentpage="@Model.TotalPages" asp-route-sort="@Model.Sort" asp-route-sortDirection="@Model.SortDirection" class="page-link"><i class="fas fa-fast-forward"></i></a>
+			<li class="page-item @(!Model.ShowNext? "disabled" : "")">
+				<a asp-page="./Index" asp-route-currentpage="@Model.TotalPages" asp-route-sort="@Model.Sort" asp-route-sortDirection="@Model.SortDirection" class="page-link">
+					<i class="fa-solid fa-angles-right fa-lg @(!Model.ShowNext ? "text-muted" : "")"></i>
+				</a>
 			</li>
 		</ul>
 	</div>

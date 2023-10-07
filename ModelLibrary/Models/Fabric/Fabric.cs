@@ -16,10 +16,14 @@ namespace SewingModels.Models
         public int FabricTypeID { get; set; }
         public FabricBrand FabricBrand { get; set; }
         public int FabricBrandID { get; set; }
+        [Range(0.01, 9999.99)]
         public float PurchasePrice { get; set; }
-        public float Value { get; set; }
+		[Range(0.01, 9999.99)]
+		public float Value { get; set; }
         public bool SolidOrPrint { get; set; }
+        [MaxLength(50)]
         public string Appearance { get; set; }
-        public float Amount { get; set; }
+		[Range(0.01, 9999.99)]
+		public float Amount { get; set; }
     }
 }

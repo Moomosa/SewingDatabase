@@ -14,11 +14,17 @@ namespace SewingModels.Models
         public int ID { get; set; }
         public MiscItemType ItemType { get; set; }
         public int ItemTypeID { get; set; }
+        [Range(0, 99)]
         public int Quantity { get; set; }
-        public string? AdditionalNotes { get; set; }
-        public string? Brand { get; set; }
-        public string? SpecificInfo { get; set; }
+		[MaxLength(100)]
+		public string? AdditionalNotes { get; set; }
+		[MaxLength(25)]
+		public string? Brand { get; set; }
+		[MaxLength(100)]
+		public string? SpecificInfo { get; set; }
+        [Range(0.01, 9999.99)]
         public float? Value { get; set; }
+        [Range(0.01, 9999.99)]
         public float? PurchasePrice { get; set; }
     }
 }

@@ -31,32 +31,32 @@
             </div>
             <div class="form-group">
                 <label asp-for="Item.Quantity" class="control-label required-label"></label>
-                <input asp-for="Item.Quantity" class="form-control" />
+                <input asp-for="Item.Quantity" class="form-control" type="number" step="1" min="0" max="99"/>
                 <span asp-validation-for="Item.Quantity" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Item.Brand" class="control-label"></label>
-                <input asp-for="Item.Brand" class="form-control" />
+                <input asp-for="Item.Brand" class="form-control" maxlength="25"/>
                 <span asp-validation-for="Item.Brand" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Item.SpecificInfo" class="control-label">Specific Info</label>
-                <input asp-for="Item.SpecificInfo" class="form-control" />
+                <input asp-for="Item.SpecificInfo" class="form-control" maxlength="100"/>
                 <span asp-validation-for="Item.SpecificInfo" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Item.AdditionalNotes" class="control-label">Additional Notes</label>
-                <input asp-for="Item.AdditionalNotes" class="form-control" />
+                <input asp-for="Item.AdditionalNotes" class="form-control" maxlength="100"/>
                 <span asp-validation-for="Item.AdditionalNotes" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Item.Value" class="control-label"></label>
-                <input asp-for="Item.Value" class="form-control" />
+                <label asp-for="Item.Value" class="control-label">Dollar Value</label>
+                <input asp-for="Item.Value" class="form-control" type="number" min="0.01" max="9999.99"/>
                 <span asp-validation-for="Item.Value" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Item.PurchasePrice" class="control-label">Purchase Price</label>
-                <input asp-for="Item.PurchasePrice" class="form-control" />
+                <input asp-for="Item.PurchasePrice" class="form-control" type="number" min="0.01" max="9999.99"/>
                 <span asp-validation-for="Item.PurchasePrice" class="text-danger"></span>
             </div>
             <div class="form-group">

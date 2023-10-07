@@ -19,6 +19,7 @@ namespace SewingModels.Models
         public ThreadColorFamily ColorFamily { get; set; }
         public int ColorID { get; set; }
         public ThreadColor Color { get; set; }
+        [Range(0, 999)]
         public int Quantity { get; set; }        
     }
 }
