@@ -1,0 +1,32 @@
+﻿@model ModelLibrary.Models.Shared.TableHeaderModel
+
+@{
+	var currentSortDirection = Model.SortProperty != Model.CurrentSort ? "asc" : (Model.SortDirection == "asc" ? "desc" : "asc");
+}
+
+<div class="sorting-header">
+	<a class="sort-link @(Model.SortProperty == Model.CurrentSort ? "selected-sort" : "not-selected")"
+	   asp-page-handler="Sort"
+	   asp-route-sort="@Model.SortProperty"
+	   asp-route-sortDirection="@currentSortDirection">
+		@Model.HeaderText
+		<span class="sort-icon">
+			@if (Model.SortProperty == Model.CurrentSort)
+			{
+				@if (Model.SortDirection == "asc")
+				{
+					<span><i class="fa-solid fa-sort-up fa-lg" style="color: black;"></i></span>
+				}
+				else if (Model.SortDirection == "desc")
+				{
+					<span><i class="fa-solid fa-sort-down fa-lg" style="color: black;"></i></span>
+				}
+			}
+			else
+			{
+				<span><i class="fa-solid fa-sort fa-lg" style="color: black;"></i></span>
+			}
+		</span>
+
+	</a>
+</div>

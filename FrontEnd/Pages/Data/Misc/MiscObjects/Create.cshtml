@@ -51,12 +51,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="Item.Value" class="control-label">Dollar Value</label>
-                <input asp-for="Item.Value" class="form-control" type="number" min="0.01" max="9999.99"/>
+                <input asp-for="Item.Value" class="form-control" type="number" step="0.01" min="0.01" max="9999.99"/>
                 <span asp-validation-for="Item.Value" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Item.PurchasePrice" class="control-label">Purchase Price</label>
-                <input asp-for="Item.PurchasePrice" class="form-control" type="number" min="0.01" max="9999.99"/>
+                <input asp-for="Item.PurchasePrice" class="form-control" type="number" step="0.01" min="0.01" max="9999.99"/>
                 <span asp-validation-for="Item.PurchasePrice" class="text-danger"></span>
             </div>
             <div class="form-group">

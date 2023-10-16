@@ -1,0 +1,59 @@
+﻿/* CSS for sorting bar */
+#cardView #sortBar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center; /* Vertically center the sorting headers */
+    padding: 15px 10px; /* Adjust the padding as needed */
+    border-bottom: 1px solid #ddd;
+}
+
+#cardView .sorting-header {
+    display: inline-block; /* Display sorting headers inline */
+    text-align: left;
+    margin-right: 10px; /* Add some spacing between sorting headers */
+    margin-bottom: 20px;
+}
+
+#cardView .sort-link {
+    text-decoration: none;
+    color: black; /* Button text color */
+    font-weight: bold;
+    padding: 10px 20px; /* Button padding */
+    border: 1px solid black; /* Remove button border */
+    cursor: pointer; /* Change cursor on hover */
+    transition: background-color 0.2s, color 0.2s; /* Add smooth transition effects */
+    border-radius: 5px;
+}
+
+    #cardView .sort-link.not-selected {
+        background-color: lightcyan;
+        color: black;
+    }
+
+#cardView .sort-link.selected-sort {
+    background-color: blue;
+    color: white;
+}
+
+    #cardView .sort-link:hover {
+        background-color: #0056b3; /* Change button color on hover as desired */
+        color: white;
+    }
+
+/* Additional styling for the current sort direction icon (up/down arrow) */
+#cardView .sort-icon {
+    margin-left: 5px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+    /* Adjust the size of the arrow icon */
+    #cardView .sort-icon i {
+        font-size: 16px;
+    }
+
+    @media(max-width: 768px){
+        #cardView .sorting-header {
+            margin-right: 0;
+        }
+    }

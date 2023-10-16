@@ -6,7 +6,7 @@
 	ViewData["Title"] = "Index";
 	var currentSortProperty = Model.Sort;
 	var currentSortDirection = Model.SortDirection;
-	var columns = new List<TableHeaderModel>
+	var columnHeaders = new List<TableHeaderModel>
 	{
 		new TableHeaderModel("ThreadType.Name", "Thread Type", currentSortProperty, currentSortDirection, false),
 		new TableHeaderModel("ColorFamily.ColorFamily", "Color Family", currentSortProperty, currentSortDirection, false),
@@ -15,53 +15,111 @@
 	};
 }
 
-<h1>Thread</h1>
-
 @if (Model.Items.Count != 0)
 {
+	<div class="d-flex justify-content-between align-items-center">
+		<h1>Thread</h1>
+		<partial name="_PageSizeDropdown" model="Model" />
+	</div>
+	<br />
 	<div class="d-flex justify-content-between align-items-center">
 		<h4>
 			<a asp-page="Create">Add New Thread</a>
 		</h4>
-		<partial name="_PageSizeDropdown" model="Model" />
+		<partial name="_TableCardButtons" model="Model" />
 	</div>
-	<table class="table table-colors">
-		<thead>
-			<tr>
-				@foreach (var column in columns)
-				{
-					<partial name="_SortableHeader" model="column" />
-				}
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var item in Model.Items)
+	<br />
+
+	<div id="cardView" style="display: none;">
+		<link rel="stylesheet" type="text/css" href="~/css/sortBar.css" asp-append-version="true" />
+		<div id="sortBar">
+			@foreach (var column in columnHeaders)
 			{
-				<tr class="table-row-clickable" data-href='@Url.Page("./Details", new {id = item.ID})'>
-					<td>
-						@Html.DisplayFor(modelItem => item.ThreadType.Name)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.ColorFamily.ColorFamily)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Color.Color)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Quantity)
-					</td>
-					<td>
-						<partial name="_IndexActionPartial" model="@item.ID" />
-					</td>
-				</tr>
+				<partial name="_SortBar" model="column" />
 			}
-		</tbody>
-	</table>
+		</div>
+		<link rel="stylesheet" type="text/css" href="~/css/dataCard.css" asp-append-version="true" />
+		@foreach (var item in Model.Items)
+		{
+			var expandableData = new List<KeyValuePair<string, string>>
+	{
+	new KeyValuePair<string, string>("Quantity", $"{item.Quantity.ToString()} Spools"),
+	new KeyValuePair<string, string>("Color Family", item.ColorFamily.ColorFamily)
+	};
+
+			var bottomText = new List<string>();
+
+			string itemColor = item.Color.Color.Replace(" ", "");
+			System.Drawing.Color color = System.Drawing.Color.FromName(itemColor);
+			if (color.IsKnownColor)
+			{
+				bottomText.Add($"rgb({color.R},{color.G},{color.B})");
+			}
+			else
+			{
+				bottomText.Add("#fff");
+			}
+			bottomText.Add(item.Color.Color);
+
+			var backgroundColor = Model.GetBackgroundColor(item.ThreadType.Name);
+
+			var cardModel = new BaseDataCard
+					{
+						ID = item.ID,
+						MainText = item.ThreadType.Name,
+						FirstLetter = item.ThreadType.Name[0],
+						ExpandableData = expandableData,
+						BackgroundColor = backgroundColor,
+						BottomText = bottomText
+					};
+
+			<partial name="_DataCard" model="cardModel" />
+			<script src="~/js/cardSize.js" asp-append-version="true"></script>
+		}
+	</div>
+
+	<div id="tableView" style="display: none;">
+		<table class="table table-colors">
+			<thead>
+				<tr>
+					@foreach (var column in columnHeaders)
+					{
+						<partial name="_SortableHeader" model="column" />
+					}
+					<th></th>
+				</tr>
+
+			</thead>
+			<tbody>
+				@foreach (var item in Model.Items)
+				{
+					<tr class="table-row-clickable" data-href='@Url.Page("./Details", new {id = item.ID})'>
+						<td>
+							@Html.DisplayFor(modelItem => item.ThreadType.Name)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.ColorFamily.ColorFamily)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.Color.Color)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.Quantity)
+						</td>
+						<td class="text-right">
+							<partial name="_IndexActionPartial" model="@item.ID" />
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
 	<div>
 		@await Html.PartialAsync("_Pagination", Model)
 	</div>
 }
 else
 {
+	<h1>Thread</h1>
 	<h5>How can you sew without any thread? Let's add it <a asp-page="./Create">here</a>.</h5>
 }

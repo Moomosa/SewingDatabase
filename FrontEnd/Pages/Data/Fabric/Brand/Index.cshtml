@@ -6,7 +6,7 @@
 	ViewData["Title"] = "Index";
 	var currentSortProperty = Model.Sort;
 	var currentSortDirection = Model.SortDirection;
-	var columns = new List<TableHeaderModel>
+	var columnHeaders = new List<TableHeaderModel>
 	{
 		new TableHeaderModel("FullName", "Brand Name", currentSortProperty, currentSortDirection, false),
 		new TableHeaderModel("Website", "Website", currentSortProperty, currentSortDirection, false),
@@ -15,51 +15,96 @@
 
 }
 
-<h1>Fabric Brands</h1>
 
 @if (Model.Items.Count != 0)
 {
 	<div class="d-flex justify-content-between align-items-center">
+		<h1>Fabric Brands</h1>
+		<partial name="_PageSizeDropdown" model="Model" />
+	</div>
+	<br />
+	<div class="d-flex justify-content-between align-items-center">
 		<h4>
 			<a asp-page="Create">Add New Brand</a>
 		</h4>
-		<partial name="_PageSizeDropdown" model="Model" />
+		<partial name="_TableCardButtons" model="Model" />
 	</div>
-	<table class="table table-colors">
-		<thead>
-			<tr>
-				@foreach (var column in columns)
-				{
-					<partial name="_SortableHeader" model="column" />
-				}
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var item in Model.Items)
+	<br />
+
+	<div id="cardView" style="display: none;">
+		<link rel="stylesheet" type="text/css" href="~/css/sortBar.css" asp-append-version="true" />
+		<div id="sortBar">
+			@foreach (var column in columnHeaders)
 			{
-				<tr class="table-row-clickable" data-href='@Url.Page("./Details", new {id = item.ID})'>
-					<td>
-						@Html.DisplayFor(modelItem => item.FullName)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Website)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.AdditionalInfo)
-					</td>
-					<td>
-						<partial name="_IndexActionPartial" model="@item.ID" />
-					</td>
-				</tr>
+				<partial name="_SortBar" model="column" />
 			}
-		</tbody>
-	</table>
+		</div>
+		<link rel="stylesheet" type="text/css" href="~/css/dataCard.css" asp-append-version="true" />
+		@foreach (var item in Model.Items)
+		{
+			var expandableData = new List<KeyValuePair<string, string>>
+	{
+	new KeyValuePair<string, string>("Additional Info", item.AdditionalInfo ?? "N/A")
+	};
+
+			var bottomText = new List<string>();
+			bottomText.Add("#0dcaf0");
+			bottomText.Add(!string.IsNullOrEmpty(item.Website) ? item.Website : "");
+
+			var backgroundColor = Model.GetBackgroundColor(item.FullName);
+
+			var cardModel = new BaseDataCard
+					{
+						ID = item.ID,
+						MainText = item.FullName,
+						FirstLetter = item.FullName[0],
+						ExpandableData = expandableData,
+						BackgroundColor = backgroundColor,
+						BottomText = bottomText
+					};
+			<partial name="_DataCard" model="cardModel" />
+			<script src="~/js/cardSize.js" asp-append-version="true"></script>
+		}
+	</div>
+
+	<div id="tableView" style="display: none;">
+		<table class="table table-colors">
+			<thead>
+				<tr>
+					@foreach (var column in columnHeaders)
+					{
+						<partial name="_SortableHeader" model="column" />
+					}
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.Items)
+				{
+					<tr class="table-row-clickable" data-href='@Url.Page("./Details", new {id = item.ID})'>
+						<td>
+							@Html.DisplayFor(modelItem => item.FullName)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.Website)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.AdditionalInfo)
+						</td>
+						<td class="text-right">
+							<partial name="_IndexActionPartial" model="@item.ID" />
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
 	<div>
 		@await Html.PartialAsync("_Pagination", Model)
 	</div>
 }
 else
 {
+	<h1>Fabric Brands</h1>
 	<h5>Where's your favorite place to get fabric? Let's add them <a asp-page="./Create">here</a>.</h5>
 }

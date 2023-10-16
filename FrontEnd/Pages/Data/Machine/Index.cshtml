@@ -6,7 +6,7 @@
 	ViewData["Title"] = "Index";
 	var currentSortProperty = Model.Sort;
 	var currentSortDirection = Model.SortDirection;
-	var columns = new List<TableHeaderModel>
+	var columnHeaders = new List<TableHeaderModel>
 	{
 		new TableHeaderModel("Brand", "Brand", currentSortProperty, currentSortDirection, false),
 		new TableHeaderModel("Model", "Model", currentSortProperty, currentSortDirection, false),
@@ -14,59 +14,126 @@
 		new TableHeaderModel("PurchasePrice", "Purchase Price", currentSortProperty, currentSortDirection, false),
 		new TableHeaderModel("LastServiced", "Date Last Serviced", currentSortProperty, currentSortDirection, false)
 	};
+	string GetColor(float? price)
+	{
+		switch (price)
+		{
+			case float n when n <= 100:
+				return "#008000";
+			case float n when n > 100 && n <= 500:
+				return "#FFA500";
+			case float n when n > 500 && n <= 1000:
+				return "#0000FF";
+			case float n when n > 1000 && n <= 10000:
+				return "#800080";
+			case float n when n > 10000:
+				return "#FFD700";
+			default:
+				return "#000000";
+		}
+	}
 }
-
-<h1>Machines</h1>
 
 @if (Model.Items.Count != 0)
 {
 	<div class="d-flex justify-content-between align-items-center">
+		<h1>Machines</h1>
+		<partial name="_PageSizeDropdown" model="Model" />
+	</div>
+	<br />
+	<div class="d-flex justify-content-between align-items-center">
 		<h4>
 			<a asp-page="Create">Add New Machine</a>
 		</h4>
-		<partial name="_PageSizeDropdown" model="Model" />
+		<partial name="_TableCardButtons" model="Model" />
 	</div>
-	<table class="table table-colors">
-		<thead>
-			<tr>
-				@foreach (var column in columns)
-				{
-					<partial name="_SortableHeader" model="column" />
-				}
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var item in Model.Items)
+	<br />
+
+	<div id="cardView" style="display: none;">
+		<link rel="stylesheet" type="text/css" href="~/css/sortBar.css" asp-append-version="true" />
+		<div id="sortBar">
+			@foreach (var column in columnHeaders)
 			{
-				<tr class="table-row-clickable" data-href='@Url.Page("./Details", new {id = item.ID})'>
-					<td>
-						@Html.DisplayFor(modelItem => item.Brand)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Model)
-					</td>
-					<td>
-						@item.PurchaseDate.ToString("MMMM dd yyyy")
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.PurchasePrice)
-					</td>
-					<td>
-						@item.LastServiced.ToString("MMMM dd yyyy")
-					</td>
-					<td>
-						<partial name="_IndexActionPartial" model="@item.ID" />
-					</td>
-				</tr>
+				<partial name="_SortBar" model="column" />
 			}
-		</tbody>
-	</table>
+		</div>
+		<link rel="stylesheet" type="text/css" href="~/css/dataCard.css" asp-append-version="true" />
+		@foreach (var item in Model.Items)
+		{
+			var expandableData = new List<KeyValuePair<string, string>>
+	{
+	new KeyValuePair<string, string>("Model", item.Model),
+	new KeyValuePair<string, string>("Purchase Date", item.PurchaseDate.ToString("MMMM dd yyyy")),
+	new KeyValuePair<string, string>("Last Serviced", item.LastServiced.ToString("MMMM dd yyyy"))
+	};
+
+			var bottomText = new List<string>
+	{
+	GetColor(item.PurchasePrice),
+	item.PurchasePrice.ToString() ?? ""
+	};
+
+			var backgroundColor = Model.GetBackgroundColor(item.Brand);
+
+			var cardModel = new BaseDataCard
+					{
+						ID = item.ID,
+						MainText = item.Brand,
+						FirstLetter = item.Brand[0],
+						ExpandableData = expandableData,
+						BackgroundColor = backgroundColor,
+						BottomText = bottomText
+					};
+
+			<partial name="_DataCard" model="cardModel" />
+			<script src="~/js/cardSize.js" asp-append-version="true"></script>
+		}
+	</div>
+
+	<div id="tableView" style="display: none;">
+		<table class="table table-colors">
+			<thead>
+				<tr>
+					@foreach (var column in columnHeaders)
+					{
+						<partial name="_SortableHeader" model="column" />
+					}
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.Items)
+				{
+					<tr class="table-row-clickable" data-href='@Url.Page("./Details", new {id = item.ID})'>
+						<td>
+							@Html.DisplayFor(modelItem => item.Brand)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.Model)
+						</td>
+						<td>
+							@item.PurchaseDate.ToString("MMMM dd yyyy")
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.PurchasePrice)
+						</td>
+						<td>
+							@item.LastServiced.ToString("MMMM dd yyyy")
+						</td>
+						<td class="text-right">
+							<partial name="_IndexActionPartial" model="@item.ID" />
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
 	<div>
 		@await Html.PartialAsync("_Pagination", Model)
 	</div>
 }
 else
 {
+	<h1>Machines</h1>
 	<h5>Not everyone sews just by hand. Let's add a machine <a asp-page="./Create">here</a>.</h5>
 }

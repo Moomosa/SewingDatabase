@@ -1,0 +1,32 @@
+﻿<div class="card card-clickable" data-href='@Url.Page("./Details", new { id = Model.ID })'>
+	<div class="card-header" style="background-color: @Model.BackgroundColor; color: @Model.TextColor;">
+		<div class="card-header-left">
+			<strong>@Model.MainText</strong>
+		</div>
+		<div class="card-header-right">
+			<div class="circle">@Model.FirstLetter</div>
+		</div>
+	</div>
+	@if (Model.ExpandableData != null && Model.ExpandableData.Count != 0)
+	{
+		<div class="card-body">
+			<ul>
+				@foreach (var item in Model.ExpandableData)
+				{
+					<li><strong>@item.Key:</strong> @item.Value</li>
+				}
+			</ul>
+		</div>
+	}
+	@if (Model.BottomText != null && Model.BottomText.Count != 0)
+	{
+		<div class="card-footer" style="background-color: @Model.BottomText[0]">
+			<ul style="list-style: none;">
+				@for (var i = 1; i < Model.BottomText.Count; i++)
+				{
+					<li><strong>@Model.BottomText[i]</strong></li>
+				}
+			</ul>
+		</div>
+	}
+</div>

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
 using System.Data;
+using System.Net.NetworkInformation;
 using System.Security.Claims;
 
 namespace FrontEnd.Common
@@ -37,6 +39,26 @@ namespace FrontEnd.Common
 		[BindProperty(SupportsGet = true)]
 		public string SortDirection { get; set; }
 		protected string SortedAs { get; set; }
+		#endregion
+		#region Color Properties
+		public Dictionary<string, string> colorAssignments = new();
+		public List<string> predefinedColors = new List<string>()
+		{
+			"#0d6efd",	//Blue
+			"#6610f2",	//Indigo
+			"#6f42c1",	//Purple
+			"#d63384",	//Pink
+			"#dc3545",	//Red
+			"#fd7e14",	//Orange
+			"#ffc107",	//Yellow
+			"198754",	//Green
+			"#20c997",	//Teal
+			"#0dcaf0",	//Cyan
+			"#fff",		//White
+			"#6c757d",	//Gray
+			"#343a40",	//Dark Gray
+			"#000000"	//Black
+		};
 		#endregion
 
 		public virtual async Task<IActionResult> OnGetAsync()
@@ -93,6 +115,18 @@ namespace FrontEnd.Common
 		public IActionResult OnGetSort(string sort)
 		{
 			return RedirectToPage("./Index", new { CurrentPage = 1, sort, SortDirection });
+		}
+
+		public string GetBackgroundColor(string type)
+		{
+			if (colorAssignments.ContainsKey(type))
+				return colorAssignments[type];
+			else
+			{
+				var backgroundColor = predefinedColors[colorAssignments.Count % predefinedColors.Count];
+				colorAssignments[type] = backgroundColor;
+				return backgroundColor;
+			}
 		}
 	}
 }

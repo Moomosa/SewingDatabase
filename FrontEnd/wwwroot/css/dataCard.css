@@ -1,0 +1,96 @@
+﻿/* Card container */
+.cardView {
+    display:flex;
+    flex-wrap: wrap;
+    justify-content:space-between;
+    gap: 10px;
+}
+
+.card {
+    width: 22%; /* 4 cards per row on desktop */
+    margin: 10px;
+    border: 1px solid #ddd; /* 1px border with gray color */
+    border-radius: 20px; /* Rounded corners */
+    display: inline-block;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+    background-color: #fff; /* Card background color */
+    box-sizing: border-box;
+    transition: transform 0.2s;
+    overflow: hidden; /* Ensure contents don't overflow */
+}
+
+@media (max-width: 768px) {
+    .card {
+        width: 45%;
+        margin: 10px auto;
+    }
+}
+
+/* Card header */
+.card-header {
+    padding: 10px 20px; /* Adjusted padding for top/bottom and left/right */
+    background-color: #f5f5f5; /* Header background color */
+    border-top-left-radius: 5px; /* Rounded corners for the top */
+    border-top-right-radius: 5px;
+    overflow: hidden; /* Ensure contents don't overflow */
+}
+
+/* Card header left */
+.card-header-left {
+    float: left;
+    width: calc(100% - 35px); /* Adjust width to accommodate the circle */
+    white-space: normal; /* Prevent text from wrapping */
+    overflow: hidden;    
+}
+
+/* Card header right */
+.card-header-right {
+    float: right;
+    background-color: #007bff; /* Circle background color */
+    color: #fff; /* Circle text color */
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    border-radius: 50%; /* Circular shape */
+    line-height: 30px;
+    font-size: 23px;
+    border: 1px solid #000;
+}
+
+/* Main text in card header */
+.card-header strong {
+    color: #333; /* Main text color */
+}
+
+/* Card body */
+.card-body {
+    padding: 10px 20px; /* Adjusted padding for top/bottom and left/right */
+    overflow: hidden; /* Ensure contents don't overflow */
+}
+
+    .card-body ul li strong {
+        display: block;
+    }
+
+    /* List in card body */
+    .card-body ul {
+        list-style-type: none;
+        padding: 0;
+        white-space: normal;
+        overflow: hidden;
+    }
+
+    /* List items in card body */
+    .card-body li {
+        margin-bottom: 5px;
+    }
+
+/* Card footer */
+.card-footer {
+    padding: 5px 10px; /* Adjusted padding for top/bottom and left/right */
+    border-bottom-left-radius: 5px; /* Rounded corners for the bottom */
+    border-bottom-right-radius: 5px;
+    overflow: hidden; /* Ensure contents don't overflow */
+    margin-top: auto;
+    min-height: 50px;
+}

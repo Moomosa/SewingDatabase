@@ -6,55 +6,116 @@
 	ViewData["Title"] = "Index";
 	var currentSortProperty = Model.Sort;
 	var currentSortDirection = Model.SortDirection;
-	var columns = new List<TableHeaderModel>
+	var columnHeaders = new List<TableHeaderModel>
 	{
 		new TableHeaderModel("Color", "Color", currentSortProperty, currentSortDirection, false),
 		new TableHeaderModel("ColorFamily.ColorFamily", "Color Family", currentSortProperty, currentSortDirection, false)
 	};
 }
 
-<h1>Thread Color</h1>
-
 @if (Model.Items.Count != 0)
 {
+	<div class="d-flex justify-content-between align-items-center">
+		<h1>Thread Color</h1>
+		<partial name="_PageSizeDropdown" model="Model" />
+	</div>
+	<br />
 	<div class="d-flex justify-content-between align-items-center">
 		<h4>
 			<a asp-page="Create">Add New Color</a>
 		</h4>
-		<partial name="_PageSizeDropdown" model="Model" />
+		<partial name="_TableCardButtons" model="Model" />
 	</div>
-	<table class="table table-colors">
-		<thead>
-			<tr>
-				@foreach (var column in columns)
-				{
-					<partial name="_SortableHeader" model="column" />
-				}
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var item in Model.Items)
+	<br />
+
+	<div id="cardView" style="display: none;">
+		<link rel="stylesheet" type="text/css" href="~/css/sortBar.css" asp-append-version="true" />
+		<div id="sortBar">
+			@foreach (var column in columnHeaders)
 			{
-				<tr class="table-row-clickable" data-href='@Url.Page("./Details", new {id = item.ID})'>
-					<td>
-						@Html.DisplayFor(modelItem => item.Color)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.ColorFamily.ColorFamily)
-					</td>
-					<td>
-						<partial name="_IndexActionPartial" model="@item.ID" />
-					</td>
-				</tr>
+				<partial name="_SortBar" model="column" />
 			}
-		</tbody>
-	</table>
+		</div>
+		<link rel="stylesheet" type="text/css" href="~/css/dataCard.css" asp-append-version="true" />
+		@foreach (var item in Model.Items)
+		{
+			string itemColor = item.Color.Replace(" ", "");
+			string itemColorFamily = item.ColorFamily.ColorFamily.Replace(" ", "");
+			var bottomText = new List<string>();
+			System.Drawing.Color familyColor = System.Drawing.Color.FromName(itemColorFamily);
+			System.Drawing.Color color = System.Drawing.Color.FromName(itemColor);
+
+			if (familyColor.IsKnownColor)
+			{
+				bottomText.Add($"rgb({familyColor.R},{familyColor.G},{familyColor.B})");
+			}
+			else
+			{
+				bottomText.Add("#000");
+			}
+			bottomText.Add(item.ColorFamily.ColorFamily);
+
+			string backgroundColor = String.Empty;
+
+			if (color.IsKnownColor)
+			{
+				backgroundColor = $"rgb({color.R},{color.G},{color.B})";
+			}
+			else
+			{
+				backgroundColor = Model.GetBackgroundColor(item.Color);
+			}
+
+
+			var cardModel = new BaseDataCard
+					{
+						ID = item.ID,
+						MainText = item.Color,
+						FirstLetter = item.Color[0],
+						BackgroundColor = backgroundColor,
+						BottomText = bottomText
+					};
+
+			<partial name="_DataCard" model="cardModel" />
+			<script src="~/js/cardSize.js" asp-append-version="true"></script>
+		}
+	</div>
+
+	<div id="tableView" style="display: none;">
+		<table class="table table-colors">
+			<thead>
+				<tr>
+					@foreach (var column in columnHeaders)
+					{
+						<partial name="_SortableHeader" model="column" />
+					}
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.Items)
+				{
+					<tr class="table-row-clickable" data-href='@Url.Page("./Details", new {id = item.ID})'>
+						<td>
+							@Html.DisplayFor(modelItem => item.Color)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.ColorFamily.ColorFamily)
+						</td>
+						<td class="text-right">
+							<partial name="_IndexActionPartial" model="@item.ID" />
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
 	<div>
 		@await Html.PartialAsync("_Pagination", Model)
 	</div>
 }
 else
 {
+	<h1>Thread Color</h1>
 	<h5>Every thread has a color! Let's add that <a asp-page="./Create">here</a>.</h5>
 }
