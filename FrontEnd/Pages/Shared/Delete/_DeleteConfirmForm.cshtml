@@ -1,0 +1,32 @@
+﻿@*This is for the Delete page*@
+@model object
+
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Deletion</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete this item?
+			</div>
+			<form method="post" class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				<div class="ms-auto">
+					<button type="submit" class="btn btn-danger" asp-route-id="@Model.GetPropertyValue("ID")">
+						Delete
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<br />
+<form method="post" class="form-group mb-5" id="deleteForm" >
+	<input type="hidden" name="ID" value="@Model.GetPropertyValue("ID")" />
+	<a asp-page="./Index" class="btn btn-secondary">Back to List</a>
+	@*The modal will be triggered on button click*@
+	<button type="button" id="getModal" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal">Delete</button>
+</form>

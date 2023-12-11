@@ -2,60 +2,55 @@
 @model FrontEnd.Pages.Data.Misc.MiscObjects.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+	ViewData["Title"] = "Miscellaneous Item Details";
 }
 
-<h1>Details</h1>
+<partial name="_PageTitle" />
+<div class="container mt-4">
+	<div class="card mt-4">
+		<div class="card-body">
+			<dl class="row">
 
-<div>
-    <h4>MiscObjects</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.ItemType)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.ItemType.Item)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.Quantity)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.Quantity)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.AdditionalNotes)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.AdditionalNotes)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.Brand)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.Brand)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.SpecificInfo)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.SpecificInfo)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.Value)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.Value)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.PurchasePrice)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.PurchasePrice)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Item?.ID">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+				<dt class="col-sm-3">Item Type</dt>
+				<dd class="col-sm-9">
+					<a href="@Url.Page("../MiscType/Details", new { id = Model.Item.ItemType.ID })" class="subtle-link">@Model.Item.ItemType.Item</a>
+				</dd>
+
+				<dt class="col-sm-3">Quantity</dt>
+				<dd class="col-sm-9">@Model.Item.Quantity</dd>
+
+				@if (Model.Item.AdditionalNotes != null)
+				{
+					<dt class="col-sm-3">Additional Notes</dt>
+					<dd class="col-sm-9">@Model.Item.AdditionalNotes</dd>
+				}
+
+				@if (Model.Item.Brand != null)
+				{
+					<dt class="col-sm-3">Brand</dt>
+					<dd class="col-sm-9">@Model.Item.Brand</dd>
+				}
+
+				@if (Model.Item.SpecificInfo != null)
+				{
+					<dt class="col-sm-3">Specific Info</dt>
+					<dd class="col-sm-9">@Model.Item.SpecificInfo</dd>
+				}
+
+				@if (Model.Item.Value != null)
+				{
+					<dt class="col-sm-3">Value</dt>
+					<dd class="col-sm-9">@Model.Item.Value?.ToString("C")</dd>
+				}
+
+				@if (Model.Item.PurchasePrice != null)
+				{
+					<dt class="col-sm-3">Purchase Price</dt>
+					<dd class="col-sm-9">@Model.Item.PurchasePrice?.ToString("C")</dd>
+				}
+
+			</dl>
+		</div>
+	</div>
+	<partial name="Details/_ToEditBackButtons" />
 </div>

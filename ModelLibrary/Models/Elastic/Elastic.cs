@@ -12,12 +12,19 @@ namespace SewingModels.Models
     {
         [Key]
         public int ID { get; set; }
-        public ElasticTypes ElasticType { get; set; }
-        public int ElasticTypeID { get; set; }
+
+		[Display(Name = "Elastic Type")]
+		public ElasticTypes ElasticType { get; set; }
+
+		[Display(Name = "Elastic Type")]
+		public int ElasticTypeID { get; set; }
+
         [MaxLength(50)]
         public string Color { get; set; }
+
         [Range(0.01, 99.99)]
         public float Width { get; set; }
+
 		[Range(0.01, 9999.99)]
 		public float Length { get; set; }
     }

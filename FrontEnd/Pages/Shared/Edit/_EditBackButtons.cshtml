@@ -1,0 +1,9 @@
+﻿@*This is for the Edit page*@
+@model object
+
+<br />
+<div class="form-group mb-5">
+    <input type="hidden" name="ID" value="@Model.GetPropertyValue("ID")" />
+    <a asp-page="Index" class="btn btn-secondary">Back to List</a>
+    <input type="submit" value="Save" class="btn btn-primary" />
+</div>

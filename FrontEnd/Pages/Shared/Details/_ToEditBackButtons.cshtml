@@ -1,0 +1,7 @@
+﻿@*This is for the Details page*@
+<br />
+<div class="mb-5">
+	<a asp-page="./Index" class="btn btn-secondary">Back to List</a>
+	<a asp-page="./Edit" asp-route-id="@Model.Item?.ID" class="btn btn-primary">Edit</a>
+	<a asp-page="./Delete" asp-route-id="@Model.Item?.ID" class="btn btn-danger">Delete</a>
+</div>

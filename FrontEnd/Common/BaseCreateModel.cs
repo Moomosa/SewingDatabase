@@ -45,5 +45,5 @@ namespace FrontEnd.Common
 				return Page();
 			}
 		}
-	}
+    }
 }

@@ -49,8 +49,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Pages\Shared\_PageSizeDropdown.cshtml" />
-    <None Include="Pages\Shared\_Pagination.cshtml" />
+    <None Include="Pages\Shared\Index\_PageSizeDropdown.cshtml" />
+    <None Include="Pages\Shared\Index\_Pagination.cshtml" />
   </ItemGroup>
 
 </Project>

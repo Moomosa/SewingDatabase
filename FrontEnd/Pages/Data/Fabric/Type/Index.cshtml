@@ -3,7 +3,7 @@
 @model FrontEnd.Pages.Data.Fabric.Type.IndexModel
 
 @{
-	ViewData["Title"] = "Index";
+	ViewData["Title"] = "Fabric Types";
 	var currentSortProperty = Model.Sort;
 	var currentSortDirection = Model.SortDirection;
 	var columnHeaders = new List<TableHeaderModel>
@@ -17,15 +17,15 @@
 @if (Model.Items.Count != 0)
 {
 	<div class="d-flex justify-content-between align-items-center">
-		<h1>Fabric Types</h1>
-		<partial name="_PageSizeDropdown" model="Model" />
+		<partial name="_PageTitle" />
+		<partial name="Index/_PageSizeDropdown" model="Model" />
 	</div>
 	<br />
 	<div class="d-flex justify-content-between align-items-center">
 		<h4>
 			<a asp-page="Create">Add New Type</a>
 		</h4>
-		<partial name="_TableCardButtons" model="Model" />
+		<partial name="Index/_TableCardButtons" model="Model" />
 	</div>
 	<br />
 
@@ -34,7 +34,7 @@
 		<div id="sortBar">
 			@foreach (var column in columnHeaders)
 			{
-				<partial name="_SortBar" model="column" />
+				<partial name="Index/_SortBar" model="column" />
 			}
 		</div>
 		<link rel="stylesheet" type="text/css" href="~/css/dataCard.css" asp-append-version="true" />
@@ -56,7 +56,7 @@
 						BackgroundColor = backgroundColor
 					};
 
-			<partial name="_DataCard" model="cardModel" />
+			<partial name="Index/_DataCard" model="cardModel" />
 			<script src="~/js/cardSize.js" asp-append-version="true"></script>
 		}
 	</div>
@@ -67,7 +67,7 @@
 				<tr>
 					@foreach (var column in columnHeaders)
 					{
-						<partial name="_SortableHeader" model="column" />
+						<partial name="Index/_SortableHeader" model="column" />
 					}
 					<th></th>
 				</tr>
@@ -83,7 +83,7 @@
 							@Html.DisplayFor(modelItem => item.Content)
 						</td>
 						<td class="text-right">
-							<partial name="_IndexActionPartial" model="@item.ID" />
+							<partial name="Index/_IndexActionPartial" model="@item.ID" />
 						</td>
 					</tr>
 				}
@@ -91,7 +91,7 @@
 		</table>
 	</div>
 	<div>
-		@await Html.PartialAsync("_Pagination", Model)
+		<partial name="Index/_Pagination" model="Model" />
 	</div>
 }
 else

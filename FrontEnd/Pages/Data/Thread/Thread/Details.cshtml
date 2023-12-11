@@ -2,42 +2,35 @@
 @model FrontEnd.Pages.Data.Thread.Thread.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Thread Details";
 }
 
-<h1>Details</h1>
+<partial name="_PageTitle" />
+<div class="container mt-4">
+    <div class="card mt-4">
+        <div class="card-body">
+            <dl class="row">
 
-<div>
-    <h4>Thread</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.ThreadType)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.ThreadType.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.ColorFamily)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.ColorFamily.ColorFamily)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.Color)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.Color.Color)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.Quantity)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.Quantity)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Item?.ID">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+                <dt class="col-sm-3">Thread Type</dt>
+                <dd class="col-sm-9">
+                    <a href="@Url.Page("../Type/Details", new { id = Model.Item.ThreadType.ID })" class="subtle-link">@Model.Item.ThreadType.Name</a>
+                </dd>
+
+                <dt class="col-sm-3">Thread Color Family</dt>
+                <dd class="col-sm-9">
+                    <a href="@Url.Page("../Family/Details", new { id = Model.Item.ColorFamily.ID })" class="subtle-link">@Model.Item.ColorFamily.ColorFamily</a>
+                </dd>
+
+                <dt class="col-sm-3">Thread Color</dt>
+                <dd class="col-sm-9">
+                    <a href="@Url.Page("../Color/Details", new { id = Model.Item.Color.ID })" class="subtle-link">@Model.Item.Color.Color</a>
+                </dd>
+
+                <dt class="col-sm-3">Quantity</dt>
+                <dd class="col-sm-9">@Model.Item.Quantity Spools</dd>
+
+            </dl>
+        </div>
+    </div>
+    <partial name="Details/_ToEditBackButtons" />
 </div>

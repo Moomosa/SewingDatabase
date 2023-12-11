@@ -12,9 +12,14 @@ namespace ModelLibrary.Models.Thread
     {
         [Key]
         public int ID { get; set; }
+
         [MaxLength(25)]
         public string Color { get; set; }
-        public int ColorFamilyID { get; set; }
-        public ThreadColorFamily ColorFamily { get; set; }
+
+		[Display(Name = "Color Family")]
+		public int ColorFamilyID { get; set; }
+
+		[Display(Name = "Color Family")]
+		public ThreadColorFamily ColorFamily { get; set; }
     }
 }

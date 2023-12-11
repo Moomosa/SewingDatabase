@@ -13,12 +13,25 @@ namespace SewingModels.Models
     {
         [Key]
         public int ID { get; set; }
-        public int ThreadTypeID { get; set; }
-        public ThreadTypes ThreadType { get; set; }
-        public int ColorFamilyID { get; set; }
-        public ThreadColorFamily ColorFamily { get; set; }
-        public int ColorID { get; set; }
-        public ThreadColor Color { get; set; }
+
+		[Display(Name = "Thread Type")]
+		public int ThreadTypeID { get; set; }
+
+		[Display(Name = "Thread Type")]
+		public ThreadTypes ThreadType { get; set; }
+
+		[Display(Name = "Color Family")]
+		public int ColorFamilyID { get; set; }
+
+		[Display(Name = "Color Family")]
+		public ThreadColorFamily ColorFamily { get; set; }
+		
+		[Display(Name = "Color")]
+		public int ColorID { get; set; }
+
+		[Display(Name = "Color")]
+		public ThreadColor Color { get; set; }
+
         [Range(0, 999)]
         public int Quantity { get; set; }        
     }

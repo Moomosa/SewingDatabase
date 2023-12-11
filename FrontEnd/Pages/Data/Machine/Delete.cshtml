@@ -2,51 +2,33 @@
 @model FrontEnd.Pages.Data.Machine.DeleteModel
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete this Machine";
 }
 
-<h1>Delete</h1>
+<partial name="_PageTitle" />
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Machine</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.Brand)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.Brand)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.Model)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.Model)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.PurchaseDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.PurchaseDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.PurchasePrice)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.PurchasePrice)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.LastServiced)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.LastServiced)
-        </dd>
-    </dl>
-    
-    <form method="post">
-        <input type="hidden" asp-for="Item.ID" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-page="./Index">Back to List</a>
-    </form>
+<div class="container mt-4">
+    <div class="card mt-4">
+        <div class="card-body">
+            <dl class="row">
+
+                <dt class="col-sm-3">Brand</dt>
+                <dd class="col-sm-9">@Model.Item.Brand</dd>
+
+                <dt class="col-sm-3">Model</dt>
+                <dd class="col-sm-9">@Model.Item.Model</dd>
+
+                <dt class="col-sm-3">Purchase Date</dt>
+                <dd class="col-sm-9">@Model.Item.PurchaseDate.ToString("MMMM dd yyyy")</dd>
+
+                <dt class="col-sm-3">Purchase Price</dt>
+                <dd class="col-sm-9">@Model.Item.PurchasePrice?.ToString("C")</dd>
+
+                <dt class="col-sm-3">Last Serviced</dt>
+                <dd class="col-sm-9">@Model.Item.LastServiced.ToString("MMMM dd yyyy")</dd>
+
+            </dl>
+        </div>
+    </div>
+    <partial name="Delete/_DeleteConfirmForm" model="Model.Item" />
 </div>

@@ -2,19 +2,16 @@
 @model FrontEnd.Pages.Data.Elastic.Elastic.CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create a New Elastic";
 }
 
-<h1>Create</h1>
-
-<h4>Elastic</h4>
-<hr />
+<partial name="_PageTitle" />
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Item.ElasticTypeID" class="control-label required-label">Type of Elastic</label>
+            <div class="form-group mt-2">
+                <label asp-for="Item.ElasticTypeID" class="control-label required-label">Elastic Type</label>
                 <select asp-for="Item.ElasticTypeID" class ="form-control form-select" >
                     <option value=""></option>
                     @foreach (var elasticType in Model.ElasticTypes)
@@ -22,36 +19,30 @@
                         <option value="@elasticType.ID">@elasticType.Type</option>
                     }
                 </select>
-                <span asp-validation-for="Item.ElasticType.ID" class="text-danger"></span>
+                <span asp-validation-for="Item.ElasticTypeID" class="text-danger"></span>
                 @if(Model.ElasticTypes.Count == 0)
                 {
                     <p class="text-danger m-lg-2">You haven't created any Elastic Types yet. Click <a asp-page="../Type/Create">here</a> to create one.</p>
                 }
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="Item.Color" class="control-label required-label"></label>
                 <input asp-for="Item.Color" class="form-control" maxlength="50"/>
                 <span asp-validation-for="Item.Color" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="Item.Width" class="control-label required-label"></label>
                 <input asp-for="Item.Width" class="form-control" type="number" step="0.01" min="0.01" max="99.99"/>
                 <span asp-validation-for="Item.Width" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="Item.Length" class="control-label required-label"></label>
                 <input asp-for="Item.Length" class="form-control" type="number" step="0.01" min="0.01" max="9999.99" />
                 <span asp-validation-for="Item.Length" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+            <partial name="Create/_CreateBackButtons" />
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {

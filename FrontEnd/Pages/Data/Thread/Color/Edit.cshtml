@@ -2,25 +2,22 @@
 @model FrontEnd.Pages.Data.Thread.Color.EditModel
 
 @{
-	ViewData["Title"] = "Edit";
+	ViewData["Title"] = "Edit a Thread Color";
 }
 
-<h1>Edit</h1>
-
-<h4>ThreadColor</h4>
-<hr />
+<partial name="_PageTitle" />
 <div class="row">
 	<div class="col-md-4">
 		<form method="post">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 			<input type="hidden" asp-for="Item.ID" />
-			<div class="form-group">
-				<label asp-for="Item.Color" class="control-label"></label>
+			<div class="form-group mt-2">
+				<label asp-for="Item.Color" class="control-label required-label"></label>
 				<input asp-for="Item.Color" class="form-control" />
 				<span asp-validation-for="Item.Color" class="text-danger"></span>
 			</div>
-			<div class="form-group">
-				<label asp-for="Item.ColorFamilyID" class="control-label"></label>
+			<div class="form-group mt-2">
+				<label asp-for="Item.ColorFamilyID" class="control-label required-label"></label>
 				<select asp-for="Item.ColorFamilyID" class="form-control form-select">
 					<option value=""></option>
 					@foreach (var colorFamily in Model.ThreadColorFamily)
@@ -30,16 +27,9 @@
 				</select>
 				<span asp-validation-for="Item.ColorFamilyID" class="text-danger"></span>
 			</div>
-			<div class="form-group">
-				<input type="hidden" asp-for="Item.ID" />
-				<input type="submit" value="Save" class="btn btn-primary" />
-			</div>
+			<partial name="Edit/_EditBackButtons" model="Model.Item" />
 		</form>
 	</div>
-</div>
-
-<div>
-	<a asp-page="./Index">Back to List</a>
 </div>
 
 @section Scripts {

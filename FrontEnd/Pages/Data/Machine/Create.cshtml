@@ -2,51 +2,42 @@
 @model FrontEnd.Pages.Data.Machine.CreateModel
 
 @{
-	ViewData["Title"] = "Create";
+	ViewData["Title"] = "Create a New Machine";
 }
 
-<h1>Create</h1>
-
-<h4>Machine</h4>
-<hr />
+<partial name="_PageTitle" />
 <div class="row">
 	<div class="col-md-4">
 		<form method="post">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-			<div class="form-group">
+			<div class="form-group mt-2">
 				<label asp-for="Item.Brand" class="control-label required-label"></label>
-				<input asp-for="Item.Brand" class="form-control" maxlength="25" />
+				<input asp-for="Item.Brand" class="form-control" maxlength="25" autofocus/>
 				<span asp-validation-for="Item.Brand" class="text-danger"></span>
 			</div>
-			<div class="form-group">
+			<div class="form-group mt-2">
 				<label asp-for="Item.Model" class="control-label required-label"></label>
 				<input asp-for="Item.Model" class="form-control" maxlength="25" />
 				<span asp-validation-for="Item.Model" class="text-danger"></span>
 			</div>
-			<div class="form-group">
+			<div class="form-group mt-2">
 				<label asp-for="Item.PurchaseDate" class="control-label required-label">Purchase Date</label>
 				<input asp-for="Item.PurchaseDate" class="form-control" id="PurchaseDate" type="date"/>
 				<span asp-validation-for="Item.PurchaseDate" class="text-danger"></span>
 			</div>
-			<div class="form-group">
+			<div class="form-group mt-2">
 				<label asp-for="Item.PurchasePrice" class="control-label">Purchase Price</label>
 				<input asp-for="Item.PurchasePrice" class="form-control" type="number" step="0.01" min="0.01" max="99999.99"/>
 				<span asp-validation-for="Item.PurchasePrice" class="text-danger"></span>
 			</div>
-			<div class="form-group">
+			<div class="form-group mt-2">
 				<label asp-for="Item.LastServiced" class="control-label required-label">Last Serviced</label>
 				<input asp-for="Item.LastServiced" class="form-control" id="LastServicedInput" type="date"/>
 				<span asp-validation-for="Item.LastServiced" class="text-danger"></span>
 			</div>
-			<div class="form-group">
-				<input type="submit" value="Create" class="btn btn-primary" />
-			</div>
+			<partial name="Create/_CreateBackButtons" />
 		</form>
 	</div>
-</div>
-
-<div>
-	<a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {

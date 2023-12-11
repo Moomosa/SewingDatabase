@@ -3,14 +3,16 @@
 @model FrontEnd.Pages.Data.Fabric.Fabric.IndexModel
 
 @{
-	ViewData["Title"] = "Index";
+	ViewData["Title"] = "Fabrics";
 	var currentSortProperty = Model.Sort;
 	var currentSortDirection = Model.SortDirection;
 	var columnHeaders = new List<TableHeaderModel>
 	{
+		// These models are for the table header columns. The arguments are: the property, the displayed string, 
+		// which property is sorted, the sort direction ("asc" or "desc"), and whether to hide the column on mobile screens
+		new TableHeaderModel("Appearance", "Appearance", currentSortProperty, currentSortDirection, false),
 		new TableHeaderModel("FabricType.Type", "Fabric Type", currentSortProperty, currentSortDirection, false),
 		new TableHeaderModel("FabricBrand.FullName", "Fabric Brand", currentSortProperty, currentSortDirection, false),
-		new TableHeaderModel("Appearance", "Appearance", currentSortProperty, currentSortDirection, false),
 		new TableHeaderModel("SolidOrPrint", "Print", currentSortProperty, currentSortDirection, true),
 		new TableHeaderModel("Amount", "Amount", currentSortProperty, currentSortDirection, false),
 		new TableHeaderModel("Value", "Value", currentSortProperty, currentSortDirection, true),
@@ -21,15 +23,15 @@
 @if (Model.Items.Count != 0)
 {
 	<div class="d-flex justify-content-between align-items-center">
-		<h1>Fabrics</h1>
-		<partial name="_PageSizeDropdown" model="Model" />
+		<partial name="_PageTitle" />
+		<partial name="Index/_PageSizeDropdown" model="Model" />
 	</div>
 	<br />
 	<div class="d-flex justify-content-between align-items-center">
 		<h4>
 			<a asp-page="Create">Add New Fabric</a>
 		</h4>
-		<partial name="_TableCardButtons" model="Model" />
+		<partial name="Index/_TableCardButtons" model="Model" />
 	</div>
 	<br />
 
@@ -38,7 +40,7 @@
 		<div id="sortBar">
 			@foreach (var column in columnHeaders)
 			{
-				<partial name="_SortBar" model="column" />
+				<partial name="Index/_SortBar" model="column" />
 			}
 		</div>
 		<link rel="stylesheet" type="text/css" href="~/css/dataCard.css" asp-append-version="true" />
@@ -71,7 +73,7 @@
 						BottomText = bottomText
 					};
 
-			<partial name="_DataCard" model="cardModel" />
+			<partial name="Index/_DataCard" model="cardModel" />
 			<script src="~/js/cardSize.js" asp-append-version="true"></script>
 		}
 	</div>
@@ -82,7 +84,7 @@
 				<tr>
 					@foreach (var column in columnHeaders)
 					{
-						<partial name="_SortableHeader" model="column" />
+						<partial name="Index/_SortableHeader" model="column" />
 					}
 					<th></th>
 				</tr>
@@ -92,13 +94,13 @@
 				{
 					<tr class="table-row-clickable" data-href='@Url.Page("./Details", new {id = item.ID})'>
 						<td>
+							@Html.DisplayFor(modelItem => item.Appearance)
+						</td>
+						<td>
 							@Html.DisplayFor(modelItem => item.FabricType.Type)
 						</td>
 						<td>
 							@Html.DisplayFor(modelItem => item.FabricBrand.FullName)
-						</td>
-						<td>
-							@Html.DisplayFor(modelItem => item.Appearance)
 						</td>
 						<td class="hide-on-mobile">
 							@if (item.SolidOrPrint)
@@ -114,13 +116,13 @@
 							@Html.DisplayFor(modelItem => item.Amount) Yards
 						</td>
 						<td class="hide-on-mobile">
-							$@Html.DisplayFor(modelItem => item.Value) / Yard
+							@Html.DisplayFor(modelItem => item.Value) / Yard
 						</td>
 						<td class="hide-on-mobile">
-							$@Html.DisplayFor(modelItem => item.PurchasePrice) / Yard
+							@Html.DisplayFor(modelItem => item.PurchasePrice) / Yard
 						</td>
 						<td class="text-right">
-							<partial name="_IndexActionPartial" model="@item.ID" />
+							<partial name="Index/_IndexActionPartial" model="@item.ID" />
 						</td>
 					</tr>
 				}
@@ -128,7 +130,7 @@
 		</table>
 	</div>
 	<div>
-		<partial name="_Pagination" model="Model" />
+		<partial name="Index/_Pagination" model="Model" />
 	</div>
 }
 else

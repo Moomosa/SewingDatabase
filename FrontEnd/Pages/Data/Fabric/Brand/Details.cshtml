@@ -2,36 +2,29 @@
 @model FrontEnd.Pages.Data.Fabric.Brand.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+	ViewData["Title"] = "Fabric Brand Details";
 }
 
-<h1>Details</h1>
+<partial name="_PageTitle" />
+<div class="container mt-4">
+	<div class="card mt-4">
+		<div class="card-body">
+			<dl class="row">
+				<dt class="col-sm-3">Brand Name</dt>
+				<dd class="col-sm-9">@Model.Item.FullName</dd>
 
-<div>
-    <h4>FabricBrand</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.FullName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.FullName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.Website)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.Website)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.AdditionalInfo)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.AdditionalInfo)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Item?.ID">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+				@if (Model.Item.Website != null)
+				{
+					<dt class="col-sm-3">Website</dt>
+					<dd class="col-sm-9">@Model.Item.Website</dd>
+				}
+				@if (Model.Item.AdditionalInfo != null)
+				{
+					<dt class="col-sm-3">Additional Info</dt>
+					<dd class="col-sm-9">@Model.Item.AdditionalInfo</dd>
+				}
+			</dl>
+		</div>
+	</div>
+	<partial name="Details/_ToEditBackButtons" />
 </div>

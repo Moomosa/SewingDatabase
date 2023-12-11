@@ -2,18 +2,15 @@
 @model FrontEnd.Pages.Data.Misc.MiscObjects.CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create a New Miscellaneous Item";
 }
 
-<h1>Create</h1>
-
-<h4>Miscellaneous Items</h4>
-<hr />
+<partial name="_PageTitle" />
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="Item.ItemTypeID" class="control-label required-label">Item Type</label>
                 <select asp-for="Item.ItemTypeID" class ="form-control form-select" >
                     <option value=""></option>
@@ -22,52 +19,46 @@
                         <option value="@objectType.ID">@objectType.Item</option>
                     }
                 </select>
-                <span asp-validation-for="Item.ItemType.ID" class="text-danger"></span>
+                <span asp-validation-for="Item.ItemTypeID" class="text-danger"></span>
                 @if (Model.MiscItemTypes.Count == 0)
                 {
                     <p class="text-danger m-lg-2">You haven't created any Item Types yet. Click <a asp-page="../MiscType/Create">here</a> to create one.</p>
                 }
 
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="Item.Quantity" class="control-label required-label"></label>
                 <input asp-for="Item.Quantity" class="form-control" type="number" step="1" min="0" max="99"/>
                 <span asp-validation-for="Item.Quantity" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="Item.Brand" class="control-label"></label>
                 <input asp-for="Item.Brand" class="form-control" maxlength="25"/>
                 <span asp-validation-for="Item.Brand" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="Item.SpecificInfo" class="control-label">Specific Info</label>
                 <input asp-for="Item.SpecificInfo" class="form-control" maxlength="100"/>
                 <span asp-validation-for="Item.SpecificInfo" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="Item.AdditionalNotes" class="control-label">Additional Notes</label>
                 <input asp-for="Item.AdditionalNotes" class="form-control" maxlength="100"/>
                 <span asp-validation-for="Item.AdditionalNotes" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="Item.Value" class="control-label">Dollar Value</label>
                 <input asp-for="Item.Value" class="form-control" type="number" step="0.01" min="0.01" max="9999.99"/>
                 <span asp-validation-for="Item.Value" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="Item.PurchasePrice" class="control-label">Purchase Price</label>
                 <input asp-for="Item.PurchasePrice" class="form-control" type="number" step="0.01" min="0.01" max="9999.99"/>
                 <span asp-validation-for="Item.PurchasePrice" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+            <partial name="Create/_CreateBackButtons" />
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {

@@ -11,7 +11,9 @@ namespace ModelLibrary.Models.Thread
     {
         [Key]
         public int ID { get; set; }
+
 		[MaxLength(25)]
+        [Display(Name = "Color Family")]
 		public string ColorFamily { get; set; }
     }
 }

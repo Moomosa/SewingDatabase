@@ -2,38 +2,28 @@
 @model FrontEnd.Pages.Data.Fabric.Type.EditModel
 
 @{
-	ViewData["Title"] = "Edit";
+	ViewData["Title"] = "Edit a Fabric Type";
 }
 
-<h1>Edit</h1>
-
-<h4>FabricTypes</h4>
-<hr />
+<partial name="_PageTitle" />
 <div class="row">
 	<div class="col-md-4">
 		<form method="post">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 			<input type="hidden" asp-for="Item.ID" />
-			<div class="form-group">
-				<label asp-for="Item.Type" class="control-label"></label>
+			<div class="form-group mt-2">
+				<label asp-for="Item.Type" class="control-label required-label"></label>
 				<input asp-for="Item.Type" class="form-control" />
 				<span asp-validation-for="Item.Type" class="text-danger"></span>
 			</div>
-			<div class="form-group">
+			<div class="form-group mt-2">
 				<label asp-for="Item.Content" class="control-label"></label>
 				<input asp-for="Item.Content" class="form-control" />
 				<span asp-validation-for="Item.Content" class="text-danger"></span>
 			</div>
-			<div class="form-group">
-				<input type="hidden" asp-for="Item.ID" />
-				<input type="submit" value="Save" class="btn btn-primary" />
-			</div>
+			<partial name="Edit/_EditBackButtons" model="Model.Item" />
 		</form>
 	</div>
-</div>
-
-<div>
-	<a asp-page="./Index">Back to List</a>
 </div>
 
 @section Scripts {
